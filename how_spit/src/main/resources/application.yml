@@ -1,0 +1,13 @@
+server:
+  port: 9006
+
+spring:
+  application:
+    name: how-spit #指定服务名
+  data:
+    mongodb:
+      host: 101.201.142.43
+      database: spitdb
+
+  redis:
+    host: 101.201.142.43

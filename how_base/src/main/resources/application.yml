@@ -1,0 +1,14 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: how-base #指定服务名
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://101.201.142.43:3306/how_base?characterEncoding=utf-8
+    username: root
+    password: root
+  jpa:
+    database: MySQL
+    show-sql: true
+    generate-ddl: true

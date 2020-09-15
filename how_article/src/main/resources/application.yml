@@ -1,0 +1,20 @@
+server: 
+  port: 9004
+spring: 
+  application:  
+    name: how-article #指定服务名
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://101.201.142.43:3306/how_article?useUnicode=true&amp;characterEncoding=UTF8
+    username: root
+    password: root
+  jpa: 
+    database: MySQL
+    show-sql: true
+
+  redis:
+    host: 101.201.142.43
+  data:
+    mongodb:
+      host: 101.201.142.43
+      database: commentdb
