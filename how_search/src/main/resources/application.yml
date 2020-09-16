@@ -1,0 +1,8 @@
+server:
+  port: 9007
+spring:
+  application:
+    name: how-search #指定服务名
+  data:
+    elasticsearch:
+      cluster-nodes: 101.201.142.43:9300

@@ -5,7 +5,7 @@ spring:
     name: how-article #指定服务名
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://101.201.142.43:3306/how_article?useUnicode=true&amp;characterEncoding=UTF8
+    url: jdbc:mysql://101.201.142.43:3306/how_article?characterEncoding=utf-8
     username: root
     password: root
   jpa: 
