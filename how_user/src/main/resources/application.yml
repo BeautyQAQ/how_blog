@@ -1,6 +1,6 @@
-server: 
+server:
   port: 9008
-spring: 
+spring:
   application:  
     name: how-user #指定服务名
   datasource:
@@ -17,3 +17,8 @@ spring:
 
   redis:
     host: 101.201.142.43
+
+jwt:
+  config:
+    key: howblog  #注意这个key不能太短
+    ttl: 360000

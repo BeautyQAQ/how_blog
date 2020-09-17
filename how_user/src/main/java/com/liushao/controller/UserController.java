@@ -1,10 +1,13 @@
 package com.liushao.controller;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
+import com.liushao.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.liushao.pojo.User;
 import com.liushao.service.UserService;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -30,6 +35,10 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
+	private JwtUtil jwtUtil;
 	
 	
 	/**
@@ -101,7 +110,11 @@ public class UserController {
 	 * @param id
 	 */
 	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
-	public Result delete(@PathVariable String id ){
+	public Result delete(@PathVariable String id){
+		Claims claims=(Claims) request.getAttribute("admin_claims");
+		if(claims==null){
+			return new Result(true,StatusCode.ACCESSERROR,"无权访问");
+		}
 		userService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
@@ -124,6 +137,25 @@ public class UserController {
 	public Result register( @RequestBody User user ,@PathVariable String code){
 		userService.add(user,code);
 		return new Result(true,StatusCode.OK,"注册成功");
+	}
+
+	/**
+	 * 用户登陆
+	 * @return
+	 */
+	@RequestMapping(value="/login",method=RequestMethod.POST)
+	public Result login(@RequestBody Map<String,String> loginMap){
+		User user = userService.findByMobileAndPassword(loginMap.get("mobile"),loginMap.get("password"));
+		if(user!=null){
+			String token = jwtUtil.createJWT(user.getId(), user.getNickname(), "user");
+			Map map=new HashMap();
+			map.put("token",token);
+			map.put("name",user.getNickname());//昵称
+			map.put("avatar",user.getAvatar());//头像
+			return new Result(true,StatusCode.OK,"登陆成功",map);
+		}else{
+			return new Result(false,StatusCode.LOGINERROR,"用户名或密码错误");
+		}
 	}
 
 

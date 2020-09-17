@@ -5,6 +5,7 @@ import java.util.Map;
 import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.liushao.pojo.Problem;
 import com.liushao.service.ProblemService;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -30,8 +33,10 @@ public class ProblemController {
 
 	@Autowired
 	private ProblemService problemService;
-	
-	
+	@Autowired
+	private HttpServletRequest request;
+
+
 	/**
 	 * 查询全部数据
 	 * @return
@@ -76,13 +81,20 @@ public class ProblemController {
     }
 	
 	/**
+	 * 发布问题
 	 * 增加
 	 * @param problem
 	 */
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Problem problem  ){
+		Claims claims=(Claims)request.getAttribute("user_claims");
+		if(claims==null){
+			return new Result(false,StatusCode.ACCESSERROR,"无权访问");
+		}
+		problem.setUserid(claims.getId());
 		problemService.add(problem);
 		return new Result(true,StatusCode.OK,"增加成功");
+
 	}
 	
 	/**
