@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import com.liushao.dao.UserDao;
 import com.liushao.pojo.User;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 服务层
@@ -180,6 +181,24 @@ public class UserService {
 		}else{
 			return null;
 		}
+	}
+
+	/**
+	 * 更新粉丝数
+	 * @param x
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public void incFanscount(String userid,int x){
+		userDao.incFanscount(userid,x);
+	}
+
+	/**
+	 * 更新关注数
+	 * @param x
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public void incFollowcount(String userid,int x){
+		userDao.incFollowcount(userid,x);
 	}
 
 	/**

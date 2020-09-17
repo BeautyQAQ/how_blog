@@ -17,6 +17,7 @@
         <module>how_search</module>
         <module>how_user</module>
         <module>how_sms</module>
+        <module>how_friend</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -47,4 +48,24 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <!-- 依赖版本号管理 -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Hoxton.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2.2.0.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

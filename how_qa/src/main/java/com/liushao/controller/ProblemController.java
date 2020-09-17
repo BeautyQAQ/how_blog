@@ -2,6 +2,7 @@ package com.liushao.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.liushao.client.LabelClient;
 import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
@@ -35,6 +36,9 @@ public class ProblemController {
 	private ProblemService problemService;
 	@Autowired
 	private HttpServletRequest request;
+
+	@Autowired
+	private LabelClient labelClient;
 
 
 	/**
@@ -153,5 +157,12 @@ public class ProblemController {
 		PageResult<Problem> pageResult = new PageResult<>(pageList.getTotalElements(), pageList.getContent());
 		return new Result(true, StatusCode.OK, "查询成功",pageResult);
 	}
-	
+
+	@RequestMapping(value = "/label/{labelid}")
+	public Result findLabelById(@PathVariable String labelid){
+		Result result = labelClient.findById(labelid);
+		return result;
+	}
+
+
 }

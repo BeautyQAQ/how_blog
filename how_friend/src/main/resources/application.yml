@@ -1,28 +1,25 @@
 server:
-  port: 9003
+  port: 9010
 spring:
   application:
-    name: how-qa #指定服务名
+    name: tensquare-friend #指定服务名
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://101.201.142.43:3306/how_qa?characterEncoding=utf-8
+    url: jdbc:mysql://101.201.142.43:3306/how_friend?characterEncoding=utf-8
     username: root
     password: root
   jpa:
     database: MySQL
-    show-sql: true
-    generate-ddl: true
+    show‐sql: true
 
   # nacos服务地址
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-#开启熔断机制
-feign:
-  hystrix:
-    enabled: true
 
 jwt:
   config:
-    key: howblog  #注意这个key不能太短
+    key: howblog
+
+

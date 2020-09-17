@@ -13,3 +13,8 @@ spring:
     show-sql: true
   redis:
     host: 101.201.142.43
+  # nacos服务地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
