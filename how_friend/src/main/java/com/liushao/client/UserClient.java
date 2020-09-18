@@ -1,5 +1,6 @@
 package com.liushao.client;
 
+import com.liushao.client.impol.UserClientImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * 用户客户端
  * @author huangshen
  */
-@FeignClient("how-user")
+@FeignClient(value = "how-user", fallback = UserClientImpl.class)
 public interface UserClient {
     /**
      * 增加粉丝数

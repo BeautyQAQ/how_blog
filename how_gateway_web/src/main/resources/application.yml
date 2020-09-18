@@ -1,0 +1,49 @@
+server:
+  port: 9012
+
+spring:
+  application:
+    name: how-gateway-web #指定服务名
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true #路由小写
+
+      routes:
+        - id: how-gathering #活动
+          uri: lb://how-gathering
+          predicates:
+            - Path=/gathering/** # 路径匹配
+        - id: how-article #文章
+          uri: lb://how-article
+          predicates:
+            - Path=/article/** # 路径匹配
+        - id: how-base #基础
+            uri: lb://how-base
+            predicates:
+              - Path=/base/** # 路径匹配
+        - id: how-friend #交友
+            uri: lb://how-friend
+            predicates:
+              - Path=/friend/** # 路径匹配
+        - id: how-qa #问答
+            uri: lb://how-qa
+            predicates:
+              - Path=/qa/** # 路径匹配
+        - id: how-spit #吐槽
+            uri: lb://how-spit
+            predicates:
+              - Path=/spit/** # 路径匹配
+        - id: how-user #用户
+            uri: lb://how-user
+            predicates:
+              - Path=/user/** # 路径匹配
+        - id: how-search #搜索
+            uri: lb://how-search
+            predicates:
+              - Path=/search/** # 路径匹配

@@ -18,6 +18,8 @@
         <module>how_user</module>
         <module>how_sms</module>
         <module>how_friend</module>
+        <module>how_gateway_manager</module>
+        <module>how_gateway_web</module>
     </modules>
 
     <packaging>pom</packaging>

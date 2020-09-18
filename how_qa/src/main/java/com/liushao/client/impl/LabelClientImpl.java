@@ -5,6 +5,9 @@ import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author huangshen
+ */
 @Component
 public class LabelClientImpl implements LabelClient {
     @Override
