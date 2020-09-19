@@ -5,10 +5,13 @@ import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 import com.liushao.pojo.Spit;
 import com.liushao.service.SpitService;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @CrossOrigin
@@ -19,6 +22,9 @@ public class SpitController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private HttpServletRequest request;
 
     /**
      * 查询全部数据
@@ -86,8 +92,12 @@ public class SpitController {
     @RequestMapping(value="/thumbup/{id}",method=RequestMethod.PUT)
     public Result updateThumbup(@PathVariable String id){
         //判断用户是否点过赞
-        //todo 测试数据。 后边修改为当前登陆的用户
-        String userid="2023";
+        Claims claims=(Claims)request.getAttribute("user_claims");
+        if(claims==null){
+            return new Result(false,StatusCode.ACCESSERROR,"无权访问");
+        }
+        //用户已经登录
+        String userid=claims.getId();
         if(redisTemplate.opsForValue().get("thumbup_"+userid+"_"+ id)!=null){
             return new Result(false,StatusCode.REPERROR,"你已经点过赞了");
         }
