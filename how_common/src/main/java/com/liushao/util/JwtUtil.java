@@ -9,7 +9,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.Date;
 
 /**
- * Created by Administrator on 2018/4/11.
+ *
+ * @author Administrator
+ * @date 2018/4/11
  */
 @ConfigurationProperties("jwt.config")
 public class JwtUtil {

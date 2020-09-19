@@ -1,4 +1,5 @@
 package com.liushao.config;
+
 import com.liushao.handler.JsonExceptionHandler;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;

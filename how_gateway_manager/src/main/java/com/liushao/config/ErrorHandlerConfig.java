@@ -1,4 +1,5 @@
 package com.liushao.config;
+
 import com.liushao.handler.JsonExceptionHandler;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
@@ -19,7 +20,7 @@ import java.util.List;
 
 /**
  * 覆盖默认的异常处理
- * @author huangshen
+ *
  */
 @Configuration
 @EnableConfigurationProperties({ServerProperties.class, ResourceProperties.class})
