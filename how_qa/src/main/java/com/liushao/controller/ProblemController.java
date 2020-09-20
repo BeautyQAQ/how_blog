@@ -158,7 +158,7 @@ public class ProblemController {
 		return new Result(true, StatusCode.OK, "查询成功",pageResult);
 	}
 
-	@RequestMapping(value = "/label/{labelid}")
+	@RequestMapping(value = "/label/{labelid}", method=RequestMethod.GET)
 	public Result findLabelById(@PathVariable String labelid){
 		Result result = labelClient.findById(labelid);
 		return result;

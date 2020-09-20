@@ -22,6 +22,9 @@ public class Result {
      */
     private Object data;
 
+    public Result() {
+    }
+
     public Result(boolean flag, Integer code, String message, Object data) {
         this.flag = flag;
         this.code = code;
