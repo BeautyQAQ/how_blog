@@ -43,7 +43,7 @@
     </dependencies>
 
     <build>
-        <finalName>how_article</finalName>
+        <finalName>how_base</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
