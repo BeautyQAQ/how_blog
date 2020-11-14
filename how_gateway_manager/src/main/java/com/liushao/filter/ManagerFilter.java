@@ -36,11 +36,11 @@ public class ManagerFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         System.out.println("manager过滤器");
         ServerHttpRequest request = exchange.getRequest();
-        if(request.getMethod().equals("OPTIONS")){
+        if("OPTIONS".equals(request.getMethod())){
             return chain.filter(exchange);
         }
         String url = request.getURI().getPath();
-        if(url.indexOf("/admin/login")>0){
+        if(url.contains("/admin/login") || url.contains("/user/login")){
             System.out.println("登陆页面"+url);
             return chain.filter(exchange);
         }
