@@ -1,17 +1,22 @@
 package com.liushao.controller;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.liushao.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.jsonwebtoken.Claims;
 
 import com.liushao.pojo.Admin;
 import com.liushao.service.AdminService;
@@ -127,5 +132,19 @@ public class AdminController {
 		}
 	}
 
+	/**
+	 * 获取管理员权限
+	 * @param request 请求
+	 * @return result
+	 */
+	@GetMapping("/info")	
+	public Result test(HttpServletRequest request) {	
+		String token = request.getHeader("Authorization");	
+		Claims claims = jwtUtil.parseJWT(token);	
+		Map<String, Object> map=new HashMap<>();
+		map.put("avatar",null);
+		map.put("roles",claims.get("roles"));//角色
+		return new Result(true,StatusCode.OK,"登陆成功",map);
+	}
 
 }
