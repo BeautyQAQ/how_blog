@@ -1,5 +1,4 @@
 package com.liushao.controller;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,7 @@ public class ChannelController {
 	 * @return 分页结果
 	 */
 	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
-	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
+	public Result findSearch(@RequestBody Map<String, Object> searchMap , @PathVariable int page, @PathVariable int size){
 		Page<Channel> pageList = channelService.findSearch(searchMap, page, size);
 		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Channel>(pageList.getTotalElements(), pageList.getContent()) );
 	}
@@ -70,7 +69,7 @@ public class ChannelController {
      * @return
      */
     @RequestMapping(value="/search",method = RequestMethod.POST)
-    public Result findSearch( @RequestBody Map searchMap){
+    public Result findSearch( @RequestBody Map<String, Object> searchMap){
         return new Result(true,StatusCode.OK,"查询成功",channelService.findSearch(searchMap));
     }
 	

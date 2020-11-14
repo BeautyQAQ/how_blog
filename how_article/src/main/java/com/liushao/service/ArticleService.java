@@ -1,23 +1,19 @@
 package com.liushao.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
 import com.liushao.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -61,7 +57,7 @@ public class ArticleService {
 	 * @param size
 	 * @return
 	 */
-	public Page<Article> findSearch(Map whereMap, int page, int size) {
+	public Page<Article> findSearch(Map<String, Object> whereMap, int page, int size) {
 		Specification<Article> specification = createSpecification(whereMap);
 		PageRequest pageRequest =  PageRequest.of(page-1, size);
 		return articleDao.findAll(specification, pageRequest);
@@ -73,7 +69,7 @@ public class ArticleService {
 	 * @param whereMap
 	 * @return
 	 */
-	public List<Article> findSearch(Map whereMap) {
+	public List<Article> findSearch(Map<String, Object> whereMap) {
 		Specification<Article> specification = createSpecification(whereMap);
 		return articleDao.findAll(specification);
 	}
@@ -146,7 +142,7 @@ public class ArticleService {
 	 * @param searchMap
 	 * @return
 	 */
-	private Specification<Article> createSpecification(Map searchMap) {
+	private Specification<Article> createSpecification(Map<String, Object> searchMap) {
 
 		return new Specification<Article>() {
 

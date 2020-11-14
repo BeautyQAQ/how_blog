@@ -36,7 +36,7 @@ public class ManagerFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         System.out.println("manager过滤器");
         ServerHttpRequest request = exchange.getRequest();
-        if("OPTIONS".equals(request.getMethod())){
+        if("OPTIONS".equals(request.getMethodValue())){
             return chain.filter(exchange);
         }
         String url = request.getURI().getPath();

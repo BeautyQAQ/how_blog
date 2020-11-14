@@ -13,6 +13,8 @@ import java.io.Serializable;
 @Table(name="tb_column")
 public class Column implements Serializable{
 
+	private static final long serialVersionUID = -5145926516795764886L;
+
 	@Id
 	private String id;//ID
 

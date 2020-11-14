@@ -123,7 +123,7 @@ public class AdminController {
 		if(admin!=null){
 			//生成token
 			String token = jwtUtil.createJWT(admin.getId(), admin.getLoginname(), "admin");
-			Map map=new HashMap();
+			Map<String, Object> map=new HashMap<>();
 			map.put("token",token);
 			map.put("name",admin.getLoginname());//登陆名
 			return new Result(true,StatusCode.OK,"登陆成功",map);

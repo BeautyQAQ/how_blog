@@ -13,6 +13,8 @@ import java.io.Serializable;
 @Table(name="tb_article")
 public class Article implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	private String id;//ID
 
