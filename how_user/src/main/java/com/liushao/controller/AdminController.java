@@ -137,7 +137,7 @@ public class AdminController {
 	 * @param request 请求
 	 * @return result
 	 */
-	@GetMapping("/info")	
+	@RequestMapping(value="/info",method=RequestMethod.GET)
 	public Result adminInfo(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");	
 		Claims claims = jwtUtil.parseJWT(token);	
