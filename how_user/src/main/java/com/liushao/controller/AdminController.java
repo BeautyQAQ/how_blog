@@ -142,7 +142,7 @@ public class AdminController {
 		String token = request.getHeader("Authorization");	
 		Claims claims = jwtUtil.parseJWT(token);	
 		Map<String, Object> map=new HashMap<>();
-		map.put("avatar",null);
+		map.put("avatar","");
 		map.put("roles",claims.get("roles"));//角色
 		return new Result(true,StatusCode.OK,"登陆成功",map);
 	}
