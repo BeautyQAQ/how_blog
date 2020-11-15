@@ -124,7 +124,7 @@ public class AdminController {
 			//生成token
 			String token = jwtUtil.createJWT(admin.getId(), admin.getLoginname(), "admin");
 			Map<String, Object> map=new HashMap<>();
-			map.put("token",token);
+			map.put("token","Bearer "+token);
 			map.put("name",admin.getLoginname());//登陆名
 			return new Result(true,StatusCode.OK,"登陆成功",map);
 		}else{
@@ -138,12 +138,13 @@ public class AdminController {
 	 * @return result
 	 */
 	@GetMapping("/info")	
-	public Result test(HttpServletRequest request) {	
+	public Result adminInfo(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");	
 		Claims claims = jwtUtil.parseJWT(token);	
 		Map<String, Object> map=new HashMap<>();
 		map.put("avatar","");
-		map.put("roles",claims.get("roles"));//角色
+		//角色
+		map.put("roles",claims.get("roles"));
 		return new Result(true,StatusCode.OK,"登陆成功",map);
 	}
 

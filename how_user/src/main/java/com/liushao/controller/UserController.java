@@ -1,6 +1,5 @@
 package com.liushao.controller;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.liushao.entity.PageResult;
@@ -148,8 +147,8 @@ public class UserController {
 		User user = userService.findByMobileAndPassword(loginMap.get("mobile"),loginMap.get("password"));
 		if(user!=null){
 			String token = jwtUtil.createJWT(user.getId(), user.getNickname(), "user");
-			Map map=new HashMap();
-			map.put("token",token);
+			Map<String, Object> map=new HashMap<>();
+			map.put("token","Bearer "+token);
 			map.put("name",user.getNickname());//昵称
 			map.put("avatar",user.getAvatar());//头像
 			return new Result(true,StatusCode.OK,"登陆成功",map);
