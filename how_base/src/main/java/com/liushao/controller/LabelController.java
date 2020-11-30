@@ -5,6 +5,8 @@ import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 import com.liushao.pojo.Label;
 import com.liushao.service.LabelService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.util.Map;
 /**
  * @author huangshen
  */
+@Api(tags = "标签模块")
 @RestController
 @RequestMapping("/base/label")
 public class LabelController {
@@ -23,6 +26,7 @@ public class LabelController {
      * 查询全部列表
      * @return
      */
+    @ApiOperation(value = "查询全部标签数据")
     @RequestMapping(method = RequestMethod.GET)
     public Result findAll(){
         return new Result(true, StatusCode.OK,"查询成功",
@@ -33,6 +37,7 @@ public class LabelController {
      * @param id
      * @return
      */
+    @ApiOperation(value = "根据id数据")
     @RequestMapping(value="/{id}",method = RequestMethod.GET)
     public Result findById(@PathVariable String id){
         return new Result(true,StatusCode.OK,"查询成功",labelService.findById(id));
@@ -43,6 +48,7 @@ public class LabelController {
      * @param label
      * @return
      */
+    @ApiOperation(value = "增加标签")
     @RequestMapping(method = RequestMethod.POST)
     public Result add( @RequestBody Label label){
         labelService.add(label);
@@ -53,6 +59,7 @@ public class LabelController {
      * @param label
      * @return
      */
+    @ApiOperation(value = "修改标签")
     @RequestMapping(value="/{id}" ,method = RequestMethod.PUT)
     public Result update( @RequestBody Label label,@PathVariable String
             id){
@@ -65,6 +72,7 @@ public class LabelController {
      * @param id
      * @return
      */
+    @ApiOperation(value = "删除标签")
     @RequestMapping(value="/{id}" ,method = RequestMethod.DELETE)
     public Result deleteById(@PathVariable String id){
         labelService.deleteById(id);
@@ -76,6 +84,7 @@ public class LabelController {
      * @param searchMap
      * @return
      */
+    @ApiOperation(value = "条件查询")
     @RequestMapping(value="/search",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map searchMap){
         return new Result(true,StatusCode.OK,"查询成 功",labelService.findSearch(searchMap));
@@ -88,6 +97,7 @@ public class LabelController {
      * @param size
      * @return
      */
+    @ApiOperation(value = "分页+条件查询")
     @RequestMapping(value="/search/{page}/{size}",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map searchMap
             ,@PathVariable int page,@PathVariable int size ){

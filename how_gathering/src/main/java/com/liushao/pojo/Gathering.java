@@ -1,5 +1,8 @@
 package com.liushao.pojo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,26 +12,47 @@ import java.io.Serializable;
  * @author Administrator
  *
  */
+@ApiModel(value = "活动")
 @Entity
 @Table(name="tb_gathering")
 public class Gathering implements Serializable{
 
+	@ApiModelProperty(value = "ID编号")
 	@Id
-	private String id;//编号
+	private String id;
 
+	@ApiModelProperty(value = "活动名称")
+	private String name;
 
-	
-	private String name;//活动名称
-	private String summary;//大会简介
-	private String detail;//详细说明
-	private String sponsor;//主办方
-	private String image;//活动图片
-	private java.util.Date starttime;//开始时间
-	private java.util.Date endtime;//截止时间
-	private String address;//举办地点
-	private java.util.Date enrolltime;//报名截止
-	private String state;//是否可见
-	private String city;//城市
+	@ApiModelProperty(value = "大会简介")
+	private String summary;
+
+	@ApiModelProperty(value = "详细说明")
+	private String detail;
+
+	@ApiModelProperty(value = "主办方")
+	private String sponsor;
+
+	@ApiModelProperty(value = "活动图片")
+	private String image;
+
+	@ApiModelProperty(value = "开始时间")
+	private java.util.Date starttime;
+
+	@ApiModelProperty(value = "截止时间")
+	private java.util.Date endtime;
+
+	@ApiModelProperty(value = "举办地点")
+	private String address;
+
+	@ApiModelProperty(value = "报名截止")
+	private java.util.Date enrolltime;
+
+	@ApiModelProperty(value = "是否可见")
+	private String state;
+
+	@ApiModelProperty(value = "城市")
+	private String city;
 
 	
 	public String getId() {		

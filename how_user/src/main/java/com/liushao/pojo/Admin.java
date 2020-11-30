@@ -1,5 +1,8 @@
 package com.liushao.pojo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,18 +12,23 @@ import java.io.Serializable;
  * @author Administrator
  *
  */
+@ApiModel(value = "Admin用户")
 @Entity
 @Table(name="tb_admin")
 public class Admin implements Serializable{
 
+	@ApiModelProperty(value = "ID")
 	@Id
-	private String id;//ID
+	private String id;
 
+	@ApiModelProperty(value = "登录名称")
+	private String loginname;
 
-	
-	private String loginname;//登陆名称
-	private String password;//密码
-	private String state;//状态
+	@ApiModelProperty(value = "密码")
+	private String password;
+
+	@ApiModelProperty(value = "状态")
+	private String state;
 
 	
 	public String getId() {		
@@ -51,6 +59,4 @@ public class Admin implements Serializable{
 		this.state = state;
 	}
 
-
-	
 }

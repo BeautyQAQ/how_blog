@@ -4,6 +4,8 @@ import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 import com.liushao.service.FriendService;
 import io.jsonwebtoken.Claims;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author huangshen
  */
+@Api(tags = "交友模块")
 @RestController
 @RequestMapping("/friend")
 public class FriendController {
@@ -28,6 +31,7 @@ public class FriendController {
      * @param type 1：喜欢 0：不喜欢
      * @return
      */
+    @ApiOperation(value = "添加好友")
     @RequestMapping(value="/like/{friendid}/{type}",method= RequestMethod.PUT)
     public Result addFriend(@PathVariable String friendid , @PathVariable String type){
         Claims claims=(Claims)request.getAttribute("user_claims");
@@ -40,8 +44,8 @@ public class FriendController {
                 return new Result(false, StatusCode.REPERROR,"已经添加此好友");
             }
         }else{
-            //不喜欢
-            friendService.addNoFriend(claims.getId(),friendid);//向不喜欢列表中添加记录
+            //不喜欢，向不喜欢列表中添加记录
+            friendService.addNoFriend(claims.getId(),friendid);
         }
         return new Result(true, StatusCode.OK, "操作成功");
     }
@@ -51,6 +55,7 @@ public class FriendController {
      * @param friendid
      * @return
      */
+    @ApiOperation(value = "删除好友")
     @RequestMapping(value="/{friendid}",method=RequestMethod.DELETE)
     public Result remove(@PathVariable String friendid){
         Claims claims=(Claims)request.getAttribute("user_claims");

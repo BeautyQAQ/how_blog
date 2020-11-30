@@ -1,5 +1,8 @@
 package com.liushao.pojo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
@@ -8,16 +11,28 @@ import java.util.Date;
  * 文章评论（mongoDB）
  * @author huangshen
  */
+@ApiModel(value = "评论mongoDB")
 public class Comment implements Serializable {
 
     private static final long serialVersionUID = 7212242187409603851L;
-    
+
+    @ApiModelProperty(value = "_id")
     @Id
     private String _id;
+
+    @ApiModelProperty(value = "文章id")
     private String articleid;
+
+    @ApiModelProperty(value = "评论内容")
     private String content;
+
+    @ApiModelProperty(value = "用户id")
     private String userid;
+
+    @ApiModelProperty(value = "父评论id")
     private String parentid;
+
+    @ApiModelProperty(value = "发布时间")
     private Date publishdate;
 
     public String get_id() {

@@ -7,6 +7,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
+/**
+ * @author huangshen
+ */
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients

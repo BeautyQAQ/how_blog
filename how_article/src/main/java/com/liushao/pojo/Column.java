@@ -1,5 +1,8 @@
 package com.liushao.pojo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,23 +12,34 @@ import java.io.Serializable;
  * @author Administrator
  *
  */
+@ApiModel(value = "专栏")
 @Entity
 @Table(name="tb_column")
 public class Column implements Serializable{
 
 	private static final long serialVersionUID = -5145926516795764886L;
 
+	@ApiModelProperty(value = "ID")
 	@Id
-	private String id;//ID
+	private String id;
 
+	@ApiModelProperty(value = "专栏名称")
+	private String name;
 
-	
-	private String name;//专栏名称
-	private String summary;//专栏简介
-	private String userid;//用户ID
-	private java.util.Date createtime;//申请日期
-	private java.util.Date checktime;//审核日期
-	private String state;//状态
+	@ApiModelProperty(value = "专栏简介")
+	private String summary;
+
+	@ApiModelProperty(value = "用户ID")
+	private String userid;
+
+	@ApiModelProperty(value = "申请日期")
+	private java.util.Date createtime;
+
+	@ApiModelProperty(value = "审核日期")
+	private java.util.Date checktime;
+
+	@ApiModelProperty(value = "状态")
+	private String state;
 
 	
 	public String getId() {		

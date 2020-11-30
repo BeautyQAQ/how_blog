@@ -1,6 +1,9 @@
 package com.liushao.pojo;
 
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,17 +12,29 @@ import javax.persistence.Table;
  * 标签实体
  * @author huangshen
  */
+@ApiModel(value = "标签")
 @Entity
 @Table(name="tb_label")
 public class Label {
 
+    @ApiModelProperty(value = "ID")
     @Id
     private String id;
-    private String labelname;//标签名称
-    private String state;//状态
-    private Long count;//使用数量
-    private Long fans;//关注数
-    private String recommend;//是否推荐
+
+    @ApiModelProperty(value = "标签名称")
+    private String labelname;
+
+    @ApiModelProperty(value = "状态")
+    private String state;
+
+    @ApiModelProperty(value = "使用数量")
+    private Long count;
+
+    @ApiModelProperty(value = "关注数")
+    private Long fans;
+
+    @ApiModelProperty(value = "是否推荐")
+    private String recommend;
 
     public String getId() {
         return id;
