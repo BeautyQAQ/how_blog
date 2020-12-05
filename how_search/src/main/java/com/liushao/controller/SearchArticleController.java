@@ -4,7 +4,7 @@ import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 import com.liushao.pojo.Article;
-import com.liushao.service.ArticleSearchService;
+import com.liushao.service.SearchArticleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 @RequestMapping("/search/article")
-public class ArticleSearchController {
+public class SearchArticleController {
     @Autowired
-    private ArticleSearchService articleSearchService;
+    private SearchArticleService searchArticleService;
 
     @ApiOperation(value = "在es保存文章")
     @RequestMapping(method= RequestMethod.POST)
     public Result save(@RequestBody Article article){
-        articleSearchService.add(article);
+        searchArticleService.add(article);
         return new Result(true, StatusCode.OK, "操作成功");
     }
 
@@ -38,7 +38,7 @@ public class ArticleSearchController {
     @ApiOperation(value = "文章搜索")
     @RequestMapping(value="/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByTitleLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
-        Page<Article> articlePage = articleSearchService.findByTitleLike(keywords,page,size);
+        Page<Article> articlePage = searchArticleService.findByTitleLike(keywords,page,size);
         return new Result(true, StatusCode.OK, "查询成功", new PageResult<Article>(articlePage.getTotalElements(), articlePage.getContent()));
     }
 }

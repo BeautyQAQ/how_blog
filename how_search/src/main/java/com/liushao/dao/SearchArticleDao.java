@@ -9,7 +9,7 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
  * 文章数据访问层接口
  * @author huangshen
  */
-public interface ArticleSearchDao extends ElasticsearchRepository<Article,String> {
+public interface SearchArticleDao extends ElasticsearchRepository<Article,String> {
     /**
      * 检索
      * @param
