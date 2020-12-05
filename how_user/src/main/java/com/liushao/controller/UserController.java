@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(tags = "User用户模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/user")
+@RequestMapping("/user/user")
 public class UserController {
 
 	@Autowired

@@ -27,7 +27,7 @@ import com.liushao.service.ColumnService;
 @Api(tags = "专栏模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/column")
+@RequestMapping("/article/column")
 public class ColumnController {
 
 	@Autowired

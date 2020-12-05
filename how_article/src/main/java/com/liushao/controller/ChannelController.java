@@ -26,7 +26,7 @@ import com.liushao.entity.StatusCode;
 @Api(tags = "频道模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/channel")
+@RequestMapping("/article/channel")
 public class ChannelController {
 
 	@Autowired

@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(tags = "吐槽模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/spit")
+@RequestMapping("/spit/spit")
 public class SpitController {
 
     @Autowired

@@ -28,7 +28,7 @@ import com.liushao.service.ReplyService;
 @Api(tags = "回答")
 @RestController
 @CrossOrigin
-@RequestMapping("/reply")
+@RequestMapping("/qa/reply")
 public class ReplyController {
 
 	@Autowired

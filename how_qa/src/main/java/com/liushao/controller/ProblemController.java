@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(tags = "问题")
 @RestController
 @CrossOrigin
-@RequestMapping("/problem")
+@RequestMapping("/qa/problem")
 public class ProblemController {
 
 	@Autowired

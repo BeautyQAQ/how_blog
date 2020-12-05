@@ -26,7 +26,7 @@ import com.liushao.entity.StatusCode;
 @Api(tags = "文章模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/article")
+@RequestMapping("/article/article")
 public class ArticleController {
 
 	@Autowired

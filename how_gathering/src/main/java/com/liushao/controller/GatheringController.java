@@ -28,7 +28,7 @@ import com.liushao.service.GatheringService;
 @Api(tags = "活动模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/gathering")
+@RequestMapping("/gathering/gathering")
 public class GatheringController {
 
 	@Autowired

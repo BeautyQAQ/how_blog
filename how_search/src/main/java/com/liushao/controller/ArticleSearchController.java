@@ -11,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * @author huangshen
+ */
 @Api(tags = "文章搜索")
 @RestController
 @CrossOrigin
-@RequestMapping("/article")
+@RequestMapping("/search/article")
 public class ArticleSearchController {
     @Autowired
     private ArticleSearchService articleSearchService;
@@ -33,7 +36,7 @@ public class ArticleSearchController {
      * @param size 页面大小
      */
     @ApiOperation(value = "文章搜索")
-    @RequestMapping(value="/search/{keywords}/{page}/{size}",method= RequestMethod.GET)
+    @RequestMapping(value="/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByTitleLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Article> articlePage = articleSearchService.findByTitleLike(keywords,page,size);
         return new Result(true, StatusCode.OK, "查询成功", new PageResult<Article>(articlePage.getTotalElements(), articlePage.getContent()));

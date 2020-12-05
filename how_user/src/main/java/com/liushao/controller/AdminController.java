@@ -33,7 +33,7 @@ import com.liushao.entity.StatusCode;
 @Api(tags = "Admin管理员模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/admin")
+@RequestMapping("/user/admin")
 public class AdminController {
 
 	@Autowired

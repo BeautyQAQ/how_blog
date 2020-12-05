@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface UserClient {
     /**
      * 增加粉丝数
-     * @param userid
-     * @param x
+     * @param userid userid
+     * @param x 数量
      */
-    @RequestMapping(value="/user/incfans/{userid}/{x}",method= RequestMethod.POST)
+    @RequestMapping(value="/user/user/incfans/{userid}/{x}",method= RequestMethod.POST)
     void incFanscount(@PathVariable("userid") String userid, @PathVariable("x") int x);
     /**
      * 增加关注数
-     * @param userid
-     * @param x
+     * @param userid userid
+     * @param x 数量
      */
-    @RequestMapping(value="/user/incfollow/{userid}/{x}",method=RequestMethod.POST)
+    @RequestMapping(value="/user/user/incfollow/{userid}/{x}",method=RequestMethod.POST)
     void incFollowcount(@PathVariable("userid") String userid,@PathVariable("x") int x);
 }
