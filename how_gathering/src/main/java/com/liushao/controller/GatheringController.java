@@ -114,5 +114,8 @@ public class GatheringController {
 		gatheringService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
-	
+
+
+	//git提交演示
+
 }
