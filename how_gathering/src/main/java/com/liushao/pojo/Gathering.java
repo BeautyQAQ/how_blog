@@ -1,5 +1,6 @@
 package com.liushao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -36,9 +37,11 @@ public class Gathering implements Serializable{
 	@ApiModelProperty(value = "活动图片")
 	private String image;
 
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	@ApiModelProperty(value = "开始时间")
 	private java.util.Date starttime;
 
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	@ApiModelProperty(value = "截止时间")
 	private java.util.Date endtime;
 

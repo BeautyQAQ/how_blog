@@ -1,5 +1,6 @@
 package com.liushao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -27,9 +28,11 @@ public class Reply implements Serializable{
 	@ApiModelProperty(value = "回答内容")
 	private String content;
 
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	@ApiModelProperty(value = "创建日期")
 	private java.util.Date createtime;
 
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	@ApiModelProperty(value = "更新日期")
 	private java.util.Date updatetime;
 

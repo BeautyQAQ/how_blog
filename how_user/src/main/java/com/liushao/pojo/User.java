@@ -1,5 +1,6 @@
 package com.liushao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -33,6 +34,7 @@ public class User implements Serializable{
 	@ApiModelProperty(value = "性别")
 	private String sex;
 
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd",timezone="GMT+8")
 	@ApiModelProperty(value = "出生年月日")
 	private java.util.Date birthday;
 
@@ -42,12 +44,15 @@ public class User implements Serializable{
 	@ApiModelProperty(value = "E-Mail")
 	private String email;
 
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	@ApiModelProperty(value = "注册日期")
 	private java.util.Date regdate;
 
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	@ApiModelProperty(value = "修改日期")
 	private java.util.Date updatedate;
 
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	@ApiModelProperty(value = "最后登录日期")
 	private java.util.Date lastdate;
 
