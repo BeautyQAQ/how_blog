@@ -1,7 +1,7 @@
 version: '3'
 services:
   #文章服务
-  mogu_admin:
+  how_article:
     image: registry.cn-beijing.aliyuncs.com/liushao-repository/how_article:latest
     container_name: how_article
     restart: always
