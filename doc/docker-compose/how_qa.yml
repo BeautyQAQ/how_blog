@@ -1,0 +1,18 @@
+version: '3'
+services:
+  #问答服务
+  how_qa:
+    image: registry.cn-beijing.aliyuncs.com/liushao-repository/how_qa:latest
+    container_name: how_qa
+    restart: always
+    ports:
+      - 9003:9003
+    networks:
+      - how
+    environment:
+      - COMPOSE_PROJECT_NAME=how_qa
+    volumes:
+      - ../log/:/logs/
+networks:
+  how:
+    external: true

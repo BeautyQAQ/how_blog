@@ -1,0 +1,18 @@
+version: '3'
+services:
+  #搜索服务
+  how_search:
+    image: registry.cn-beijing.aliyuncs.com/liushao-repository/how_search:latest
+    container_name: how_search
+    restart: always
+    ports:
+      - 9007:9007
+    networks:
+      - how
+    environment:
+      - COMPOSE_PROJECT_NAME=how_search
+    volumes:
+      - ../log/:/logs/
+networks:
+  how:
+    external: true
