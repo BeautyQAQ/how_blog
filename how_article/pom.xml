@@ -74,7 +74,7 @@
 				<version>1.2.0</version>
 				<configuration>
 					<!-- 注意imageName一定要是符合正则[a-z0-9-_.]的，否则构建不会成功 -->
-					<imageName>registry.cn-shenzhen.aliyuncs.com/howblog/${project.artifactId}</imageName>
+					<imageName>registry.cn-beijing.aliyuncs.com/liushao-repository/zenyang/${project.artifactId}</imageName>
 					<!-- 指定DockerFile路径-->
 					<dockerDirectory>${project.basedir}</dockerDirectory>
 					<rm>true</rm>
