@@ -8,12 +8,11 @@ services:
     ports:
       - 9004:9004
     networks:
-      - mogu
+      - how
     environment:
       - COMPOSE_PROJECT_NAME=how_article
     volumes:
       - ../log/:/logs/
-      - ../config/how_article/:/config/
 networks:
   how:
     external: true
