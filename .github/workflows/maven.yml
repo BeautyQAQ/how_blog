@@ -50,7 +50,7 @@ jobs:
       run: |
           echo '=====开始上传镜像====='
           echo '=====开始上传mogu_admin====='
-          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/zenyang/how_article
+          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_article
           echo '=====镜像上传结束====='
         
         
