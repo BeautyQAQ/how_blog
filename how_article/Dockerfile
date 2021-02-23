@@ -1,5 +1,4 @@
-#FROM adoptopenjdk/openjdk11
-FROM java:alpine
+FROM adoptopenjdk/openjdk11
 VOLUME /tmp
 ADD how_article.jar how_article.jar
 #COPY ./target/how_article.jar how_article.jar
