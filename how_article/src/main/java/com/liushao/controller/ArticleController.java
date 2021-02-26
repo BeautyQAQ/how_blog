@@ -26,7 +26,7 @@ import com.liushao.entity.StatusCode;
 @Api(tags = "文章模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/article/article")
+@RequestMapping("/article")
 public class ArticleController {
 
 	@Autowired
@@ -37,7 +37,7 @@ public class ArticleController {
 	 * @return
 	 */
 	@ApiOperation(value = "查询全部文章数据")
-	@RequestMapping(method= RequestMethod.GET)
+	@RequestMapping(value = "/article", method= RequestMethod.GET)
 	public Result findAll(){
 		return new Result(true,StatusCode.OK,"查询成功",articleService.findAll());
 	}

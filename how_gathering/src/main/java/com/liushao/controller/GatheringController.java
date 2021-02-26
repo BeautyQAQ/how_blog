@@ -28,7 +28,7 @@ import com.liushao.service.GatheringService;
 @Api(tags = "活动模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/gathering/gathering")
+@RequestMapping("/gathering")
 public class GatheringController {
 
 	@Autowired
@@ -114,8 +114,5 @@ public class GatheringController {
 		gatheringService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
-
-
-	//git提交演示
 
 }

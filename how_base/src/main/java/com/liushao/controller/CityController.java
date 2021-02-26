@@ -27,7 +27,7 @@ import com.liushao.service.CityService;
 @Api(tags = "城市模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/base/city")
+@RequestMapping("/base")
 public class CityController {
 
 	@Autowired
@@ -37,7 +37,7 @@ public class CityController {
 	 * 查询全部数据
 	 */
 	@ApiOperation(value = "查询全部城市数据")
-	@RequestMapping(method= RequestMethod.GET)
+	@RequestMapping(value = "/city", method= RequestMethod.GET)
 	public Result findAll(){
 		return new Result(true, StatusCode.OK,"查询成功",cityService.findAll());
 	}
@@ -48,7 +48,7 @@ public class CityController {
 	 * @return
 	 */
 	@ApiOperation(value = "根据id查询数据")
-	@RequestMapping(value="/{id}",method= RequestMethod.GET)
+	@RequestMapping(value="/city/{id}",method= RequestMethod.GET)
 	public Result findById(@PathVariable String id){
 		return new Result(true,StatusCode.OK,"查询成功",cityService.findById(id));
 	}
@@ -62,7 +62,7 @@ public class CityController {
 	 * @return 分页结果
 	 */
 	@ApiOperation(value = "分页+条件查询")
-	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
+	@RequestMapping(value="/city/search/{page}/{size}",method=RequestMethod.POST)
 	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
 		Page<City> pageList = cityService.findSearch(searchMap, page, size);
 		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<City>(pageList.getTotalElements(), pageList.getContent()) );
@@ -74,7 +74,7 @@ public class CityController {
      * @return
      */
 	@ApiOperation(value = "条件查询")
-    @RequestMapping(value="/search",method = RequestMethod.POST)
+    @RequestMapping(value="/city/search",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map searchMap){
         return new Result(true,StatusCode.OK,"查询成功",cityService.findSearch(searchMap));
     }
@@ -84,7 +84,7 @@ public class CityController {
 	 * @param city
 	 */
 	@ApiOperation(value = "增加")
-	@RequestMapping(method=RequestMethod.POST)
+	@RequestMapping(value = "/city", method=RequestMethod.POST)
 	public Result add(@RequestBody City city  ){
 		cityService.add(city);
 		return new Result(true,StatusCode.OK,"增加成功");
@@ -95,7 +95,7 @@ public class CityController {
 	 * @param city
 	 */
 	@ApiOperation(value = "修改")
-	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
+	@RequestMapping(value="/city/{id}",method= RequestMethod.PUT)
 	public Result update(@RequestBody City city, @PathVariable String id ){
 		city.setId(id);
 		cityService.update(city);		
@@ -107,7 +107,7 @@ public class CityController {
 	 * @param id
 	 */
 	@ApiOperation(value = "删除")
-	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
+	@RequestMapping(value="/city/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
 		cityService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");

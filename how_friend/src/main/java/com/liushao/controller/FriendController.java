@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Api(tags = "交友模块")
 @RestController
-@RequestMapping("/friend/friend")
+@RequestMapping("/friend")
 public class FriendController {
     @Autowired
     private FriendService friendService;

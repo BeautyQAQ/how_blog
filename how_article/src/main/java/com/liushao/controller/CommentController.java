@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "评论模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/article/comment")
+@RequestMapping("/article")
 public class CommentController {
 
     @Autowired
@@ -24,7 +24,7 @@ public class CommentController {
      * @return
      */
     @ApiOperation(value = "添加评论")
-    @RequestMapping(method= RequestMethod.POST)
+    @RequestMapping(value = "/comment", method= RequestMethod.POST)
     public Result save(@RequestBody Comment comment){
         commentService.add(comment);
         return new Result(true, StatusCode.OK, "提交成功 ");
@@ -35,7 +35,7 @@ public class CommentController {
      * @param id
      */
     @ApiOperation(value = "删除评论")
-    @RequestMapping(value="/{id}",method=RequestMethod.DELETE)
+    @RequestMapping(value="/comment/{id}",method=RequestMethod.DELETE)
     public Result deleteById(@PathVariable String id ){
         commentService.deleteById(id);
         return new Result(true,StatusCode.OK,"删除成功");
@@ -45,7 +45,7 @@ public class CommentController {
      * 根据文章ID查询评论列表
      */
     @ApiOperation(value = "根据文章id查询评论列表")
-    @RequestMapping(value="/article/{articleid}",method= RequestMethod.GET)
+    @RequestMapping(value="/comment/article/{articleid}",method= RequestMethod.GET)
     public Result findByArticleid(@PathVariable String articleid){
         return new Result(true, StatusCode.OK, "查询成功", commentService.findByArticleid(articleid));
     }

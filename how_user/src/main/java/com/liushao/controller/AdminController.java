@@ -33,7 +33,7 @@ import com.liushao.entity.StatusCode;
 @Api(tags = "Admin管理员模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/user/admin")
+@RequestMapping("/user")
 public class AdminController {
 
 	@Autowired
@@ -46,7 +46,7 @@ public class AdminController {
 	 * 查询全部数据
 	 */
 	@ApiOperation(value = "查询全部管理员数据")
-	@RequestMapping(method= RequestMethod.GET)
+	@RequestMapping(value = "/admin", method= RequestMethod.GET)
 	public Result findAll(){
 		return new Result(true,StatusCode.OK,"查询成功",adminService.findAll());
 	}
@@ -56,7 +56,7 @@ public class AdminController {
 	 * @param id ID
 	 */
 	@ApiOperation(value = "根据id查询数据")
-	@RequestMapping(value="/{id}",method= RequestMethod.GET)
+	@RequestMapping(value="/admin/{id}",method= RequestMethod.GET)
 	public Result findById(@PathVariable String id){
 		return new Result(true,StatusCode.OK,"查询成功",adminService.findById(id));
 	}
@@ -70,7 +70,7 @@ public class AdminController {
 	 * @return 分页结果
 	 */
 	@ApiOperation(value = "分页+条件查询")
-	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
+	@RequestMapping(value="/admin/search/{page}/{size}",method=RequestMethod.POST)
 	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
 		Page<Admin> pageList = adminService.findSearch(searchMap, page, size);
 		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Admin>(pageList.getTotalElements(), pageList.getContent()) );
@@ -81,7 +81,7 @@ public class AdminController {
      * @param searchMap 查询对象
      */
 	@ApiOperation(value = "条件查询")
-    @RequestMapping(value="/search",method = RequestMethod.POST)
+    @RequestMapping(value="/admin/search",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map searchMap){
         return new Result(true,StatusCode.OK,"查询成功",adminService.findSearch(searchMap));
     }
@@ -91,7 +91,7 @@ public class AdminController {
 	 * @param admin 管理员
 	 */
 	@ApiOperation(value = "增加管理员")
-	@RequestMapping(method=RequestMethod.POST)
+	@RequestMapping(value = "/admin", method=RequestMethod.POST)
 	public Result add(@RequestBody Admin admin  ){
 		adminService.add(admin);
 		return new Result(true,StatusCode.OK,"增加成功");
@@ -102,7 +102,7 @@ public class AdminController {
 	 * @param admin 修改管理员
 	 */
 	@ApiOperation(value = "修改管理员")
-	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
+	@RequestMapping(value="/admin/{id}",method= RequestMethod.PUT)
 	public Result update(@RequestBody Admin admin, @PathVariable String id ){
 		admin.setId(id);
 		adminService.update(admin);		
@@ -114,7 +114,7 @@ public class AdminController {
 	 * @param id 管理员ID
 	 */
 	@ApiOperation(value = "删除管理员")
-	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
+	@RequestMapping(value="/admin/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
 		adminService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
@@ -124,7 +124,7 @@ public class AdminController {
 	 * 管理员用户登陆
 	 */
 	@ApiOperation(value = "管理员登录")
-	@RequestMapping(value="/login",method=RequestMethod.POST)
+	@RequestMapping(value="/admin/login",method=RequestMethod.POST)
 	public Result login(@RequestBody Map<String,String> loginMap){
 		Admin admin = adminService.findByLoginnameAndPassword(loginMap.get("loginname"), loginMap.get("password"));
 		if(admin!=null){
@@ -146,7 +146,7 @@ public class AdminController {
 	 * @return result
 	 */
 	@ApiOperation(value = "获取管理员信息")
-	@RequestMapping(value="/info",method=RequestMethod.GET)
+	@RequestMapping(value="/admin/info",method=RequestMethod.GET)
 	public Result adminInfo(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");	
 		Claims claims = jwtUtil.parseJWT(token);	

@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @Api(tags = "标签模块")
 @RestController
-@RequestMapping("/base/label")
+@RequestMapping("/base")
 public class LabelController {
     @Autowired
     private LabelService labelService;
@@ -27,7 +27,7 @@ public class LabelController {
      * @return
      */
     @ApiOperation(value = "查询全部标签数据")
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/label", method = RequestMethod.GET)
     public Result findAll(){
         return new Result(true, StatusCode.OK,"查询成功",
                 labelService.findAll() );
@@ -38,7 +38,7 @@ public class LabelController {
      * @return
      */
     @ApiOperation(value = "根据id数据")
-    @RequestMapping(value="/{id}",method = RequestMethod.GET)
+    @RequestMapping(value="/label/{id}",method = RequestMethod.GET)
     public Result findById(@PathVariable String id){
         return new Result(true,StatusCode.OK,"查询成功",labelService.findById(id));
     }
@@ -49,7 +49,7 @@ public class LabelController {
      * @return
      */
     @ApiOperation(value = "增加标签")
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/label", method = RequestMethod.POST)
     public Result add( @RequestBody Label label){
         labelService.add(label);
         return new Result(true,StatusCode.OK,"增加成功");
@@ -60,7 +60,7 @@ public class LabelController {
      * @return
      */
     @ApiOperation(value = "修改标签")
-    @RequestMapping(value="/{id}" ,method = RequestMethod.PUT)
+    @RequestMapping(value="/label/{id}" ,method = RequestMethod.PUT)
     public Result update( @RequestBody Label label,@PathVariable String
             id){
         label.setId(id);
@@ -73,7 +73,7 @@ public class LabelController {
      * @return
      */
     @ApiOperation(value = "删除标签")
-    @RequestMapping(value="/{id}" ,method = RequestMethod.DELETE)
+    @RequestMapping(value="/label/{id}" ,method = RequestMethod.DELETE)
     public Result deleteById(@PathVariable String id){
         labelService.deleteById(id);
         return new Result(true,StatusCode.OK,"删除成功");
@@ -85,7 +85,7 @@ public class LabelController {
      * @return
      */
     @ApiOperation(value = "条件查询")
-    @RequestMapping(value="/search",method = RequestMethod.POST)
+    @RequestMapping(value="/label/search",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map searchMap){
         return new Result(true,StatusCode.OK,"查询成 功",labelService.findSearch(searchMap));
     }
@@ -98,7 +98,7 @@ public class LabelController {
      * @return
      */
     @ApiOperation(value = "分页+条件查询")
-    @RequestMapping(value="/search/{page}/{size}",method = RequestMethod.POST)
+    @RequestMapping(value="/label/search/{page}/{size}",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map searchMap
             ,@PathVariable int page,@PathVariable int size ){
         Page pageList= labelService.findSearch(searchMap,page,size);

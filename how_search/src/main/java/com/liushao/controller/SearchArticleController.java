@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "文章搜索")
 @RestController
 @CrossOrigin
-@RequestMapping("/search/article")
+@RequestMapping("/search")
 public class SearchArticleController {
     @Autowired
     private SearchArticleService searchArticleService;
 
     @ApiOperation(value = "在es保存文章")
-    @RequestMapping(method= RequestMethod.POST)
+    @RequestMapping(value = "/article", method= RequestMethod.POST)
     public Result save(@RequestBody Article article){
         searchArticleService.add(article);
         return new Result(true, StatusCode.OK, "操作成功");
@@ -36,7 +36,7 @@ public class SearchArticleController {
      * @param size 页面大小
      */
     @ApiOperation(value = "文章搜索")
-    @RequestMapping(value="/{keywords}/{page}/{size}",method= RequestMethod.GET)
+    @RequestMapping(value="/article/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByTitleLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Article> articlePage = searchArticleService.findByTitleLike(keywords,page,size);
         return new Result(true, StatusCode.OK, "查询成功", new PageResult<Article>(articlePage.getTotalElements(), articlePage.getContent()));
