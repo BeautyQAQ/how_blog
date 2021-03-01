@@ -20,6 +20,7 @@ import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 /**
  * 控制器层
+ * 前缀 /article
  * @author Administrator
  *
  */
@@ -37,7 +38,7 @@ public class ArticleController {
 	 * @return
 	 */
 	@ApiOperation(value = "查询全部文章数据")
-	@RequestMapping(value = "/article", method= RequestMethod.GET)
+	@RequestMapping(method= RequestMethod.GET)
 	public Result findAll(){
 		return new Result(true,StatusCode.OK,"查询成功",articleService.findAll());
 	}

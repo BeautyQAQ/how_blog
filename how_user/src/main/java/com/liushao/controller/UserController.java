@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 控制器层
+ * 前缀 /user
  * @author Administrator
  *
  */
@@ -47,7 +48,7 @@ public class UserController {
 	 * 查询全部数据
 	 */
 	@ApiOperation(value = "查询全部数据")
-	@RequestMapping(value = "/user", method= RequestMethod.GET)
+	@RequestMapping(method= RequestMethod.GET)
 	public Result findAll(){
 		return new Result(true, StatusCode.OK,"查询成功",userService.findAll());
 	}
@@ -57,7 +58,7 @@ public class UserController {
 	 * @param id ID
 	 */
 	@ApiOperation(value = "根据ID查询")
-	@RequestMapping(value="/user/{id}",method= RequestMethod.GET)
+	@RequestMapping(value="/{id}",method= RequestMethod.GET)
 	public Result findById(@PathVariable String id){
 		return new Result(true,StatusCode.OK,"查询成功",userService.findById(id));
 	}
@@ -71,7 +72,7 @@ public class UserController {
 	 * @return 分页结果
 	 */
 	@ApiOperation(value = "分页+条件查询")
-	@RequestMapping(value="/user/search/{page}/{size}",method=RequestMethod.POST)
+	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
 	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
 		Page<User> pageList = userService.findSearch(searchMap, page, size);
 		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<User>(pageList.getTotalElements(), pageList.getContent()) );
@@ -82,7 +83,7 @@ public class UserController {
      * @param searchMap 查询条件
      */
 	@ApiOperation(value = "条件查询")
-    @RequestMapping(value="/user/search",method = RequestMethod.POST)
+    @RequestMapping(value="/search",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map searchMap){
         return new Result(true,StatusCode.OK,"查询成功",userService.findSearch(searchMap));
     }
@@ -92,7 +93,7 @@ public class UserController {
 	 * @param user 用户
 	 */
 	@ApiOperation(value = "增加用户")
-	@RequestMapping(value = "/user", method=RequestMethod.POST)
+	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody User user  ){
 		userService.add(user);
 		return new Result(true,StatusCode.OK,"增加成功");
@@ -103,7 +104,7 @@ public class UserController {
 	 * @param user 用户
 	 */
 	@ApiOperation(value = "修改用户")
-	@RequestMapping(value="/user/{id}",method= RequestMethod.PUT)
+	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
 	public Result update(@RequestBody User user, @PathVariable String id ){
 		user.setId(id);
 		userService.update(user);		
@@ -115,7 +116,7 @@ public class UserController {
 	 * @param id userid
 	 */
 	@ApiOperation(value = "删除用户")
-	@RequestMapping(value="/user/{id}",method= RequestMethod.DELETE)
+	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id){
 		Claims claims=(Claims) request.getAttribute("admin_claims");
 		if(claims==null){
@@ -130,7 +131,7 @@ public class UserController {
 	 * @param mobile 手机号码
 	 */
 	@ApiOperation(value = "给指定手机号发送短信验证码")
-	@RequestMapping(value="/user/sendsms/{mobile}",method=RequestMethod.POST)
+	@RequestMapping(value="/sendsms/{mobile}",method=RequestMethod.POST)
 	public Result sendsms(@PathVariable String mobile ){
 		userService.sendSms(mobile);
 		return new Result(true,StatusCode.OK,"发送成功");
@@ -141,7 +142,7 @@ public class UserController {
 	 * @param user 用户
 	 */
 	@ApiOperation(value = "用户注册")
-	@RequestMapping(value="/user/register/{code}",method=RequestMethod.POST)
+	@RequestMapping(value="/register/{code}",method=RequestMethod.POST)
 	public Result register( @RequestBody User user ,@PathVariable String code){
 		userService.add(user,code);
 		return new Result(true,StatusCode.OK,"注册成功");
@@ -151,7 +152,7 @@ public class UserController {
 	 * 用户登陆
 	 */
 	@ApiOperation(value = "登录")
-	@RequestMapping(value="/user/login",method=RequestMethod.POST)
+	@RequestMapping(value="/login",method=RequestMethod.POST)
 	public Result login(@RequestBody Map<String,String> loginMap){
 		User user = userService.findByMobileAndPassword(loginMap.get("mobile"),loginMap.get("password"));
 		if(user!=null){
@@ -174,7 +175,7 @@ public class UserController {
 	 * @param x 数量
 	 */
 	@ApiOperation(value = "增加粉丝数")
-	@RequestMapping(value="/user/incfans/{userid}/{x}",method=RequestMethod.POST)
+	@RequestMapping(value="/incfans/{userid}/{x}",method=RequestMethod.POST)
 	public void incFanscount(@PathVariable String userid,@PathVariable int x){
 		userService.incFanscount(userid,x);
 	}
@@ -185,7 +186,7 @@ public class UserController {
 	 * @param x 数量
 	 */
 	@ApiOperation(value = "增加关注数量")
-	@RequestMapping(value="/user/incfollow/{userid}/{x}",method=RequestMethod.POST)
+	@RequestMapping(value="/incfollow/{userid}/{x}",method=RequestMethod.POST)
 	public void incFollowcount(@PathVariable String userid,@PathVariable int x){
 		userService.incFollowcount(userid,x);
 	}

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * 前缀 /friend
  * @author huangshen
  */
 @Api(tags = "交友模块")

@@ -22,13 +22,14 @@ import com.liushao.service.ReplyService;
 
 /**
  * 控制器层
+ * 前缀 /qa
  * @author Administrator
  *
  */
 @Api(tags = "回答")
 @RestController
 @CrossOrigin
-@RequestMapping("/qa")
+@RequestMapping("/reply")
 public class ReplyController {
 
 	@Autowired
@@ -38,7 +39,7 @@ public class ReplyController {
 	 * 查询全部数据
 	 */
 	@ApiOperation(value = "查询全部回答数据")
-	@RequestMapping(value = "/reply", method= RequestMethod.GET)
+	@RequestMapping(method= RequestMethod.GET)
 	public Result findAll(){
 		return new Result(true, StatusCode.OK,"查询成功",replyService.findAll());
 	}
@@ -49,7 +50,7 @@ public class ReplyController {
 	 * @return
 	 */
 	@ApiOperation(value = "根据id查询回答")
-	@RequestMapping(value="/reply/{id}",method= RequestMethod.GET)
+	@RequestMapping(value="/{id}",method= RequestMethod.GET)
 	public Result findById(@PathVariable String id){
 		return new Result(true,StatusCode.OK,"查询成功",replyService.findById(id));
 	}
@@ -63,7 +64,7 @@ public class ReplyController {
 	 * @return 分页结果
 	 */
 	@ApiOperation(value = "分页+条件查询")
-	@RequestMapping(value="/reply/search/{page}/{size}",method=RequestMethod.POST)
+	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
 	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
 		Page<Reply> pageList = replyService.findSearch(searchMap, page, size);
 		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Reply>(pageList.getTotalElements(), pageList.getContent()) );
@@ -75,7 +76,7 @@ public class ReplyController {
      * @return
      */
 	@ApiOperation(value = "条件查询")
-    @RequestMapping(value="/reply/search",method = RequestMethod.POST)
+    @RequestMapping(value="/search",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map searchMap){
         return new Result(true,StatusCode.OK,"查询成功",replyService.findSearch(searchMap));
     }
@@ -85,7 +86,7 @@ public class ReplyController {
 	 * @param reply 回答
 	 */
 	@ApiOperation(value = "添加回答")
-	@RequestMapping(value = "/reply", method=RequestMethod.POST)
+	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Reply reply  ){
 		replyService.add(reply);
 		return new Result(true,StatusCode.OK,"增加成功");
@@ -96,7 +97,7 @@ public class ReplyController {
 	 * @param reply 回答
 	 */
 	@ApiOperation(value = "修改回答")
-	@RequestMapping(value="/reply/{id}",method= RequestMethod.PUT)
+	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
 	public Result update(@RequestBody Reply reply, @PathVariable String id ){
 		reply.setId(id);
 		replyService.update(reply);		
@@ -108,7 +109,7 @@ public class ReplyController {
 	 * @param id 回答id
 	 */
 	@ApiOperation(value = "删除回答")
-	@RequestMapping(value="/reply/{id}",method= RequestMethod.DELETE)
+	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
 		replyService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");

@@ -22,6 +22,7 @@ import com.liushao.service.GatheringService;
 
 /**
  * 控制器层
+ * 前缀 /gathering
  * @author Administrator
  *
  */

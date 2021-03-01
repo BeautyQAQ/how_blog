@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * 前缀 /spit
  * @author huangshen
  */
 @Api(tags = "吐槽模块")
@@ -35,7 +36,7 @@ public class SpitController {
      * 查询全部数据
      */
     @ApiOperation(value = "查询全部吐槽数据")
-    @RequestMapping(value = "/spit", method= RequestMethod.GET)
+    @RequestMapping(method= RequestMethod.GET)
     public Result findAll(){
         return new Result(true, StatusCode.OK,"查询成功",spitService.findAll());
     }
@@ -53,7 +54,7 @@ public class SpitController {
      * @param spit 吐槽
      */
     @ApiOperation(value = "增加吐槽")
-    @RequestMapping(value = "/spit", method=RequestMethod.POST)
+    @RequestMapping(method=RequestMethod.POST)
     public Result add(@RequestBody Spit spit ){
         spitService.add(spit);
         return new Result(true,StatusCode.OK,"增加成功");
@@ -63,7 +64,7 @@ public class SpitController {
      * @param spit 修改吐槽
      */
     @ApiOperation(value = "修改吐槽")
-    @RequestMapping(value="/spit/{id}",method=RequestMethod.PUT)
+    @RequestMapping(value="/{id}",method=RequestMethod.PUT)
     public Result update(@RequestBody Spit spit,@PathVariable String id )
     {
         spit.set_id(id);
@@ -75,7 +76,7 @@ public class SpitController {
      * @param id 吐槽id
      */
     @ApiOperation(value = "删除吐槽")
-    @RequestMapping(value="/spit/{id}",method=RequestMethod.DELETE)
+    @RequestMapping(value="/{id}",method=RequestMethod.DELETE)
     public Result deleteById(@PathVariable String id ){
         spitService.deleteById(id);
         return new Result(true,StatusCode.OK,"删除成功");
@@ -86,7 +87,7 @@ public class SpitController {
      * @param size 页面大小
      */
     @ApiOperation(value = "根据上级id查询吐槽分页数据")
-    @RequestMapping(value="/spit/comment/{parentId}/{page}/{size}",method=RequestMethod.GET)
+    @RequestMapping(value="/comment/{parentId}/{page}/{size}",method=RequestMethod.GET)
     public Result findByParentid(@PathVariable String parentId, @PathVariable int page,@PathVariable int size){
         Page<Spit> pageList = spitService.findByParentid(parentId,page, size);
         return new Result(true,StatusCode.OK,"查询成功",new PageResult<Spit>(pageList.getTotalElements(), pageList.getContent() ) );
@@ -97,7 +98,7 @@ public class SpitController {
      * @param id 吐槽id
      */
     @ApiOperation(value = "点赞")
-    @RequestMapping(value="/spit/thumbup/{id}",method=RequestMethod.PUT)
+    @RequestMapping(value="/thumbup/{id}",method=RequestMethod.PUT)
     public Result updateThumbup(@PathVariable String id){
         //判断用户是否点过赞
         Claims claims=(Claims)request.getAttribute("user_claims");

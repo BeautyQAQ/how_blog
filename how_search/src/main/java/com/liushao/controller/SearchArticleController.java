@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * 前缀 /search
  * @author huangshen
  */
 @Api(tags = "文章搜索")

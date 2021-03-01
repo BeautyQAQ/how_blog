@@ -21,13 +21,14 @@ import com.liushao.service.ColumnService;
 
 /**
  * 控制器层
+ * 前缀 /article
  * @author Administrator
  *
  */
 @Api(tags = "专栏模块")
 @RestController
 @CrossOrigin
-@RequestMapping("/article")
+@RequestMapping("/column")
 public class ColumnController {
 
 	@Autowired
@@ -39,7 +40,7 @@ public class ColumnController {
 	 * @return
 	 */
 	@ApiOperation(value = "查询全部专栏数据")
-	@RequestMapping(value = "/column", method= RequestMethod.GET)
+	@RequestMapping(method= RequestMethod.GET)
 	public Result findAll(){
 		return new Result(true, StatusCode.OK,"查询成功",columnService.findAll());
 	}
@@ -50,7 +51,7 @@ public class ColumnController {
 	 * @return
 	 */
 	@ApiOperation(value = "根据id查询数据")
-	@RequestMapping(value="/column/{id}",method= RequestMethod.GET)
+	@RequestMapping(value="/{id}",method= RequestMethod.GET)
 	public Result findById(@PathVariable String id){
 		return new Result(true,StatusCode.OK,"查询成功",columnService.findById(id));
 	}
@@ -64,7 +65,7 @@ public class ColumnController {
 	 * @return 分页结果
 	 */
 	@ApiOperation(value = "分页+条件查询")
-	@RequestMapping(value="/column/search/{page}/{size}",method=RequestMethod.POST)
+	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
 	public Result findSearch(@RequestBody Map<String, Object> searchMap , @PathVariable int page, @PathVariable int size){
 		Page<Column> pageList = columnService.findSearch(searchMap, page, size);
 		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Column>(pageList.getTotalElements(), pageList.getContent()) );
@@ -76,7 +77,7 @@ public class ColumnController {
      * @return
      */
 	@ApiOperation(value = "条件查询")
-    @RequestMapping(value="/column/search",method = RequestMethod.POST)
+    @RequestMapping(value="/search",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map<String, Object> searchMap){
         return new Result(true,StatusCode.OK,"查询成功",columnService.findSearch(searchMap));
     }
@@ -86,7 +87,7 @@ public class ColumnController {
 	 * @param column
 	 */
 	@ApiOperation(value = "添加频道")
-	@RequestMapping(value = "/column", method=RequestMethod.POST)
+	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Column column  ){
 		columnService.add(column);
 		return new Result(true,StatusCode.OK,"增加成功");
@@ -97,7 +98,7 @@ public class ColumnController {
 	 * @param column
 	 */
 	@ApiOperation(value = "修改频道")
-	@RequestMapping(value="/column/{id}",method= RequestMethod.PUT)
+	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
 	public Result update(@RequestBody Column column, @PathVariable String id ){
 		column.setId(id);
 		columnService.update(column);		
@@ -109,7 +110,7 @@ public class ColumnController {
 	 * @param id
 	 */
 	@ApiOperation(value = "删除频道")
-	@RequestMapping(value="/column/{id}",method= RequestMethod.DELETE)
+	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
 		columnService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
