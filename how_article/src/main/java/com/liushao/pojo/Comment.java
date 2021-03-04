@@ -1,5 +1,6 @@
 package com.liushao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -33,7 +34,7 @@ public class Comment implements Serializable {
     private String parentid;
 
     //这里暂时不确定是否这么使用注解，因为这里的数据来自mongoDB
-    //@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     @ApiModelProperty(value = "发布时间")
     private Date publishdate;
 
