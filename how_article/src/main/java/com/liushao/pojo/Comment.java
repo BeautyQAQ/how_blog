@@ -38,12 +38,35 @@ public class Comment implements Serializable {
     @ApiModelProperty(value = "发布时间")
     private Date publishdate;
 
+    @JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @ApiModelProperty(value = "审核时间")
+    private Date checktime;
+
+    @ApiModelProperty(value = "状态")
+    private String state;
+
     public String get_id() {
         return _id;
     }
 
     public void set_id(String _id) {
         this._id = _id;
+    }
+
+    public Date getChecktime() {
+        return checktime;
+    }
+
+    public void setChecktime(Date checktime) {
+        this.checktime = checktime;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getArticleid() {
