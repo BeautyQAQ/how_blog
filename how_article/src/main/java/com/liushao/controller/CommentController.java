@@ -72,4 +72,16 @@ public class CommentController {
     public Result findByArticleid(@PathVariable String articleid){
         return new Result(true, StatusCode.OK, "查询成功", commentService.findByArticleid(articleid));
     }
+
+    /**
+     * 审核
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "审核评论")
+    @RequestMapping(value="/examine/{id}",method=RequestMethod.PUT)
+    public Result examine(@PathVariable String id){
+        commentService.examine(id);
+        return new Result(true, StatusCode.OK, "审核成功！");
+    }
 }
