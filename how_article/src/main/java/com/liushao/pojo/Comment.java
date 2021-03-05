@@ -24,6 +24,9 @@ public class Comment implements Serializable {
     @ApiModelProperty(value = "文章id")
     private String articleid;
 
+    @ApiModelProperty(value = "文章标题")
+    private String article;
+
     @ApiModelProperty(value = "评论内容")
     private String content;
 
@@ -55,6 +58,14 @@ public class Comment implements Serializable {
 
     public Date getChecktime() {
         return checktime;
+    }
+
+    public String getArticle() {
+        return article;
+    }
+
+    public void setArticle(String article) {
+        this.article = article;
     }
 
     public void setChecktime(Date checktime) {

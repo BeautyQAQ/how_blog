@@ -61,6 +61,9 @@ public class CommentService {
         if(StringUtils.isNotEmpty((String)searchMap.get("articleid"))){
             comment.setArticleid((String)searchMap.get("articleid"));
         }
+        if(StringUtils.isNotEmpty((String)searchMap.get("article"))){
+            comment.setArticle((String)searchMap.get("article"));
+        }
         if(StringUtils.isNotEmpty((String)searchMap.get("content"))){
             comment.setContent((String)searchMap.get("content"));
         }
@@ -79,7 +82,8 @@ public class CommentService {
 
         //条件匹配器 如果不设置匹配器默认精确匹配
         ExampleMatcher exampleMatcher = ExampleMatcher.matching()
-                .withMatcher("content",ExampleMatcher.GenericPropertyMatchers.contains());
+                .withMatcher("content",ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("article",ExampleMatcher.GenericPropertyMatchers.contains());
                 //.withMatcher("processStatus",ExampleMatcher.GenericPropertyMatchers.exact());
 
         //定义example条件对象
