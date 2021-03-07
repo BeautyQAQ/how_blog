@@ -190,4 +190,14 @@ public class UserController {
 	public void incFollowcount(@PathVariable String userid,@PathVariable int x){
 		userService.incFollowcount(userid,x);
 	}
+
+	/**
+	 * 根据ID查询用户名
+	 * @param id ID
+	 */
+	@ApiOperation(value = "根据ID查询用户名")
+	@RequestMapping(value="/nickname/{id}",method= RequestMethod.GET)
+	public Result findNicknameById(@PathVariable String id){
+		return new Result(true,StatusCode.OK,"查询成功",userService.findById(id).getNickname());
+	}
 }

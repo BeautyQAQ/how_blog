@@ -1,7 +1,6 @@
 package com.liushao.controller;
-import java.util.List;
-import java.util.Map;
 
+import java.util.Map;
 import com.liushao.client.LabelClient;
 import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;

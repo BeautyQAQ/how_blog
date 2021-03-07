@@ -3,9 +3,9 @@ package com.liushao.controller;
 import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
-import com.liushao.pojo.Article;
 import com.liushao.pojo.Comment;
 import com.liushao.service.CommentService;
+import com.liushao.vo.CommentVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +37,8 @@ public class CommentController {
     @ApiOperation(value = "分页+多条件查询")
     @RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
     public Result findSearch(@RequestBody Map<String, Object> searchMap , @PathVariable int page, @PathVariable int size){
-        Page<Comment> pageList = commentService.findSearch(searchMap, page, size);
-        return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Comment>(pageList.getTotalElements(), pageList.getContent()) );
+        Page<CommentVo> pageList = commentService.findSearch(searchMap, page, size);
+        return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<CommentVo>(pageList.getTotalElements(), pageList.getContent()) );
     }
 
     /**
@@ -48,7 +48,7 @@ public class CommentController {
      */
     @ApiOperation(value = "添加评论")
     @RequestMapping(method= RequestMethod.POST)
-    public Result save(@RequestBody Comment comment){
+    public Result save(@RequestBody com.liushao.pojo.Comment comment){
         commentService.add(comment);
         return new Result(true, StatusCode.OK, "提交成功 ");
     }

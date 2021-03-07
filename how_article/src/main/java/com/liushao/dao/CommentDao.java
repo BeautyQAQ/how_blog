@@ -9,7 +9,7 @@ import java.util.List;
  * 评论Dao
  * @author huangshen
  */
-public interface CommentDao  extends MongoRepository<Comment, String> {
+public interface CommentDao extends MongoRepository<Comment, String> {
     /**
      * 根据文章ID查询评论列表
      * @param articleid

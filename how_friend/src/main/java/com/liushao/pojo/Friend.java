@@ -22,7 +22,7 @@ public class Friend implements Serializable {
     @Id
     private String userid;
 
-    @ApiModelProperty(value = "friendid")
+    @ApiModelProperty(value = "friendid", required = true)
     @Id
     private String friendid;
 

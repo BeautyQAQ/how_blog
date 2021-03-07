@@ -3,6 +3,7 @@ package com.liushao.pojo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,6 +14,7 @@ import java.io.Serializable;
  * @author Administrator
  *
  */
+@Data
 @ApiModel(value = "专栏")
 @Entity
 @Table(name="tb_column")
@@ -24,7 +26,7 @@ public class Column implements Serializable{
 	@Id
 	private String id;
 
-	@ApiModelProperty(value = "专栏名称")
+	@ApiModelProperty(value = "专栏名称", required = true)
 	private String name;
 
 	@ApiModelProperty(value = "专栏简介")
@@ -43,57 +45,4 @@ public class Column implements Serializable{
 
 	@ApiModelProperty(value = "状态")
 	private String state;
-
-	
-	public String getId() {		
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getName() {		
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSummary() {		
-		return summary;
-	}
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public String getUserid() {		
-		return userid;
-	}
-	public void setUserid(String userid) {
-		this.userid = userid;
-	}
-
-	public java.util.Date getCreatetime() {		
-		return createtime;
-	}
-	public void setCreatetime(java.util.Date createtime) {
-		this.createtime = createtime;
-	}
-
-	public java.util.Date getChecktime() {		
-		return checktime;
-	}
-	public void setChecktime(java.util.Date checktime) {
-		this.checktime = checktime;
-	}
-
-	public String getState() {		
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
-	}
-
-
-	
 }

@@ -2,6 +2,7 @@ package com.liushao.pojo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import java.io.Serializable;
  * @author Administrator
  *
  */
+@Data
 @ApiModel(value = "Admin用户")
 @Entity
 @Table(name="tb_admin")
@@ -21,42 +23,12 @@ public class Admin implements Serializable{
 	@Id
 	private String id;
 
-	@ApiModelProperty(value = "登录名称")
+	@ApiModelProperty(value = "登录名称", required = true)
 	private String loginname;
 
-	@ApiModelProperty(value = "密码")
+	@ApiModelProperty(value = "密码", required = true)
 	private String password;
 
 	@ApiModelProperty(value = "状态")
 	private String state;
-
-	
-	public String getId() {		
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getLoginname() {		
-		return loginname;
-	}
-	public void setLoginname(String loginname) {
-		this.loginname = loginname;
-	}
-
-	public String getPassword() {		
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getState() {		
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
-	}
-
 }

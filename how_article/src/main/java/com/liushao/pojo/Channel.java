@@ -2,6 +2,7 @@ package com.liushao.pojo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import java.io.Serializable;
  * @author Administrator
  *
  */
+@Data
 @ApiModel(value = "频道")
 @Entity
 @Table(name="tb_channel")
@@ -23,7 +25,7 @@ public class Channel implements Serializable{
 	@Id
 	private String id;
 
-	@ApiModelProperty(value = "频道名称")
+	@ApiModelProperty(value = "频道名称", required = true)
 	private String name;
 
 	@ApiModelProperty(value = "状态")

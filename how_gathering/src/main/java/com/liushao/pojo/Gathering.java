@@ -3,6 +3,7 @@ package com.liushao.pojo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,6 +14,7 @@ import java.io.Serializable;
  * @author Administrator
  *
  */
+@Data
 @ApiModel(value = "活动")
 @Entity
 @Table(name="tb_gathering")
@@ -22,7 +24,7 @@ public class Gathering implements Serializable{
 	@Id
 	private String id;
 
-	@ApiModelProperty(value = "活动名称")
+	@ApiModelProperty(value = "活动名称", required = true)
 	private String name;
 
 	@ApiModelProperty(value = "大会简介")
@@ -38,17 +40,17 @@ public class Gathering implements Serializable{
 	private String image;
 
 	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-	@ApiModelProperty(value = "开始时间")
+	@ApiModelProperty(value = "开始时间", required = true)
 	private java.util.Date starttime;
 
 	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-	@ApiModelProperty(value = "截止时间")
+	@ApiModelProperty(value = "截止时间", required = true)
 	private java.util.Date endtime;
 
-	@ApiModelProperty(value = "举办地点")
+	@ApiModelProperty(value = "举办地点", required = true)
 	private String address;
 
-	@ApiModelProperty(value = "报名截止")
+	@ApiModelProperty(value = "报名截止", required = true)
 	private java.util.Date enrolltime;
 
 	@ApiModelProperty(value = "是否可见")
@@ -56,92 +58,5 @@ public class Gathering implements Serializable{
 
 	@ApiModelProperty(value = "城市")
 	private String city;
-
-	
-	public String getId() {		
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getName() {		
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSummary() {		
-		return summary;
-	}
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public String getDetail() {		
-		return detail;
-	}
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
-
-	public String getSponsor() {		
-		return sponsor;
-	}
-	public void setSponsor(String sponsor) {
-		this.sponsor = sponsor;
-	}
-
-	public String getImage() {		
-		return image;
-	}
-	public void setImage(String image) {
-		this.image = image;
-	}
-
-	public java.util.Date getStarttime() {		
-		return starttime;
-	}
-	public void setStarttime(java.util.Date starttime) {
-		this.starttime = starttime;
-	}
-
-	public java.util.Date getEndtime() {		
-		return endtime;
-	}
-	public void setEndtime(java.util.Date endtime) {
-		this.endtime = endtime;
-	}
-
-	public String getAddress() {		
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public java.util.Date getEnrolltime() {		
-		return enrolltime;
-	}
-	public void setEnrolltime(java.util.Date enrolltime) {
-		this.enrolltime = enrolltime;
-	}
-
-	public String getState() {		
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
-	}
-
-	public String getCity() {		
-		return city;
-	}
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-
 	
 }
