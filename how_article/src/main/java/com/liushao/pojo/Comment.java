@@ -33,6 +33,9 @@ public class Comment implements Serializable {
     @ApiModelProperty(value = "用户id")
     private String userid;
 
+    @ApiModelProperty(value = "用户名称")
+    private String user;
+
     @ApiModelProperty(value = "父评论id")
     private String parentid;
 
@@ -102,6 +105,14 @@ public class Comment implements Serializable {
 
     public void setUserid(String userid) {
         this.userid = userid;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public String getParentid() {
