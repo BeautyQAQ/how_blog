@@ -14,6 +14,8 @@ public class CommentVo implements Serializable {
 
     private String _id;
 
+    private String id;
+
     private String articleid;
 
     private String content;

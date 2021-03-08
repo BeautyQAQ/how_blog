@@ -105,11 +105,11 @@ public class CommentService {
         ArrayList<CommentVo> commentVos = new ArrayList<>();
         for (Comment commentOne : comments) {
             BeanUtil.copyProperties(commentOne, commentVo);
+            // 设置id，因为mogodb自带的是_id，需要转成id
+            commentVo.setId(commentOne.get_id());
             // 设置文章标题
             commentVo.setArticle(articleService.findById(commentOne.getArticleid()).getTitle());
             // 设置用户名
-            Result nicknameById = userClient.findNicknameById(commentOne.getUserid());
-            System.out.println(nicknameById);
             commentVo.setUser((String)userClient.findNicknameById(commentOne.getUserid()).getData());
             commentVos.add(commentVo);
         }
