@@ -17,6 +17,10 @@ echo '=====结束运行how_friend====='
 
 docker-compose -f how_friend.yml down
 
+#echo '=====结束运行how_gathering====='
+#
+#docker-compose -f how_gathering.yml down
+
 echo '=====结束运行how_gateway_manager====='
 
 docker-compose -f how_gateway_manager.yml down
@@ -40,5 +44,9 @@ docker-compose -f how_spit.yml down
 echo '=====结束运行how_user====='
 
 docker-compose -f how_user.yml down
+
+echo '=====结束运行how_search====='
+
+docker-compose -f how_search.yml down
 
 echo '执行完成 日志目录how_blog/doc/log'
