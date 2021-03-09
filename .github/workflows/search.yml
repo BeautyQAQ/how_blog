@@ -49,6 +49,7 @@ jobs:
         run: |
           echo '=====开始上传镜像====='
           echo '=====开始上传how_search====='
+
           docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_search
 
           echo '=====镜像上传结束====='
