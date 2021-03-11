@@ -1,4 +1,4 @@
-name: Master-Build-Docker-Images-search
+name: Master-Build-Docker-Images-single
 
 on:
   push:
@@ -30,8 +30,8 @@ jobs:
         run: |
 
           echo '=====开始构建镜像====='
-          echo '=====开始构建how_search====='
-          cd how_search
+          echo '=====开始构建how_article====='
+          cd how_article
           mvn docker:build
           cd ..
 
@@ -48,8 +48,8 @@ jobs:
       - name: Push Docker Image
         run: |
           echo '=====开始上传镜像====='
-          echo '=====开始上传how_search====='
+          echo '=====开始上传how_article====='
 
-          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_search
+          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_article
 
           echo '=====镜像上传结束====='
