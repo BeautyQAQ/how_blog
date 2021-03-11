@@ -101,9 +101,10 @@ public class CommentService {
         PageRequest pageRequest =  PageRequest.of(page-1, size);
         Page<Comment> comments = commentDao.findAll(example, pageRequest);
 
-        CommentVo commentVo = new CommentVo();
         ArrayList<CommentVo> commentVos = new ArrayList<>();
         for (Comment commentOne : comments) {
+            // 这个对象new在外面会不能刷新数据，原因未知
+            CommentVo commentVo = new CommentVo();
             BeanUtil.copyProperties(commentOne, commentVo);
             // 设置id，因为mogodb自带的是_id，需要转成id
             commentVo.setId(commentOne.get_id());
