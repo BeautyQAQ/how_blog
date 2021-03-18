@@ -39,7 +39,7 @@ public class ArticleService {
 	private IdWorker idWorker;
 
 	@Autowired
-	private RedisTemplate redisTemplate;
+	private RedisTemplate<String, Object> redisTemplate;
 
 	/**
 	 * 查询全部列表
@@ -145,6 +145,11 @@ public class ArticleService {
 	private Specification<Article> createSpecification(Map<String, Object> searchMap) {
 
 		return new Specification<Article>() {
+
+			/**
+			 *	生成序列化serialVersionUID
+			 */
+			private static final long serialVersionUID = -8343643169154776306L;
 
 			@Override
 			public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

@@ -51,7 +51,7 @@ public class ChannelService {
 	 * @param size
 	 * @return
 	 */
-	public Page<Channel> findSearch(Map whereMap, int page, int size) {
+	public Page<Channel> findSearch(Map<String, String> whereMap, int page, int size) {
 		Specification<Channel> specification = createSpecification(whereMap);
 		PageRequest pageRequest =  PageRequest.of(page-1, size);
 		return channelDao.findAll(specification, pageRequest);
@@ -63,7 +63,7 @@ public class ChannelService {
 	 * @param whereMap
 	 * @return
 	 */
-	public List<Channel> findSearch(Map whereMap) {
+	public List<Channel> findSearch(Map<String, String> whereMap) {
 		Specification<Channel> specification = createSpecification(whereMap);
 		return channelDao.findAll(specification);
 	}
@@ -107,9 +107,14 @@ public class ChannelService {
 	 * @param searchMap
 	 * @return
 	 */
-	private Specification<Channel> createSpecification(Map searchMap) {
+	private Specification<Channel> createSpecification(Map<String, String> searchMap) {
 
 		return new Specification<Channel>() {
+
+			/**
+			 * 生成序列化ID
+			 */
+			private static final long serialVersionUID = 2095653141177783651L;
 
 			@Override
 			public Predicate toPredicate(Root<Channel> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
