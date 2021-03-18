@@ -6,6 +6,9 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 
+/**
+ * @author huangshen
+ */
 @EnableDiscoveryClient
 @EnableCaching
 @SpringBootApplication

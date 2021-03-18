@@ -1,5 +1,10 @@
 package com.liushao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,74 +14,35 @@ import java.io.Serializable;
  * @author Administrator
  *
  */
+@Data
+@ApiModel(value = "专栏")
 @Entity
 @Table(name="tb_column")
 public class Column implements Serializable{
 
 	private static final long serialVersionUID = -5145926516795764886L;
 
+	@ApiModelProperty(value = "ID")
 	@Id
-	private String id;//ID
+	private String id;
 
+	@ApiModelProperty(value = "专栏名称", required = true)
+	private String name;
 
-	
-	private String name;//专栏名称
-	private String summary;//专栏简介
-	private String userid;//用户ID
-	private java.util.Date createtime;//申请日期
-	private java.util.Date checktime;//审核日期
-	private String state;//状态
+	@ApiModelProperty(value = "专栏简介")
+	private String summary;
 
-	
-	public String getId() {		
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
+	@ApiModelProperty(value = "用户ID")
+	private String userid;
 
-	public String getName() {		
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+	@ApiModelProperty(value = "申请日期")
+	private java.util.Date createtime;
 
-	public String getSummary() {		
-		return summary;
-	}
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+	@ApiModelProperty(value = "审核日期")
+	private java.util.Date checktime;
 
-	public String getUserid() {		
-		return userid;
-	}
-	public void setUserid(String userid) {
-		this.userid = userid;
-	}
-
-	public java.util.Date getCreatetime() {		
-		return createtime;
-	}
-	public void setCreatetime(java.util.Date createtime) {
-		this.createtime = createtime;
-	}
-
-	public java.util.Date getChecktime() {		
-		return checktime;
-	}
-	public void setChecktime(java.util.Date checktime) {
-		this.checktime = checktime;
-	}
-
-	public String getState() {		
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
-	}
-
-
-	
+	@ApiModelProperty(value = "状态")
+	private String state;
 }

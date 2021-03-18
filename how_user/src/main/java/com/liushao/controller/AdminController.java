@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.liushao.util.JwtUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,9 +27,11 @@ import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 /**
  * 控制器层
+ * 前缀 /user
  * @author Administrator
  *
  */
+@Api(tags = "Admin管理员模块")
 @RestController
 @CrossOrigin
 @RequestMapping("/admin")
@@ -41,8 +45,8 @@ public class AdminController {
 
 	/**
 	 * 查询全部数据
-	 * @return
 	 */
+	@ApiOperation(value = "查询全部管理员数据")
 	@RequestMapping(method= RequestMethod.GET)
 	public Result findAll(){
 		return new Result(true,StatusCode.OK,"查询成功",adminService.findAll());
@@ -51,8 +55,8 @@ public class AdminController {
 	/**
 	 * 根据ID查询
 	 * @param id ID
-	 * @return
 	 */
+	@ApiOperation(value = "根据id查询数据")
 	@RequestMapping(value="/{id}",method= RequestMethod.GET)
 	public Result findById(@PathVariable String id){
 		return new Result(true,StatusCode.OK,"查询成功",adminService.findById(id));
@@ -66,6 +70,7 @@ public class AdminController {
 	 * @param size 页大小
 	 * @return 分页结果
 	 */
+	@ApiOperation(value = "分页+条件查询")
 	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
 	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
 		Page<Admin> pageList = adminService.findSearch(searchMap, page, size);
@@ -74,9 +79,9 @@ public class AdminController {
 
 	/**
      * 根据条件查询
-     * @param searchMap
-     * @return
+     * @param searchMap 查询对象
      */
+	@ApiOperation(value = "条件查询")
     @RequestMapping(value="/search",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map searchMap){
         return new Result(true,StatusCode.OK,"查询成功",adminService.findSearch(searchMap));
@@ -84,8 +89,9 @@ public class AdminController {
 	
 	/**
 	 * 增加
-	 * @param admin
+	 * @param admin 管理员
 	 */
+	@ApiOperation(value = "增加管理员")
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Admin admin  ){
 		adminService.add(admin);
@@ -94,8 +100,9 @@ public class AdminController {
 	
 	/**
 	 * 修改
-	 * @param admin
+	 * @param admin 修改管理员
 	 */
+	@ApiOperation(value = "修改管理员")
 	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
 	public Result update(@RequestBody Admin admin, @PathVariable String id ){
 		admin.setId(id);
@@ -105,8 +112,9 @@ public class AdminController {
 	
 	/**
 	 * 删除
-	 * @param id
+	 * @param id 管理员ID
 	 */
+	@ApiOperation(value = "删除管理员")
 	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
 		adminService.deleteById(id);
@@ -115,8 +123,8 @@ public class AdminController {
 
 	/**
 	 * 管理员用户登陆
-	 * @return
 	 */
+	@ApiOperation(value = "管理员登录")
 	@RequestMapping(value="/login",method=RequestMethod.POST)
 	public Result login(@RequestBody Map<String,String> loginMap){
 		Admin admin = adminService.findByLoginnameAndPassword(loginMap.get("loginname"), loginMap.get("password"));
@@ -124,8 +132,9 @@ public class AdminController {
 			//生成token
 			String token = jwtUtil.createJWT(admin.getId(), admin.getLoginname(), "admin");
 			Map<String, Object> map=new HashMap<>();
-			map.put("token",token);
-			map.put("name",admin.getLoginname());//登陆名
+			map.put("token","Bearer "+token);
+			//登陆名
+			map.put("name",admin.getLoginname());
 			return new Result(true,StatusCode.OK,"登陆成功",map);
 		}else{
 			return new Result(false,StatusCode.LOGINERROR,"用户名或密码错误");
@@ -133,17 +142,19 @@ public class AdminController {
 	}
 
 	/**
-	 * 获取管理员权限
+	 * 获取管理员信息
 	 * @param request 请求
 	 * @return result
 	 */
-	@GetMapping("/info")	
-	public Result test(HttpServletRequest request) {	
+	@ApiOperation(value = "获取管理员信息")
+	@RequestMapping(value="/info",method=RequestMethod.GET)
+	public Result adminInfo(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");	
 		Claims claims = jwtUtil.parseJWT(token);	
 		Map<String, Object> map=new HashMap<>();
 		map.put("avatar","");
-		map.put("roles",claims.get("roles"));//角色
+		//角色
+		map.put("roles",claims.get("roles"));
 		return new Result(true,StatusCode.OK,"登陆成功",map);
 	}
 

@@ -6,6 +6,8 @@ import com.liushao.entity.StatusCode;
 import com.liushao.pojo.Spit;
 import com.liushao.service.SpitService;
 import io.jsonwebtoken.Claims;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -13,23 +15,27 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 前缀 /spit
+ * @author huangshen
+ */
+@Api(tags = "吐槽模块")
 @RestController
 @CrossOrigin
 @RequestMapping("/spit")
 public class SpitController {
+
     @Autowired
     private SpitService spitService;
-
     @Autowired
     private RedisTemplate redisTemplate;
-
     @Autowired
     private HttpServletRequest request;
 
     /**
      * 查询全部数据
-     * @return
      */
+    @ApiOperation(value = "查询全部吐槽数据")
     @RequestMapping(method= RequestMethod.GET)
     public Result findAll(){
         return new Result(true, StatusCode.OK,"查询成功",spitService.findAll());
@@ -37,16 +43,17 @@ public class SpitController {
     /**
      * 根据ID查询
      * @param id ID
-     * @return
      */
+    @ApiOperation(value = "根据ID查询数据")
     @RequestMapping(value="/{id}",method=RequestMethod.GET)
     public Result findOne(@PathVariable String id){
         return new Result(true,StatusCode.OK,"查询成功",spitService.findById(id));
     }
     /**
      * 增加
-     * @param spit
+     * @param spit 吐槽
      */
+    @ApiOperation(value = "增加吐槽")
     @RequestMapping(method=RequestMethod.POST)
     public Result add(@RequestBody Spit spit ){
         spitService.add(spit);
@@ -54,8 +61,9 @@ public class SpitController {
     }
     /**
      * 修改
-     * @param spit
+     * @param spit 修改吐槽
      */
+    @ApiOperation(value = "修改吐槽")
     @RequestMapping(value="/{id}",method=RequestMethod.PUT)
     public Result update(@RequestBody Spit spit,@PathVariable String id )
     {
@@ -65,8 +73,9 @@ public class SpitController {
     }
     /**
      * 删除
-     * @param id
+     * @param id 吐槽id
      */
+    @ApiOperation(value = "删除吐槽")
     @RequestMapping(value="/{id}",method=RequestMethod.DELETE)
     public Result deleteById(@PathVariable String id ){
         spitService.deleteById(id);
@@ -74,10 +83,10 @@ public class SpitController {
     }
     /**
      * 根据上级ID查询吐槽分页数据
-     * @param page
-     * @param size
-     * @return
+     * @param page 页码
+     * @param size 页面大小
      */
+    @ApiOperation(value = "根据上级id查询吐槽分页数据")
     @RequestMapping(value="/comment/{parentId}/{page}/{size}",method=RequestMethod.GET)
     public Result findByParentid(@PathVariable String parentId, @PathVariable int page,@PathVariable int size){
         Page<Spit> pageList = spitService.findByParentid(parentId,page, size);
@@ -86,9 +95,9 @@ public class SpitController {
 
     /**
      * 点赞
-     * @param id
-     * @return
+     * @param id 吐槽id
      */
+    @ApiOperation(value = "点赞")
     @RequestMapping(value="/thumbup/{id}",method=RequestMethod.PUT)
     public Result updateThumbup(@PathVariable String id){
         //判断用户是否点过赞

@@ -1,5 +1,9 @@
 package com.liushao.pojo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,19 +13,23 @@ import java.io.Serializable;
  * @author Administrator
  *
  */
+@Data
+@ApiModel(value = "频道")
 @Entity
 @Table(name="tb_channel")
 public class Channel implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value = "ID")
 	@Id
-	private String id;//ID
+	private String id;
 
+	@ApiModelProperty(value = "频道名称", required = true)
+	private String name;
 
-	
-	private String name;//频道名称
-	private String state;//状态
+	@ApiModelProperty(value = "状态")
+	private String state;
 
 	
 	public String getId() {		
@@ -44,7 +52,5 @@ public class Channel implements Serializable{
 	public void setState(String state) {
 		this.state = state;
 	}
-
-
 	
 }

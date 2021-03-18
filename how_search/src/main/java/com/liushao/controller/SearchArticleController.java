@@ -4,33 +4,42 @@ import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 import com.liushao.pojo.Article;
-import com.liushao.service.ArticleSearchService;
+import com.liushao.service.SearchArticleService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 前缀 /search
+ * @author huangshen
+ */
+@Api(tags = "文章搜索")
 @RestController
 @CrossOrigin
-@RequestMapping("/article")
-public class ArticleSearchController {
+@RequestMapping("/search")
+public class SearchArticleController {
     @Autowired
-    private ArticleSearchService articleSearchService;
-    @RequestMapping(method= RequestMethod.POST)
+    private SearchArticleService searchArticleService;
+
+    @ApiOperation(value = "在es保存文章")
+    @RequestMapping(value = "/article", method= RequestMethod.POST)
     public Result save(@RequestBody Article article){
-        articleSearchService.add(article);
+        searchArticleService.add(article);
         return new Result(true, StatusCode.OK, "操作成功");
     }
 
     /**
      * 文章搜索
-     * @param keywords
-     * @param page
-     * @param size
-     * @return
+     * @param keywords 关键字
+     * @param page 页码
+     * @param size 页面大小
      */
-    @RequestMapping(value="/search/{keywords}/{page}/{size}",method= RequestMethod.GET)
+    @ApiOperation(value = "文章搜索")
+    @RequestMapping(value="/article/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByTitleLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
-        Page<Article> articlePage = articleSearchService.findByTitleLike(keywords,page,size);
+        Page<Article> articlePage = searchArticleService.findByTitleLike(keywords,page,size);
         return new Result(true, StatusCode.OK, "查询成功", new PageResult<Article>(articlePage.getTotalElements(), articlePage.getContent()));
     }
 }

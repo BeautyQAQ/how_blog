@@ -1,0 +1,18 @@
+version: '3'
+services:
+  #文章服务
+  how_article:
+    image: registry.cn-beijing.aliyuncs.com/liushao-repository/how_article:latest
+    container_name: how_article
+    restart: always
+    ports:
+      - 9004:9004
+    networks:
+      - how
+    environment:
+      - COMPOSE_PROJECT_NAME=how_article
+    volumes:
+      - ../log/:/logs/
+networks:
+  how:
+    external: true

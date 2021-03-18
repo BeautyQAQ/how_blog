@@ -1,0 +1,18 @@
+version: '3'
+services:
+  #用户服务
+  how_user:
+    image: registry.cn-beijing.aliyuncs.com/liushao-repository/how_user:latest
+    container_name: how_user
+    restart: always
+    ports:
+      - 9008:9008
+    networks:
+      - how
+    environment:
+      - COMPOSE_PROJECT_NAME=how_user
+    volumes:
+      - ../log/:/logs/
+networks:
+  how:
+    external: true

@@ -1,5 +1,10 @@
 package com.liushao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,120 +14,53 @@ import java.io.Serializable;
  * @author Administrator
  *
  */
+@Data
+@ApiModel(value = "问题")
 @Entity
 @Table(name="tb_problem")
 public class Problem implements Serializable{
 
+	@ApiModelProperty(value = "ID编号")
 	@Id
-	private String id;//ID
+	private String id;
 
+	@ApiModelProperty(value = "标题", required = true)
+	private String title;
 
-	
-	private String title;//标题
-	private String content;//内容
-	private java.util.Date createtime;//创建日期
-	private java.util.Date updatetime;//修改日期
-	private String userid;//用户ID
-	private String nickname;//昵称
-	private Long visits;//浏览量
-	private Long thumbup;//点赞数
-	private Long reply;//回复数
-	private String solve;//是否解决
-	private String replyname;//回复人昵称
-	private java.util.Date replytime;//回复日期
+	@ApiModelProperty(value = "内容", required = true)
+	private String content;
 
-	
-	public String getId() {		
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+	@ApiModelProperty(value = "创建日期")
+	private java.util.Date createtime;
 
-	public String getTitle() {		
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+	@ApiModelProperty(value = "修改日期")
+	private java.util.Date updatetime;
 
-	public String getContent() {		
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
-	}
+	@ApiModelProperty(value = "用户ID")
+	private String userid;
 
-	public java.util.Date getCreatetime() {		
-		return createtime;
-	}
-	public void setCreatetime(java.util.Date createtime) {
-		this.createtime = createtime;
-	}
+	@ApiModelProperty(value = "昵称")
+	private String nickname;
 
-	public java.util.Date getUpdatetime() {		
-		return updatetime;
-	}
-	public void setUpdatetime(java.util.Date updatetime) {
-		this.updatetime = updatetime;
-	}
+	@ApiModelProperty(value = "浏览量")
+	private Long visits;
 
-	public String getUserid() {		
-		return userid;
-	}
-	public void setUserid(String userid) {
-		this.userid = userid;
-	}
+	@ApiModelProperty(value = "点赞数")
+	private Long thumbup;
 
-	public String getNickname() {		
-		return nickname;
-	}
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
+	@ApiModelProperty(value = "回复数")
+	private Long reply;
 
-	public Long getVisits() {		
-		return visits;
-	}
-	public void setVisits(Long visits) {
-		this.visits = visits;
-	}
+	@ApiModelProperty(value = "是否解决")
+	private String solve;
 
-	public Long getThumbup() {		
-		return thumbup;
-	}
-	public void setThumbup(Long thumbup) {
-		this.thumbup = thumbup;
-	}
+	@ApiModelProperty(value = "回复人昵称")
+	private String replyname;
 
-	public Long getReply() {		
-		return reply;
-	}
-	public void setReply(Long reply) {
-		this.reply = reply;
-	}
+	@JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+	@ApiModelProperty(value = "回复日期")
+	private java.util.Date replytime;
 
-	public String getSolve() {		
-		return solve;
-	}
-	public void setSolve(String solve) {
-		this.solve = solve;
-	}
-
-	public String getReplyname() {		
-		return replyname;
-	}
-	public void setReplyname(String replyname) {
-		this.replyname = replyname;
-	}
-
-	public java.util.Date getReplytime() {		
-		return replytime;
-	}
-	public void setReplytime(java.util.Date replytime) {
-		this.replytime = replytime;
-	}
-
-
-	
 }

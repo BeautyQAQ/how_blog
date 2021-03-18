@@ -1,7 +1,7 @@
 package com.liushao.listener;
 
-import com.aliyuncs.exceptions.ClientException;
 import com.liushao.util.SmsUtil;
+import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,8 @@ import java.util.Map;
  * @author huangshen
  */
 @Component
-@RabbitListener(queues = "sms")
+//这个模式为自动创建队列
+@RabbitListener(queuesToDeclare = @Queue("sms"))
 public class SmsListener {
 
     @Autowired

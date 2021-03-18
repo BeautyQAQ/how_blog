@@ -1,5 +1,9 @@
 package com.liushao.pojo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,48 +13,22 @@ import java.io.Serializable;
  * @author Administrator
  *
  */
+@Data
+@ApiModel(value = "Admin用户")
 @Entity
 @Table(name="tb_admin")
 public class Admin implements Serializable{
 
+	@ApiModelProperty(value = "ID")
 	@Id
-	private String id;//ID
+	private String id;
 
+	@ApiModelProperty(value = "登录名称", required = true)
+	private String loginname;
 
-	
-	private String loginname;//登陆名称
-	private String password;//密码
-	private String state;//状态
+	@ApiModelProperty(value = "密码", required = true)
+	private String password;
 
-	
-	public String getId() {		
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getLoginname() {		
-		return loginname;
-	}
-	public void setLoginname(String loginname) {
-		this.loginname = loginname;
-	}
-
-	public String getPassword() {		
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getState() {		
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
-	}
-
-
-	
+	@ApiModelProperty(value = "状态")
+	private String state;
 }
