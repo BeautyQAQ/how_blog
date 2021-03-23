@@ -17,6 +17,11 @@ import java.util.Date;
 @ApiModel(value = "吐槽")
 public class Spit implements Serializable {
 
+    /**
+     * 序列化ID
+     */
+    private static final long serialVersionUID = -3220778639859847389L;
+
     @ApiModelProperty(value = "_id")
     @Id
     private String _id;

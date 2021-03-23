@@ -1,22 +1,18 @@
 package com.liushao.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
 import com.liushao.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +51,7 @@ public class ProblemService {
 	 * @param size
 	 * @return
 	 */
-	public Page<Problem> findSearch(Map whereMap, int page, int size) {
+	public Page<Problem> findSearch(Map<String, String> whereMap, int page, int size) {
 		Specification<Problem> specification = createSpecification(whereMap);
 		PageRequest pageRequest =  PageRequest.of(page-1, size);
 		return problemDao.findAll(specification, pageRequest);
@@ -67,7 +63,7 @@ public class ProblemService {
 	 * @param whereMap
 	 * @return
 	 */
-	public List<Problem> findSearch(Map whereMap) {
+	public List<Problem> findSearch(Map<String, String> whereMap) {
 		Specification<Problem> specification = createSpecification(whereMap);
 		return problemDao.findAll(specification);
 	}
@@ -147,9 +143,14 @@ public class ProblemService {
 	 * @param searchMap
 	 * @return
 	 */
-	private Specification<Problem> createSpecification(Map searchMap) {
+	private Specification<Problem> createSpecification(Map<String, String> searchMap) {
 
 		return new Specification<Problem>() {
+
+			/**
+			 * 序列化ID
+			 */
+			private static final long serialVersionUID = -1160566441680334253L;
 
 			@Override
 			public Predicate toPredicate(Root<Problem> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

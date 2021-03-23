@@ -1,8 +1,6 @@
 package com.liushao.client.impol;
 
 import com.liushao.client.UserClient;
-import com.liushao.entity.Result;
-import com.liushao.entity.StatusCode;
 import org.springframework.stereotype.Component;
 
 /**

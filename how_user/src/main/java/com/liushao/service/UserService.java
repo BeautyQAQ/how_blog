@@ -5,17 +5,14 @@ import java.util.concurrent.TimeUnit;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
 import com.liushao.util.IdWorker;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
 	@Autowired
-	private RedisTemplate redisTemplate;
+	private RedisTemplate<String, String> redisTemplate;
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
@@ -65,7 +62,7 @@ public class UserService {
 	 * @param size
 	 * @return
 	 */
-	public Page<User> findSearch(Map whereMap, int page, int size) {
+	public Page<User> findSearch(Map<String, String> whereMap, int page, int size) {
 		Specification<User> specification = createSpecification(whereMap);
 		PageRequest pageRequest =  PageRequest.of(page-1, size);
 		return userDao.findAll(specification, pageRequest);
@@ -77,7 +74,7 @@ public class UserService {
 	 * @param whereMap
 	 * @return
 	 */
-	public List<User> findSearch(Map whereMap) {
+	public List<User> findSearch(Map<String, String> whereMap) {
 		Specification<User> specification = createSpecification(whereMap);
 		return userDao.findAll(specification);
 	}
@@ -133,7 +130,7 @@ public class UserService {
 		//2.将验证码放入redis  //五分钟过期
 		redisTemplate.opsForValue().set("smscode_"+mobile, code+"" ,5, TimeUnit.MINUTES );
 		//3.将验证码和手机号发动到rabbitMQ中
-		Map<String,String> map=new HashMap();
+		Map<String,String> map=new HashMap<>();
 		map.put("mobile",mobile);
 		map.put("code",code+"");
 		rabbitTemplate.convertAndSend("sms",map);
@@ -206,9 +203,14 @@ public class UserService {
 	 * @param searchMap
 	 * @return
 	 */
-	private Specification<User> createSpecification(Map searchMap) {
+	private Specification<User> createSpecification(Map<String, String> searchMap) {
 
 		return new Specification<User>() {
+
+			/**
+			 * 序列化ID
+			 */
+			private static final long serialVersionUID = 7549337138079817126L;
 
 			@Override
 			public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

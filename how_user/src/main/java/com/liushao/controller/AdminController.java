@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,7 +71,7 @@ public class AdminController {
 	 */
 	@ApiOperation(value = "分页+条件查询")
 	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
-	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
+	public Result findSearch(@RequestBody Map<String, String> searchMap , @PathVariable int page, @PathVariable int size){
 		Page<Admin> pageList = adminService.findSearch(searchMap, page, size);
 		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Admin>(pageList.getTotalElements(), pageList.getContent()) );
 	}
@@ -83,7 +82,7 @@ public class AdminController {
      */
 	@ApiOperation(value = "条件查询")
     @RequestMapping(value="/search",method = RequestMethod.POST)
-    public Result findSearch( @RequestBody Map searchMap){
+    public Result findSearch( @RequestBody Map<String,String> searchMap){
         return new Result(true,StatusCode.OK,"查询成功",adminService.findSearch(searchMap));
     }
 	

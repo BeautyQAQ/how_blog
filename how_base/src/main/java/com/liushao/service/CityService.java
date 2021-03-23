@@ -51,7 +51,7 @@ public class CityService {
 	 * @param size
 	 * @return
 	 */
-	public Page<City> findSearch(Map whereMap, int page, int size) {
+	public Page<City> findSearch(Map<String, String> whereMap, int page, int size) {
 		Specification<City> specification = createSpecification(whereMap);
 		PageRequest pageRequest =  PageRequest.of(page-1, size);
 		return cityDao.findAll(specification, pageRequest);
@@ -63,7 +63,7 @@ public class CityService {
 	 * @param whereMap
 	 * @return
 	 */
-	public List<City> findSearch(Map whereMap) {
+	public List<City> findSearch(Map<String, String> whereMap) {
 		Specification<City> specification = createSpecification(whereMap);
 		return cityDao.findAll(specification);
 	}
@@ -107,9 +107,14 @@ public class CityService {
 	 * @param searchMap
 	 * @return
 	 */
-	private Specification<City> createSpecification(Map searchMap) {
+	private Specification<City> createSpecification(Map<String, String> searchMap) {
 
 		return new Specification<City>() {
+
+			/**
+			 * 序列化ID
+			 */
+			private static final long serialVersionUID = -4646869683828892461L;
 
 			@Override
 			public Predicate toPredicate(Root<City> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

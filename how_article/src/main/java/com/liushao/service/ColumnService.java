@@ -1,22 +1,18 @@
 package com.liushao.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
 import com.liushao.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +51,7 @@ public class ColumnService {
 	 * @param size
 	 * @return
 	 */
-	public Page<Column> findSearch(Map whereMap, int page, int size) {
+	public Page<Column> findSearch(Map<String, String> whereMap, int page, int size) {
 		Specification<Column> specification = createSpecification(whereMap);
 		PageRequest pageRequest =  PageRequest.of(page-1, size);
 		return columnDao.findAll(specification, pageRequest);
@@ -67,7 +63,7 @@ public class ColumnService {
 	 * @param whereMap
 	 * @return
 	 */
-	public List<Column> findSearch(Map whereMap) {
+	public List<Column> findSearch(Map<String, String> whereMap) {
 		Specification<Column> specification = createSpecification(whereMap);
 		return columnDao.findAll(specification);
 	}
@@ -111,9 +107,14 @@ public class ColumnService {
 	 * @param searchMap
 	 * @return
 	 */
-	private Specification<Column> createSpecification(Map searchMap) {
+	private Specification<Column> createSpecification(Map<String, String> searchMap) {
 
 		return new Specification<Column>() {
+
+			/**
+			 * 序列化ID
+			 */
+			private static final long serialVersionUID = -4501600424066072610L;
 
 			@Override
 			public Predicate toPredicate(Root<Column> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

@@ -28,7 +28,7 @@ public class SpitController {
     @Autowired
     private SpitService spitService;
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private HttpServletRequest request;
 

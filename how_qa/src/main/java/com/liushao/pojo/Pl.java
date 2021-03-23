@@ -18,6 +18,11 @@ import java.io.Serializable;
 @Table(name="tb_pl")
 public class Pl implements Serializable {
 
+    /**
+     * 序列化ID
+     */
+    private static final long serialVersionUID = -4130801027386954396L;
+
     @ApiModelProperty(value = "问题id")
     @Id
     private String problemid;

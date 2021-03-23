@@ -20,6 +20,11 @@ import java.io.Serializable;
 @Table(name="tb_reply")
 public class Reply implements Serializable{
 
+	/**
+	 * 序列化ID
+	 */
+	private static final long serialVersionUID = -8910640791140199637L;
+
 	@ApiModelProperty(value = "ID编号")
 	@Id
 	private String id;

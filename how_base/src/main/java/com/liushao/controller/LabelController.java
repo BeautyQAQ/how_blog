@@ -87,7 +87,7 @@ public class LabelController {
      */
     @ApiOperation(value = "条件查询")
     @RequestMapping(value="/search",method = RequestMethod.POST)
-    public Result findSearch( @RequestBody Map searchMap){
+    public Result findSearch( @RequestBody Map<String,String> searchMap){
         return new Result(true,StatusCode.OK,"查询成 功",labelService.findSearch(searchMap));
     }
 
@@ -100,9 +100,9 @@ public class LabelController {
      */
     @ApiOperation(value = "分页+条件查询")
     @RequestMapping(value="/search/{page}/{size}",method = RequestMethod.POST)
-    public Result findSearch( @RequestBody Map searchMap
+    public Result findSearch( @RequestBody Map<String, String> searchMap
             ,@PathVariable int page,@PathVariable int size ){
-        Page pageList= labelService.findSearch(searchMap,page,size);
+        Page<Label> pageList= labelService.findSearch(searchMap,page,size);
         return new Result(true,StatusCode.OK,"查询成功",
                 new PageResult<>(pageList.getTotalElements(),pageList.getContent() ));
     }

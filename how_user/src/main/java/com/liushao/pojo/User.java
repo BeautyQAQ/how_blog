@@ -20,6 +20,11 @@ import java.io.Serializable;
 @Table(name="tb_user")
 public class User implements Serializable{
 
+	/**
+	 * 序列化ID
+	 */
+	private static final long serialVersionUID = 376268953281515231L;
+
 	@ApiModelProperty(value = "ID编号")
 	@Id
 	private String id;

@@ -3,7 +3,6 @@ package com.liushao.controller;
 import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
-import com.liushao.pojo.Comment;
 import com.liushao.service.CommentService;
 import com.liushao.vo.CommentVo;
 import io.swagger.annotations.Api;

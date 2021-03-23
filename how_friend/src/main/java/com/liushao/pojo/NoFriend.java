@@ -15,6 +15,11 @@ import java.io.Serializable;
 @IdClass(NoFriend.class)
 public class NoFriend implements Serializable {
 
+    /**
+     * 序列化ID
+     */
+    private static final long serialVersionUID = -6817107813628847709L;
+
     @ApiModelProperty(value = "userid")
     @Id
     private String userid;

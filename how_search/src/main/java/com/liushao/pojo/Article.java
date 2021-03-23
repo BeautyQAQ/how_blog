@@ -18,6 +18,11 @@ import java.io.Serializable;
 @Document(indexName="how",type="article")
 public class Article implements Serializable {
 
+    /**
+     * 序列化ID
+     */
+    private static final long serialVersionUID = 4018596605143052936L;
+
     @ApiModelProperty(value = "ID编号")
     @Id
     private String id;

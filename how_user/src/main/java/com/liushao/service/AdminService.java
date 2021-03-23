@@ -1,22 +1,18 @@
 package com.liushao.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
 import com.liushao.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -59,7 +55,7 @@ public class AdminService {
 	 * @param size
 	 * @return
 	 */
-	public Page<Admin> findSearch(Map whereMap, int page, int size) {
+	public Page<Admin> findSearch(Map<String, String> whereMap, int page, int size) {
 		Specification<Admin> specification = createSpecification(whereMap);
 		PageRequest pageRequest =  PageRequest.of(page-1, size);
 		return adminDao.findAll(specification, pageRequest);
@@ -71,7 +67,7 @@ public class AdminService {
 	 * @param whereMap
 	 * @return
 	 */
-	public List<Admin> findSearch(Map whereMap) {
+	public List<Admin> findSearch(Map<String, String> whereMap) {
 		Specification<Admin> specification = createSpecification(whereMap);
 		return adminDao.findAll(specification);
 	}
@@ -133,9 +129,14 @@ public class AdminService {
 	 * @param searchMap
 	 * @return
 	 */
-	private Specification<Admin> createSpecification(Map searchMap) {
+	private Specification<Admin> createSpecification(Map<String, String> searchMap) {
 
 		return new Specification<Admin>() {
+
+			/**
+			 * 序列化ID
+			 */
+			private static final long serialVersionUID = -7055703182105883285L;
 
 			@Override
 			public Predicate toPredicate(Root<Admin> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

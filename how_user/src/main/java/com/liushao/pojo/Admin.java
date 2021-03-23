@@ -19,6 +19,11 @@ import java.io.Serializable;
 @Table(name="tb_admin")
 public class Admin implements Serializable{
 
+	/**
+	 * 序列化ID
+	 */
+	private static final long serialVersionUID = -7732162879078866642L;
+
 	@ApiModelProperty(value = "ID")
 	@Id
 	private String id;

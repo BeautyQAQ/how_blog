@@ -18,6 +18,11 @@ import java.io.Serializable;
 @IdClass(Friend.class)
 public class Friend implements Serializable {
 
+    /**
+     * 序列化ID
+     */
+    private static final long serialVersionUID = -6849107332525437532L;
+
     @ApiModelProperty(value = "userid")
     @Id
     private String userid;

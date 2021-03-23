@@ -12,6 +12,11 @@ import java.util.Date;
 @Data
 public class CommentVo implements Serializable {
 
+    /**
+     * 序列化ID
+     */
+    private static final long serialVersionUID = -1598516617286712963L;
+
     private String _id;
 
     private String id;

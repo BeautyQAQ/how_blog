@@ -1,22 +1,18 @@
 package com.liushao.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
 import com.liushao.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +51,7 @@ public class ReplyService {
 	 * @param size
 	 * @return
 	 */
-	public Page<Reply> findSearch(Map whereMap, int page, int size) {
+	public Page<Reply> findSearch(Map<String, String> whereMap, int page, int size) {
 		Specification<Reply> specification = createSpecification(whereMap);
 		PageRequest pageRequest =  PageRequest.of(page-1, size);
 		return replyDao.findAll(specification, pageRequest);
@@ -67,7 +63,7 @@ public class ReplyService {
 	 * @param whereMap
 	 * @return
 	 */
-	public List<Reply> findSearch(Map whereMap) {
+	public List<Reply> findSearch(Map<String, String> whereMap) {
 		Specification<Reply> specification = createSpecification(whereMap);
 		return replyDao.findAll(specification);
 	}
@@ -111,9 +107,14 @@ public class ReplyService {
 	 * @param searchMap
 	 * @return
 	 */
-	private Specification<Reply> createSpecification(Map searchMap) {
+	private Specification<Reply> createSpecification(Map<String, String> searchMap) {
 
 		return new Specification<Reply>() {
+
+			/**
+			 * 序列化ID
+			 */
+			private static final long serialVersionUID = 3663193034727229790L;
 
 			@Override
 			public Predicate toPredicate(Root<Reply> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

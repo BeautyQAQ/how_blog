@@ -70,8 +70,13 @@ public class LabelService {
      * @param searchMap
      * @return
      */
-    private Specification<Label> createSpecification(Map searchMap){
+    private Specification<Label> createSpecification(Map<String, String> searchMap){
         return new Specification<Label>() {
+            /**
+             * 序列化ID
+             */
+            private static final long serialVersionUID = -8161805229038471459L;
+
             @Override
             public Predicate toPredicate(Root<Label> root, CriteriaQuery<?>
                     criteriaQuery, CriteriaBuilder cb) {
@@ -103,8 +108,8 @@ public class LabelService {
      * @param searchMap
      * @return
      */
-    public List<Label> findSearch(Map searchMap){
-        Specification specification= createSpecification(searchMap);
+    public List<Label> findSearch(Map<String, String> searchMap){
+        Specification<Label> specification= createSpecification(searchMap);
         return labelDao.findAll( specification);
     }
 
@@ -115,8 +120,8 @@ public class LabelService {
      * @param size
      * @return
      */
-    public Page<Label> findSearch(Map searchMap, int page, int size){
-        Specification specification= createSpecification(searchMap);
+    public Page<Label> findSearch(Map<String, String> searchMap, int page, int size){
+        Specification<Label> specification= createSpecification(searchMap);
         PageRequest pageRequest=PageRequest.of(page - 1,size);
         return labelDao.findAll( specification ,pageRequest);
     }

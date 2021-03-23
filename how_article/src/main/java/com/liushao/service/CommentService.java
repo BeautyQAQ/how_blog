@@ -3,7 +3,6 @@ package com.liushao.service;
 import cn.hutool.core.bean.BeanUtil;
 import com.liushao.client.UserClient;
 import com.liushao.dao.CommentDao;
-import com.liushao.entity.Result;
 import com.liushao.pojo.Comment;
 import com.liushao.util.IdWorker;
 import com.liushao.vo.CommentVo;
