@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 /**
- * 实体类
+ * 回复实体类
  * @author Administrator
  *
  */

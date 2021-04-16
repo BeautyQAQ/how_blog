@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
+ * 问题和标签关联对象
  * @author huangshen
  */
 @Data

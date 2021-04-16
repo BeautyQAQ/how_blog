@@ -10,7 +10,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import java.io.Serializable;
 
 /**
- * 文章实体类
+ * 文章搜索实体类
  * @author huangshen
  */
 @Data
@@ -34,9 +34,6 @@ public class Article implements Serializable {
     @ApiModelProperty(value = "文章正文")
     @Field(index= true,analyzer="ik_max_word",searchAnalyzer="ik_max_word")
     private String content;
-
-    @ApiModelProperty(value = "审核状态")
-    private String state;
 
 }
 
