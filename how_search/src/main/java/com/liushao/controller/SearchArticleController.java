@@ -23,6 +23,9 @@ public class SearchArticleController {
     @Autowired
     private SearchArticleService searchArticleService;
 
+    /**
+     * 文章索引添加
+     */
     @ApiOperation(value = "在es保存文章")
     @RequestMapping(value = "/article", method= RequestMethod.POST)
     public Result save(@RequestBody Article article){
@@ -38,8 +41,17 @@ public class SearchArticleController {
      */
     @ApiOperation(value = "文章搜索")
     @RequestMapping(value="/article/{keywords}/{page}/{size}",method= RequestMethod.GET)
-    public Result findByTitleLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
-        Page<Article> articlePage = searchArticleService.findByTitleLike(keywords,page,size);
+    public Result findByTitleOrContentLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
+        Page<Article> articlePage = searchArticleService.findByTitleOrContentLike(keywords,page,size);
         return new Result(true, StatusCode.OK, "查询成功", new PageResult<Article>(articlePage.getTotalElements(), articlePage.getContent()));
+    }
+
+    /**
+     * 删除文章索引
+     */
+    @ApiOperation(value = "专栏删除")
+    @RequestMapping(value="/article/delete/{id}",method= RequestMethod.DELETE)
+    public Result delete(@PathVariable String id){
+        return searchArticleService.deleteById(id);
     }
 }

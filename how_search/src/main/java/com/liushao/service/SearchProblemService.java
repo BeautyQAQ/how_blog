@@ -2,10 +2,10 @@ package com.liushao.service;
 
 import java.util.Optional;
 
-import com.liushao.dao.SearchArticleDao;
+import com.liushao.dao.SearchProblemDao;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
-import com.liushao.pojo.Article;
+import com.liushao.pojo.Problem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,40 +15,40 @@ import org.springframework.stereotype.Service;
  * @author huangshen
  */
 @Service
-public class SearchArticleService {
+public class SearchProblemService {
     @Autowired
-    private SearchArticleDao searchArticleDao;
+    private SearchProblemDao searchProblemDao;
     /**
-     * 增加文章
-     * @param article
+     * 增加问题
+     * @param problem
      */
-    public void add(Article article){
-        searchArticleDao.save(article);
+    public void add(Problem problem){
+        searchProblemDao.save(problem);
     }
 
     /**
-     * 文章搜索
+     * 问题搜索
      * @param keywords
      * @param page
      * @param size
      * @return
      */
-    public Page<Article> findByTitleOrContentLike(String keywords, int page, int size) {
+    public Page<Problem> findByTitleOrContentLike(String keywords, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page-1, size);
-        return searchArticleDao.findByTitleOrContentLike(keywords, keywords, pageRequest);
+        return searchProblemDao.findByTitleOrContentLike(keywords, keywords, pageRequest);
     }
 
     /**
-     * 文章删除
+     * 问题删除
      * @param id
      */
     public Result deleteById(String id) {
         // 先查询索引中是否存在
-        Optional<Article> channel = searchArticleDao.findById(id);
+        Optional<Problem> channel = searchProblemDao.findById(id);
         if(channel.isPresent()){
-            searchArticleDao.deleteById(id);
+            searchProblemDao.deleteById(id);
             return new Result(true, StatusCode.OK, "删除成功");
         }
-        return new Result(true, StatusCode.OK, "删除失败，该文章不存在");
+        return new Result(true, StatusCode.OK, "删除失败，该问题不存在");
     }
 }
