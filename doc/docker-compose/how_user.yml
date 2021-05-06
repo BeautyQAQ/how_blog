@@ -6,7 +6,7 @@ services:
     container_name: how_user
     restart: always
     ports:
-      - 9008:9008
+      - 9003:9003
     networks:
       - how
     environment:

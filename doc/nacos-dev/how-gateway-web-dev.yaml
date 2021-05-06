@@ -1,0 +1,41 @@
+server:
+  port: 9005
+
+spring:
+  application:
+    name: how-gateway-web #指定服务名
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 222.222.222.222:8848
+        namespace: dev
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true #路由小写
+
+      routes:
+        - id: how-article #文章
+          uri: lb://how-article
+          predicates:
+            - Path=/article/** # 路径匹配
+          filters:
+            - StripPrefix=1
+        - id: how-user #用户
+          uri: lb://how-user
+          predicates:
+            - Path=/user/** # 路径匹配
+          filters:
+            - StripPrefix=1
+        - id: how-search #搜索
+          uri: lb://how-search
+          predicates:
+            - Path=/search/** # 路径匹配
+          filters:
+            - StripPrefix=1
+
+jwt:
+  config:
+    key: xxxxxxxxxxxxx  #注意这个key不能太短
+    ttl: 360000

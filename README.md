@@ -11,3 +11,5 @@ how_search          ----搜索模块（elasticsearch）
 how_sms             ----消息模块（rabbitMQ）  
 how_user            ----用户模块（权限管理）（合并交友模块）
 活动模块砍掉
+
+todo：合并数据库

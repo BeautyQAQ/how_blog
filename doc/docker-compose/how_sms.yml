@@ -6,7 +6,7 @@ services:
     container_name: how_sms
     restart: always
     ports:
-      - 9009:9009
+      - 9004:9004
     networks:
       - how
     environment:

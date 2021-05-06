@@ -6,7 +6,7 @@ services:
     container_name: how_search
     restart: always
     ports:
-      - 9007:9007
+      - 9002:9002
     networks:
       - how
     environment:

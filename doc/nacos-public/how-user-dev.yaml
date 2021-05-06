@@ -1,0 +1,28 @@
+server:
+  port: 9003
+spring:
+  application:  
+    name: how-user #指定服务名
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql:3306/how_user?characterEncoding=utf-8
+    username: root
+    password: root
+  jpa: 
+    database: MySQL
+    show-sql: true
+  rabbitmq:
+    host: 111.111.111.111
+    username: guest
+    password: guest
+  redis:
+    host: redis
+  # nacos服务地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+jwt:
+  config:
+    key: xxxxxxxxxxxx  #注意这个key不能太短
+    ttl: 360000

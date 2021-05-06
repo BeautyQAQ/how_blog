@@ -1,0 +1,22 @@
+server:
+  port: 9004
+spring:
+  application:
+    name: how-sms #指定服务名
+  rabbitmq:
+    host: 111.111.111.111
+    username: guest
+    password: guest
+
+  # nacos服务地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+
+aliyun:
+  sms:
+    template_code: 11111111111111111111
+    sign_name: xxxxxxxxxx
+    accessKeyId: xxxxxxxxxxxx
+    accessKeySecret: xxxxxxxxxxxxxxx

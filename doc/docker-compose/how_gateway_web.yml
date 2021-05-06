@@ -1,12 +1,12 @@
 version: '3'
 services:
-  #前台网关服务
+  #网关服务
   how_gateway_web:
     image: registry.cn-beijing.aliyuncs.com/liushao-repository/how_gateway_web:latest
     container_name: how_gateway_web
     restart: always
     ports:
-      - 9012:9012
+      - 9005:9005
     networks:
       - how
     environment:
