@@ -44,9 +44,9 @@ public class WebFilter implements GlobalFilter, Ordered {
             System.out.println("登陆页面" + url);
             return chain.filter(exchange);
         }
-        // 以下请求放行，如果存在Authorization，则下放到模块中验证
+        // 以下请求放行，如果存在Authorization，则下放到模块中验证，同时放行api-docs接口
         if (url.contains("/article") || url.contains("/search") || url.contains("/channel") || url.contains("/city")
-                || url.contains("/column") || url.contains("/comment") || url.contains("/label")
+                || url.contains("/column") || url.contains("/comment") || url.contains("/label") || url.contains("/v2/api-docs")
                 || url.contains("/problem") || url.contains("/reply") || url.contains("/spit")) {
             System.out.println("登陆页面" + url);
             // 获取头信息
