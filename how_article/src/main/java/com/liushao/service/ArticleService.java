@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Resource;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -38,7 +39,8 @@ public class ArticleService {
 	@Autowired
 	private IdWorker idWorker;
 
-	@Autowired
+	//用Resource才不会报错，原因未知
+	@Resource
 	private RedisTemplate<String, Object> redisTemplate;
 
 	/**
