@@ -9,16 +9,10 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>how_common</module>
-        <module>how_base</module>
-        <module>how_qa</module>
         <module>how_article</module>
-        <module>how_gathering</module>
-        <module>how_spit</module>
         <module>how_search</module>
         <module>how_user</module>
         <module>how_sms</module>
-        <module>how_friend</module>
-        <module>how_gateway_manager</module>
         <module>how_gateway_web</module>
     </modules>
 

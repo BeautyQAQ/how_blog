@@ -1,7 +1,6 @@
 package com.liushao.controller;
 
 import java.util.Map;
-import com.liushao.client.LabelClient;
 import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.liushao.pojo.Problem;
+import com.liushao.service.LabelService;
 import com.liushao.service.ProblemService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +40,7 @@ public class ProblemController {
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
-	private LabelClient labelClient;
+	private LabelService labelService;
 
 
 	/**
@@ -173,9 +173,7 @@ public class ProblemController {
 	@ApiOperation(value = "远程调用查询标签")
 	@RequestMapping(value = "/label/{labelid}", method=RequestMethod.GET)
 	public Result findLabelById(@PathVariable String labelid){
-		Result result = labelClient.findById(labelid);
-		return result;
+		return new Result(true,StatusCode.OK,"查询成功",labelService.findById(labelid));
 	}
-
 
 }

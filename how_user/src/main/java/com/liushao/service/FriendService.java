@@ -1,6 +1,5 @@
 package com.liushao.service;
 
-import com.liushao.client.UserClient;
 import com.liushao.dao.FriendDao;
 import com.liushao.dao.NoFriendDao;
 import com.liushao.pojo.Friend;
@@ -19,7 +18,7 @@ public class FriendService {
     @Autowired
     private NoFriendDao noFriendDao;
     @Autowired
-    private UserClient userClient;
+    private UserService userService;
 
     @Transactional(rollbackFor = Exception.class)
     public int addFriend(String userid,String friendid){
@@ -38,8 +37,8 @@ public class FriendService {
             friendDao.updateLike(userid,friendid,"1");
             friendDao.updateLike(friendid,userid,"1");
         }
-        userClient.incFollowcount(userid,1);//增加自己的关注数
-        userClient.incFanscount(friendid,1);//增加对方的粉丝数
+        userService.incFollowcount(userid,1);//增加自己的关注数
+        userService.incFanscount(friendid,1);//增加对方的粉丝数
         return 1;
     }
 
@@ -65,7 +64,7 @@ public class FriendService {
         friendDao.deleteFriend(userid,friendid);
         friendDao.updateLike(friendid,userid,"0");
         addNoFriend(userid,friendid);//向不喜欢表中添加记录
-        userClient.incFollowcount(userid,-1);//减少自己的关注数
-        userClient.incFanscount(friendid,-1);//减少对方的粉丝数
+        userService.incFollowcount(userid,-1);//减少自己的关注数
+        userService.incFanscount(friendid,-1);//减少对方的粉丝数
     }
 }
