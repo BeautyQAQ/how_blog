@@ -36,33 +36,12 @@ jobs:
         run: |
 
           echo '=====开始构建镜像====='
-          echo '=====开始构建how_article====='
           cd how_article
-          mvn docker:build
-          cd ..
-
-          echo '=====how_base====='
-          cd how_base
-          mvn docker:build
-          cd ..
-
-          echo '=====how_friend====='
-          cd how_friend
-          mvn docker:build
-          cd ..
-
-          echo '=====how_gateway_manager====='
-          cd how_gateway_manager
           mvn docker:build
           cd ..
 
           echo '=====how_gateway_web====='
           cd how_gateway_web
-          mvn docker:build
-          cd ..
-
-          echo '=====how_qa====='
-          cd how_qa
           mvn docker:build
           cd ..
 
@@ -73,11 +52,6 @@ jobs:
 
           echo '=====how_sms====='
           cd how_sms
-          mvn docker:build
-          cd ..
-
-          echo '=====how_spit====='
-          cd how_spit
           mvn docker:build
           cd ..
 
@@ -102,29 +76,14 @@ jobs:
           echo '=====开始上传how_article====='
           docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_article
 
-          echo '=====开始上传how_base====='
-          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_base
-
-          echo '=====开始上传how_friend====='
-          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_friend
-
-          echo '=====开始上传how_gateway_manager====='
-          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_gateway_manager
-
           echo '=====开始上传how_gateway_web====='
           docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_gateway_web
-
-          echo '=====开始上传how_qa====='
-          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_qa
 
           echo '=====开始上传how_search====='
           docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_search
 
           echo '=====开始上传how_sms====='
           docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_sms
-
-          echo '=====开始上传how_spit====='
-          docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_spit
 
           echo '=====开始上传how_user====='
           docker push registry.cn-beijing.aliyuncs.com/liushao-repository/how_user
