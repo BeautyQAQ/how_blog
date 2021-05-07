@@ -1,0 +1,36 @@
+version: '3.1'
+services:
+  rabbitmq:
+    restart: always
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      TZ: Asia/Shanghai
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - ./rabbitmq/data:/var/lib/rabbitmq
+    networks:
+      - how
+  mongo:
+    restart: always
+    image: mongo
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      # 挂载数据目录
+      - ./mongo/db:/data/db
+      # 挂载日志目录
+      - ./mongo/log:/var/log/mongodb
+      # 挂载配置目录
+      - ./mongo/config:/etc/mongo
+    networks:
+      - how
+
+networks:
+  how:
+    external: true
