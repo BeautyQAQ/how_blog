@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.liushao.client.SearchClient;
 import com.liushao.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,9 @@ public class ArticleService {
 	
 	@Autowired
 	private IdWorker idWorker;
+
+	@Autowired
+	private SearchClient searchClient;
 
 	//用Resource才不会报错，原因未知
 	@Resource
@@ -94,7 +98,7 @@ public class ArticleService {
 
 	/**
 	 * 增加
-	 * @param article
+	 * @param article 文章
 	 */
 	public void add(Article article) {
 		article.setId( idWorker.nextId()+"" );
@@ -103,11 +107,12 @@ public class ArticleService {
 
 	/**
 	 * 修改
-	 * @param article
+	 * @param article 文章
 	 */
 	public void update(Article article) {
 		redisTemplate.delete( "article_" + article.getId() );//删除缓存
 		articleDao.save(article);
+		searchClient.updateArticle(article);
 	}
 
 	/**
@@ -117,6 +122,7 @@ public class ArticleService {
 	public void deleteById(String id) {
 		redisTemplate.delete( "article_" + id );//删除缓存
 		articleDao.deleteById(id);
+		searchClient.deleteArticle(id);
 	}
 
 	/**
@@ -126,6 +132,9 @@ public class ArticleService {
 	@Transactional
 	public void examine(String id){
 		articleDao.examine(id);
+		Article article = findById(id);
+		//审核通过后，加入索引
+		searchClient.saveArticle(article);
 	}
 
 	/**

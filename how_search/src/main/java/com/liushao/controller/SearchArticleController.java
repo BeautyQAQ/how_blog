@@ -28,7 +28,7 @@ public class SearchArticleController {
      */
     @ApiOperation(value = "在es保存文章")
     @RequestMapping(value = "/article", method= RequestMethod.POST)
-    public Result save(@RequestBody Article article){
+    public Result save(Article article){
         searchArticleService.add(article);
         return new Result(true, StatusCode.OK, "操作成功");
     }
@@ -49,9 +49,19 @@ public class SearchArticleController {
     /**
      * 删除文章索引
      */
-    @ApiOperation(value = "专栏删除")
+    @ApiOperation(value = "文章删除")
     @RequestMapping(value="/article/delete/{id}",method= RequestMethod.DELETE)
     public Result delete(@PathVariable String id){
         return searchArticleService.deleteById(id);
+    }
+
+    /**
+     * 更新文章索引
+     */
+    @ApiOperation(value = "文章更新")
+    @RequestMapping(value="/article/update",method= RequestMethod.PUT)
+    public Result update(Article article){
+        searchArticleService.update(article);
+        return new Result(true, StatusCode.OK, "操作成功");
     }
 }

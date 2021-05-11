@@ -51,4 +51,16 @@ public class SearchArticleService {
         }
         return new Result(true, StatusCode.OK, "删除失败，该文章不存在");
     }
+
+    /**
+     * 文章更新
+     * @param article 文章
+     */
+    public void update(Article article) {
+        // 先查询索引中是否存在
+        Optional<Article> channel = searchArticleDao.findById(article.getId());
+        if(channel.isPresent()){
+            searchArticleDao.save(article);
+        }
+    }
 }
