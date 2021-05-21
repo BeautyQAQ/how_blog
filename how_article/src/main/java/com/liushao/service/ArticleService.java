@@ -36,12 +36,12 @@ public class ArticleService {
 
 	@Autowired
 	private ArticleDao articleDao;
-	
-	@Autowired
-	private IdWorker idWorker;
 
 	@Autowired
 	private SearchClient searchClient;
+	
+	@Autowired
+	private IdWorker idWorker;
 
 	//用Resource才不会报错，原因未知
 	@Resource
@@ -86,7 +86,7 @@ public class ArticleService {
 	 * @return
 	 */
 	public Article findById(String id) {
-		//从缓存中提取
+		// 从缓存中提取
 		Article article= (Article)redisTemplate.opsForValue().get("article_"+id);
 		// 如果缓存没有则到数据库查询并放入缓存
 		if(article==null) {
@@ -110,7 +110,8 @@ public class ArticleService {
 	 * @param article 文章
 	 */
 	public void update(Article article) {
-		redisTemplate.delete( "article_" + article.getId() );//删除缓存
+		// 删除缓存
+		redisTemplate.delete( "article_" + article.getId() );
 		articleDao.save(article);
 		searchClient.updateArticle(article);
 	}
@@ -120,7 +121,8 @@ public class ArticleService {
 	 * @param id
 	 */
 	public void deleteById(String id) {
-		redisTemplate.delete( "article_" + id );//删除缓存
+		// 删除缓存
+		redisTemplate.delete( "article_" + id );
 		articleDao.deleteById(id);
 		searchClient.deleteArticle(id);
 	}

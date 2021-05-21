@@ -16,7 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-
+import com.liushao.client.SearchClient;
 import com.liushao.dao.ChannelDao;
 import com.liushao.pojo.Channel;
 
@@ -31,6 +31,9 @@ public class ChannelService {
 
 	@Autowired
 	private ChannelDao channelDao;
+
+	@Autowired
+	private SearchClient searchClient;
 	
 	@Autowired
 	private IdWorker idWorker;
@@ -84,6 +87,7 @@ public class ChannelService {
 	public void add(Channel channel) {
 		channel.setId( idWorker.nextId()+"" );
 		channelDao.save(channel);
+		searchClient.saveChannel(channel);
 	}
 
 	/**
