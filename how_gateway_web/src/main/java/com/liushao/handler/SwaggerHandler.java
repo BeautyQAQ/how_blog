@@ -43,6 +43,11 @@ public class SwaggerHandler {
                 Optional.ofNullable(uiConfiguration).orElse(UiConfigurationBuilder.builder().build()), HttpStatus.OK));
     }
 
+    /**
+     * SuppressWarnings 抑制警告信息
+     * @return Mono
+     */
+    @SuppressWarnings("rawtypes")
     @GetMapping("/swagger-resources")
     public Mono<ResponseEntity> swaggerResources() {
         return Mono.just((new ResponseEntity<>(swaggerResources.get(), HttpStatus.OK)));
