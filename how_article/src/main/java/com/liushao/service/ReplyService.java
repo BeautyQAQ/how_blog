@@ -16,7 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-
+import com.liushao.client.SearchClient;
 import com.liushao.dao.ReplyDao;
 import com.liushao.pojo.Reply;
 
@@ -31,6 +31,9 @@ public class ReplyService {
 
 	@Autowired
 	private ReplyDao replyDao;
+
+	@Autowired
+	private SearchClient searchClient;
 	
 	@Autowired
 	private IdWorker idWorker;
@@ -84,6 +87,7 @@ public class ReplyService {
 	public void add(Reply reply) {
 		reply.setId( idWorker.nextId()+"" );
 		replyDao.save(reply);
+		searchClient.saveReply(reply);
 	}
 
 	/**
@@ -92,6 +96,7 @@ public class ReplyService {
 	 */
 	public void update(Reply reply) {
 		replyDao.save(reply);
+		searchClient.updateReply(reply);
 	}
 
 	/**
@@ -100,6 +105,7 @@ public class ReplyService {
 	 */
 	public void deleteById(String id) {
 		replyDao.deleteById(id);
+		searchClient.deleteReply(id);
 	}
 
 	/**

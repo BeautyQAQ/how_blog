@@ -44,8 +44,8 @@ public class SearchArticleService {
      */
     public Result deleteById(String id) {
         // 先查询索引中是否存在
-        Optional<Article> channel = searchArticleDao.findById(id);
-        if(channel.isPresent()){
+        Optional<Article> article = searchArticleDao.findById(id);
+        if(article.isPresent()){
             searchArticleDao.deleteById(id);
             return new Result(true, StatusCode.OK, "删除成功");
         }
@@ -58,8 +58,8 @@ public class SearchArticleService {
      */
     public void update(Article article) {
         // 先查询索引中是否存在
-        Optional<Article> channel = searchArticleDao.findById(article.getId());
-        if(channel.isPresent()){
+        Optional<Article> articleOptional = searchArticleDao.findById(article.getId());
+        if(articleOptional.isPresent()){
             searchArticleDao.save(article);
         }
     }

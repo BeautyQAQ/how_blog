@@ -63,4 +63,14 @@ public class SearchChannelController {
     public Result delete(@PathVariable String id){
         return searchChannelService.deleteById(id);
     }
+
+    /**
+     * 更新频道索引
+     */
+    @ApiOperation(value = "频道更新")
+    @RequestMapping(value="/channel/update",method= RequestMethod.PUT)
+    public Result update(Channel channel){
+        searchChannelService.update(channel);
+        return new Result(true, StatusCode.OK, "操作成功");
+    }
 }

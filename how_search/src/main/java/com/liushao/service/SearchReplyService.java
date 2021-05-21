@@ -2,10 +2,11 @@ package com.liushao.service;
 
 import java.util.Optional;
 
-import com.liushao.dao.SearchProblemDao;
+import com.liushao.dao.SearchReplyDao;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
-import com.liushao.pojo.Problem;
+import com.liushao.pojo.Reply;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,52 +16,52 @@ import org.springframework.stereotype.Service;
  * @author huangshen
  */
 @Service
-public class SearchProblemService {
+public class SearchReplyService {
     @Autowired
-    private SearchProblemDao searchProblemDao;
+    private SearchReplyDao searchReplyDao;
     /**
-     * 增加问题
-     * @param problem
+     * 增加回复
+     * @param reply
      */
-    public void add(Problem problem){
-        searchProblemDao.save(problem);
+    public void add(Reply reply){
+        searchReplyDao.save(reply);
     }
 
     /**
-     * 问题搜索
+     * 回复搜索
      * @param keywords
      * @param page
      * @param size
      * @return
      */
-    public Page<Problem> findByTitleOrContentLike(String keywords, int page, int size) {
+    public Page<Reply> findByContentLike(String keywords, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page-1, size);
-        return searchProblemDao.findByTitleOrContentLike(keywords, keywords, pageRequest);
+        return searchReplyDao.findByContentLike(keywords, pageRequest);
     }
 
     /**
-     * 问题删除
+     * 回复删除
      * @param id
      */
     public Result deleteById(String id) {
         // 先查询索引中是否存在
-        Optional<Problem> channel = searchProblemDao.findById(id);
+        Optional<Reply> channel = searchReplyDao.findById(id);
         if(channel.isPresent()){
-            searchProblemDao.deleteById(id);
+            searchReplyDao.deleteById(id);
             return new Result(true, StatusCode.OK, "删除成功");
         }
         return new Result(true, StatusCode.OK, "删除失败，该问题不存在");
     }
 
     /**
-     * 问题更新
-     * @param problem 问题
+     * 回复更新
+     * @param reply 回复
      */
-    public void update(Problem problem) {
+    public void update(Reply reply) {
         // 先查询索引中是否存在
-        Optional<Problem> problemOptional = searchProblemDao.findById(problem.getId());
-        if(problemOptional.isPresent()){
-            searchProblemDao.save(problem);
+        Optional<Reply> replyOptional = searchReplyDao.findById(reply.getId());
+        if(replyOptional.isPresent()){
+            searchReplyDao.save(reply);
         }
     }
 }

@@ -5,14 +5,14 @@ import com.liushao.entity.Result;
 import com.liushao.pojo.Article;
 import com.liushao.pojo.Channel;
 import com.liushao.pojo.Column;
+import com.liushao.pojo.Label;
 import com.liushao.pojo.Problem;
+import com.liushao.pojo.Reply;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import aj.org.objectweb.asm.Label;
 
 /**
  * @author huangshen
@@ -115,6 +115,7 @@ public interface SearchClient {
     @RequestMapping(value="/search/column/delete/{id}", method = RequestMethod.DELETE)
     Result deleteColumn(@PathVariable String id);
 
+
     /**
      * 在es中新增问题
      * @param problem 问题
@@ -137,5 +138,29 @@ public interface SearchClient {
      */
     @RequestMapping(value="/search/problem/delete/{id}", method = RequestMethod.DELETE)
     Result deleteProblem(@PathVariable String id);
+
+
+    /**
+     * 在es中新增回复
+     * @param problem 回复
+     * @return Result
+     */
+    @RequestMapping(value="/search/reply", method = RequestMethod.POST)
+    Result saveReply(Reply reply);
+
+    /**
+     * 在es中更新回复
+     * @param problem 回复
+     * @return Result
+     */
+    @RequestMapping(value="/search/reply/update", method = RequestMethod.PUT)
+    Result updateReply(Reply reply);
+    /**
+     * 在es中删除回复
+     * @param id id
+     * @return Result
+     */
+    @RequestMapping(value="/search/reply/delete/{id}", method = RequestMethod.DELETE)
+    Result deleteReply(@PathVariable String id);
 
 }

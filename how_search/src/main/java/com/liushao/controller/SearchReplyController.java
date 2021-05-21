@@ -3,8 +3,8 @@ package com.liushao.controller;
 import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
-import com.liushao.pojo.Column;
-import com.liushao.service.SearchColumnService;
+import com.liushao.pojo.Reply;
+import com.liushao.service.SearchReplyService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,55 +22,56 @@ import io.swagger.annotations.ApiOperation;
  * 前缀 /search
  * @author huangshen
  */
-@Api(tags = "专栏搜索")
+@Api(tags = "回复搜索")
 @RestController
 @CrossOrigin
 @RequestMapping("/search")
-public class SearchColumnController {
+public class SearchReplyController {
+
     @Autowired
-    private SearchColumnService searchColumnService;
+    private SearchReplyService searchReplyService;
 
     /**
-     * 专栏索引添加
-     * @param column
+     * 回复索引添加
+     * @param problem
      * @return
      */
-    @ApiOperation(value = "在es保存专栏")
-    @RequestMapping(value = "/column", method= RequestMethod.POST)
-    public Result save(@RequestBody Column column){
-        searchColumnService.add(column);
+    @ApiOperation(value = "在es保存回复")
+    @RequestMapping(value = "/reply", method= RequestMethod.POST)
+    public Result save(@RequestBody Reply reply){
+        searchReplyService.add(reply);
         return new Result(true, StatusCode.OK, "操作成功");
     }
 
     /**
-     * 专栏搜索
+     * 回复搜索
      * @param keywords 关键字
      * @param page 页码
      * @param size 页面大小
      */
-    @ApiOperation(value = "专栏搜索")
-    @RequestMapping(value="/column/{keywords}/{page}/{size}",method= RequestMethod.GET)
+    @ApiOperation(value = "回复搜索")
+    @RequestMapping(value="/reply/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByTitleOrContentLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
-        Page<Column> columnPage = searchColumnService.findByNameOrSummaryLike(keywords, page, size);
-        return new Result(true, StatusCode.OK, "查询成功", new PageResult<Column>(columnPage.getTotalElements(), columnPage.getContent()));
+        Page<Reply> reply = searchReplyService.findByContentLike(keywords, page, size);
+        return new Result(true, StatusCode.OK, "查询成功", new PageResult<Reply>(reply.getTotalElements(), reply.getContent()));
     }
 
     /**
-     * 删除专栏索引
+     * 删除回复索引
      */
-    @ApiOperation(value = "专栏删除")
-    @RequestMapping(value="/column/delete/{id}",method= RequestMethod.DELETE)
+    @ApiOperation(value = "回复删除")
+    @RequestMapping(value="/reply/delete/{id}",method= RequestMethod.DELETE)
     public Result delete(@PathVariable String id){
-        return searchColumnService.deleteById(id);
+        return searchReplyService.deleteById(id);
     }
 
     /**
-     * 更新专栏索引
+     * 更新回复索引
      */
-    @ApiOperation(value = "专栏更新")
-    @RequestMapping(value="/column/update",method= RequestMethod.PUT)
-    public Result update(Column column){
-        searchColumnService.update(column);
+    @ApiOperation(value = "回复更新")
+    @RequestMapping(value="/reply/update",method= RequestMethod.PUT)
+    public Result update(Reply reply){
+        searchReplyService.update(reply);
         return new Result(true, StatusCode.OK, "操作成功");
     }
 }

@@ -51,4 +51,17 @@ public class SearchLabelService {
         }
         return new Result(true, StatusCode.OK, "删除失败，该标签不存在");
     }
+
+    /**
+     * 标签更新
+     * @param label 标签
+     */
+    public void update(Label label) {
+        // 先查询索引中是否存在
+        Optional<Label> labelOptional = searchLabelDao.findById(label.getId());
+        if(labelOptional.isPresent()){
+            searchLabelDao.save(label);
+        }
+    }
+
 }

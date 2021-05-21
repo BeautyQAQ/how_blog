@@ -56,4 +56,16 @@ public class SearchColumnService {
         }
         return new Result(true, StatusCode.OK, "删除失败，该专栏不存在");
     }
+
+    /**
+     * 专栏更新
+     * @param channel 专栏
+     */
+    public void update(Column column) {
+        // 先查询索引中是否存在
+        Optional<Column> columnOptional = searchColumndDao.findById(column.getId());
+        if(columnOptional.isPresent()){
+            searchColumndDao.save(column);
+        }
+    }
 }

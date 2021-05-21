@@ -56,4 +56,16 @@ public class SearchChannelService {
         }
         return new Result(true, StatusCode.OK, "删除失败，该频道不存在");
     }
+
+    /**
+     * 频道更新
+     * @param channel 频道
+     */
+    public void update(Channel channel) {
+        // 先查询索引中是否存在
+        Optional<Channel> channelOptional = searchChanneldDao.findById(channel.getId());
+        if(channelOptional.isPresent()){
+            searchChanneldDao.save(channel);
+        }
+    }
 }

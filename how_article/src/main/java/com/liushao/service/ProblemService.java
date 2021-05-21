@@ -16,7 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-
+import com.liushao.client.SearchClient;
 import com.liushao.dao.ProblemDao;
 import com.liushao.pojo.Problem;
 
@@ -31,6 +31,9 @@ public class ProblemService {
 
 	@Autowired
 	private ProblemDao problemDao;
+
+	@Autowired
+	private SearchClient searchClient;
 	
 	@Autowired
 	private IdWorker idWorker;
@@ -84,6 +87,7 @@ public class ProblemService {
 	public void add(Problem problem) {
 		problem.setId( idWorker.nextId()+"" );
 		problemDao.save(problem);
+		searchClient.saveProblem(problem);
 	}
 
 	/**
@@ -92,6 +96,7 @@ public class ProblemService {
 	 */
 	public void update(Problem problem) {
 		problemDao.save(problem);
+		searchClient.updateProblem(problem);
 	}
 
 	/**
@@ -100,6 +105,7 @@ public class ProblemService {
 	 */
 	public void deleteById(String id) {
 		problemDao.deleteById(id);
+		searchClient.deleteProblem(id);
 	}
 
 	/**

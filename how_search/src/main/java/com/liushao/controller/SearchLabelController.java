@@ -63,4 +63,14 @@ public class SearchLabelController {
     public Result delete(@PathVariable String id){
         return searchLabelService.deleteById(id);
     }
+
+    /**
+     * 更新标签索引
+     */
+    @ApiOperation(value = "标签更新")
+    @RequestMapping(value="/label/update",method= RequestMethod.PUT)
+    public Result update(Label label){
+        searchLabelService.update(label);
+        return new Result(true, StatusCode.OK, "操作成功");
+    }
 }

@@ -6,11 +6,11 @@ import com.liushao.entity.StatusCode;
 import com.liushao.pojo.Article;
 import com.liushao.pojo.Channel;
 import com.liushao.pojo.Column;
+import com.liushao.pojo.Label;
 import com.liushao.pojo.Problem;
+import com.liushao.pojo.Reply;
 
 import org.springframework.stereotype.Component;
-
-import aj.org.objectweb.asm.Label;
 
 @Component
 public class SearchClientImpl implements SearchClient {
@@ -102,6 +102,24 @@ public class SearchClientImpl implements SearchClient {
     public Result deleteProblem(String id) {
         System.out.println("deleteProblem熔断器启动了");
         return new Result(false, StatusCode.ERROR,"deleteProblem熔断器启动了",id);
+    }
+
+    @Override
+    public Result saveReply(Reply reply) {
+        System.out.println("saveReply熔断器启动了");
+        return new Result(false, StatusCode.ERROR,"saveReply熔断器启动了",reply);
+    }
+
+    @Override
+    public Result updateReply(Reply reply) {
+        System.out.println("updateReply熔断器启动了");
+        return new Result(false, StatusCode.ERROR,"updateReply熔断器启动了",reply);
+    }
+
+    @Override
+    public Result deleteReply(String id) {
+        System.out.println("deleteReply熔断器启动了");
+        return new Result(false, StatusCode.ERROR,"deleteReply熔断器启动了",id);
     }
 
 }

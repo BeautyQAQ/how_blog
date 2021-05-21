@@ -1,5 +1,6 @@
 package com.liushao.service;
 
+import com.liushao.client.SearchClient;
 import com.liushao.dao.LabelDao;
 import com.liushao.pojo.Label;
 import com.liushao.util.IdWorker;
@@ -25,6 +26,10 @@ public class LabelService {
 
     @Autowired
     private LabelDao labelDao;
+
+    @Autowired
+	private SearchClient searchClient;
+    
     @Autowired
     private IdWorker idWorker;
     /**
@@ -49,6 +54,7 @@ public class LabelService {
     public void add(Label label){
         label.setId( idWorker.nextId()+"" );//设置ID
         labelDao.save(label);
+        searchClient.saveLabel(label);
     }
     /**
      * 修改标签
@@ -56,6 +62,7 @@ public class LabelService {
      */
     public void update(Label label){
         labelDao.save(label);
+        searchClient.updateLabel(label);
     }
     /**
      * 删除标签
@@ -63,6 +70,7 @@ public class LabelService {
      */
     public void deleteById(String id){
         labelDao.deleteById(id);
+        searchClient.deleteLabel(id);
     }
 
     /**

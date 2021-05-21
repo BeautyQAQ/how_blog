@@ -63,4 +63,14 @@ public class SearchProblemController {
     public Result delete(@PathVariable String id){
         return searchProblemService.deleteById(id);
     }
+
+    /**
+     * 更新问题索引
+     */
+    @ApiOperation(value = "问题更新")
+    @RequestMapping(value="/problem/update",method= RequestMethod.PUT)
+    public Result update(Problem problem){
+        searchProblemService.update(problem);
+        return new Result(true, StatusCode.OK, "操作成功");
+    }
 }

@@ -16,7 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-
+import com.liushao.client.SearchClient;
 import com.liushao.dao.ColumnDao;
 import com.liushao.pojo.Column;
 
@@ -31,6 +31,9 @@ public class ColumnService {
 
 	@Autowired
 	private ColumnDao columnDao;
+
+	@Autowired
+	private SearchClient searchClient;
 	
 	@Autowired
 	private IdWorker idWorker;
@@ -84,6 +87,7 @@ public class ColumnService {
 	public void add(Column column) {
 		column.setId( idWorker.nextId()+"" );
 		columnDao.save(column);
+		searchClient.saveColumn(column);
 	}
 
 	/**
@@ -92,6 +96,7 @@ public class ColumnService {
 	 */
 	public void update(Column column) {
 		columnDao.save(column);
+		searchClient.updateColumn(column);
 	}
 
 	/**
@@ -100,6 +105,7 @@ public class ColumnService {
 	 */
 	public void deleteById(String id) {
 		columnDao.deleteById(id);
+		searchClient.deleteColumn(id);
 	}
 
 	/**

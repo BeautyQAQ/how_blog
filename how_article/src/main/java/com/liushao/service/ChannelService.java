@@ -96,6 +96,7 @@ public class ChannelService {
 	 */
 	public void update(Channel channel) {
 		channelDao.save(channel);
+		searchClient.updateChannel(channel);
 	}
 
 	/**
@@ -104,6 +105,7 @@ public class ChannelService {
 	 */
 	public void deleteById(String id) {
 		channelDao.deleteById(id);
+		searchClient.deleteChannel(id);
 	}
 
 	/**
