@@ -102,7 +102,7 @@ public interface SearchClient {
 
     /**
      * 在es中更新专栏
-     * @param colum 专栏
+     * @param column 专栏
      * @return Result
      */
     @RequestMapping(value="/search/column/update", method = RequestMethod.PUT)
@@ -142,7 +142,7 @@ public interface SearchClient {
 
     /**
      * 在es中新增回复
-     * @param problem 回复
+     * @param reply 回复
      * @return Result
      */
     @RequestMapping(value="/search/reply", method = RequestMethod.POST)
@@ -150,7 +150,7 @@ public interface SearchClient {
 
     /**
      * 在es中更新回复
-     * @param problem 回复
+     * @param reply 回复
      * @return Result
      */
     @RequestMapping(value="/search/reply/update", method = RequestMethod.PUT)
