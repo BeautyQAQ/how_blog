@@ -35,6 +35,7 @@ public interface SearchClient {
      */
     @RequestMapping(value="/search/article/update", method = RequestMethod.PUT)
     Result updateArticle(Article article);
+    
     /**
      * 在es中删除文章
      * @param id id
@@ -59,6 +60,7 @@ public interface SearchClient {
      */
     @RequestMapping(value="/search/channel/update", method = RequestMethod.PUT)
     Result updateChannel(Channel channel);
+
     /**
      * 在es中删除频道
      * @param id id
@@ -83,6 +85,7 @@ public interface SearchClient {
      */
     @RequestMapping(value="/search/label/update", method = RequestMethod.PUT)
     Result updateLabel(Label label);
+
     /**
      * 在es中删除标签
      * @param id id
@@ -107,6 +110,7 @@ public interface SearchClient {
      */
     @RequestMapping(value="/search/column/update", method = RequestMethod.PUT)
     Result updateColumn(Column column);
+
     /**
      * 在es中删除专栏
      * @param id id
@@ -131,6 +135,7 @@ public interface SearchClient {
      */
     @RequestMapping(value="/search/problem/update", method = RequestMethod.PUT)
     Result updateProblem(Problem problem);
+
     /**
      * 在es中删除问题
      * @param id id
