@@ -17,7 +17,7 @@ import java.util.Map;
  * 前缀 /base
  * @author huangshen
  */
-@Api(tags = "标签模块")
+@Api(tags = "标签控制层")
 @RestController
 @RequestMapping("/label")
 public class LabelController {

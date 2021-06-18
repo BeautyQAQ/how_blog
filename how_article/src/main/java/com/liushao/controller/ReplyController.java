@@ -25,7 +25,7 @@ import com.liushao.service.ReplyService;
  * @author Administrator
  *
  */
-@Api(tags = "回答")
+@Api(tags = "回答控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/reply")

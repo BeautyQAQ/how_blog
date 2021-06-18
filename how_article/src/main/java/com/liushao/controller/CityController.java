@@ -25,7 +25,7 @@ import com.liushao.service.CityService;
  * @author Administrator
  *
  */
-@Api(tags = "城市模块")
+@Api(tags = "城市控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/city")

@@ -17,7 +17,7 @@ import java.util.Map;
  * 前缀 /article
  * @author Administrator
  */
-@Api(tags = "评论模块")
+@Api(tags = "评论控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/comment")

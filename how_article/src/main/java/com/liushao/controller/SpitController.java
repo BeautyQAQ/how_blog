@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * 前缀 /spit
  * @author huangshen
  */
-@Api(tags = "吐槽模块")
+@Api(tags = "吐槽控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/spit")

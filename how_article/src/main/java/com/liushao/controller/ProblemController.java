@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Administrator
  *
  */
-@Api(tags = "问题")
+@Api(tags = "问题控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/problem")

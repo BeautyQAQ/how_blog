@@ -16,8 +16,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SearchArticleService {
+
     @Autowired
     private SearchArticleDao searchArticleDao;
+
     /**
      * 增加文章
      * @param article
