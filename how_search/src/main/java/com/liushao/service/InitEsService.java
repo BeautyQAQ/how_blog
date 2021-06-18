@@ -3,7 +3,6 @@ package com.liushao.service;
 import com.liushao.client.InitEsClient;
 import com.liushao.dao.*;
 import com.liushao.entity.Result;
-import com.liushao.entity.StatusCode;
 import com.liushao.pojo.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
