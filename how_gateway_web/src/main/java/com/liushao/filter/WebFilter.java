@@ -43,14 +43,14 @@ public class WebFilter implements GlobalFilter, Ordered {
         // 登录请求允许通过
         String url = request.getURI().getPath();
         if (url.contains("/admin/login") || url.contains("/user/login")) {
-            log.info("登陆页面" + url);
+            log.info("登陆页面:{}", url);
             return chain.filter(exchange);
         }
         // 以下请求放行，如果存在Authorization，则下放到模块中验证，同时放行/v2/api-docs接口
         if (url.contains("/article") || url.contains("/search") || url.contains("/channel") || url.contains("/city")
                 || url.contains("/column") || url.contains("/comment") || url.contains("/label") || url.contains("/v2/api-docs")
                 || url.contains("/problem") || url.contains("/reply") || url.contains("/spit")) {
-            log.info("登陆页面" + url);
+            log.info("请求url:{}", url);
             // 获取头信息
             String authorization = request.getHeaders().getFirst("Authorization");
             // Authorization信息存在，转发到模块中校验
@@ -71,7 +71,7 @@ public class WebFilter implements GlobalFilter, Ordered {
                     ServerHttpRequest host = exchange.getRequest().mutate().header("Authorization", token).build();
                     // 将现在的request 变成 change对象
                     exchange.mutate().request(host).build();
-                    log.info("token 验证通过，添加了头信息" + token);
+                    log.info("token 验证通过，添加了头信息: {}", token);
                     return chain.filter(exchange);
                 }
             }
