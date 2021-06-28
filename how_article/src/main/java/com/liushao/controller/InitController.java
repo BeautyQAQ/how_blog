@@ -50,7 +50,7 @@ public class InitController {
      * 查询全部可搜索数据,用于搜索模块初始化
      * @return 全部可搜索数据
      */
-    @ApiOperation(value = "查询全部文章数据")
+    @ApiOperation(value = "初始化es索引数据")
     @RequestMapping(value="/data", method= RequestMethod.GET)
     public Result init(){
         List<Article> articles = articleService.findAll();
@@ -66,6 +66,6 @@ public class InitController {
         map.put("column", columns);
         map.put("problem", problems);
         map.put("reply", replies);
-        return new Result(true, StatusCode.OK,"查询成功", map);
+        return new Result(true, StatusCode.OK,"操作成功", map);
     }
 }
