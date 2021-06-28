@@ -1,6 +1,8 @@
 package com.liushao.listener;
 
 import com.liushao.util.SmsUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -26,14 +28,16 @@ public class SmsListener {
     @Value("${aliyun.sms.sign_name}")
     private String sign_name;//签名
 
+    private static final Logger log = LoggerFactory.getLogger(SmsListener.class);
+
     /**
      * 发送短信
      * @param map
      */
     @RabbitHandler
     public void sendSms(Map<String,String> map){
-        System.out.println("手机号："+map.get("mobile"));
-        System.out.println("验证码："+map.get("code"));
+        log.info("手机号："+map.get("mobile"));
+        log.info("验证码："+map.get("code"));
         smsUtil.sendSms(map.get("mobile"),template_code,sign_name,"{\"code\":\""+ map.get("code") +"\"}");
     }
 }

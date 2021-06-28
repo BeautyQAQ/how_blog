@@ -9,6 +9,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.liushao.util.IdWorker;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,11 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 服务层
- * 
- * @author Administrator
- *
+ * @author huangshen
  */
 @Service
+@Slf4j
 public class UserService {
 
 	@Autowired
@@ -126,7 +126,7 @@ public class UserService {
 		if(code<min){
 			code=code+min;
 		}
-		System.out.println(mobile+"收到验证码是："+code);
+		log.info(mobile+"收到验证码是："+code);
 		//2.将验证码放入redis  //五分钟过期
 		redisTemplate.opsForValue().set("smscode_"+mobile, code+"" ,5, TimeUnit.MINUTES );
 		//3.将验证码和手机号发动到rabbitMQ中

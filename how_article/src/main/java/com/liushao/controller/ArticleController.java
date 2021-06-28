@@ -24,7 +24,7 @@ import com.liushao.entity.StatusCode;
  * @author Administrator
  *
  */
-@Api(tags = "文章模块")
+@Api(tags = "文章控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/article")

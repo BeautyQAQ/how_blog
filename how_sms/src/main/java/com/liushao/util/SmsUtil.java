@@ -5,9 +5,10 @@ import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -25,14 +26,15 @@ public class SmsUtil {
     @Autowired
     private Environment env;
 
+    private static final Logger log = LoggerFactory.getLogger(SmsUtil.class);
+
     /**
     * 发送短信
     * @param mobile 手机号
     * @param template_code 模板号
     * @param sign_name 签名
     * @param param 参数
-    * @return
-    * @throws ClientException
+    * @return CommonResponse
     */
     public CommonResponse sendSms(String mobile,String template_code,String sign_name,String param){
         String accessKeyId =env.getProperty("aliyun.sms.accessKeyId");
@@ -56,13 +58,10 @@ public class SmsUtil {
         //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
         request.putQueryParameter("TemplateParam", param);
         try {
-            CommonResponse response = client.getCommonResponse(request);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
+            return client.getCommonResponse(request);
         } catch (ClientException e) {
             e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -94,13 +93,10 @@ public class SmsUtil {
         request.putQueryParameter("CurrentPage", "1");
 
         try {
-            CommonResponse response = client.getCommonResponse(request);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
+            return client.getCommonResponse(request);
         } catch (ClientException e) {
             e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
     }

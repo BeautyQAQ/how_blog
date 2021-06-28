@@ -24,7 +24,7 @@ import com.liushao.entity.StatusCode;
  * @author Administrator
  *
  */
-@Api(tags = "频道模块")
+@Api(tags = "频道控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/channel")

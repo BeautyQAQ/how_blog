@@ -25,7 +25,7 @@ import com.liushao.service.ColumnService;
  * @author Administrator
  *
  */
-@Api(tags = "专栏模块")
+@Api(tags = "专栏控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/column")

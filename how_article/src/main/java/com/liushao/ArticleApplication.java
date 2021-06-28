@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Bean;
  * @author huangshen
  */
 @EnableDiscoveryClient
-@SpringBootApplication
 @EnableFeignClients
+@SpringBootApplication
 public class ArticleApplication {
 
     public static void main(String[] args) {
