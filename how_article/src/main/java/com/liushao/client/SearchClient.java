@@ -160,6 +160,7 @@ public interface SearchClient {
      */
     @RequestMapping(value="/search/reply/update", method = RequestMethod.PUT)
     Result updateReply(Reply reply);
+
     /**
      * 在es中删除回复
      * @param id id
