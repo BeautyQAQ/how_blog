@@ -18,6 +18,6 @@ public class BaseExceptionHandler {
     public Result error(Exception e){
         e.printStackTrace();
         log.error(e.getMessage());
-        return new Result(false, StatusCode.ERROR, "执行出错");
+        return new Result(false, StatusCode.ERROR, e.getMessage());
     }
 }

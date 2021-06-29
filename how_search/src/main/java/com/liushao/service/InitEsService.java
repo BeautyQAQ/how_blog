@@ -4,11 +4,8 @@ import com.liushao.client.InitEsClient;
 import com.liushao.dao.*;
 import com.liushao.entity.Result;
 import com.liushao.pojo.*;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 import java.util.Map;
@@ -43,8 +40,6 @@ public class InitEsService {
     /**
      * 初始化elasticsearch索引
      */
-    @ApiOperation(value = "在es保存文章")
-    @RequestMapping(value = "/init", method= RequestMethod.POST)
     public void init(){
         Result init = initEsClient.init();
         Map<String, Object> data = (Map<String, Object>)init.getData();
