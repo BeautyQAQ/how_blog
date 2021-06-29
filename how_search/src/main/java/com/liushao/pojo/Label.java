@@ -16,7 +16,7 @@ import lombok.Data;
  */
 @Data
 @ApiModel(value = "标签")
-@Document(indexName="how",type="label")
+@Document(indexName="label",type="docs")
 public class Label {
 
     @ApiModelProperty(value = "ID")

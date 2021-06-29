@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel(value = "回复")
-@Document(indexName="how",type="reply")
+@Document(indexName="reply",type="docs")
 public class Reply implements Serializable{
 
 	@ApiModelProperty(value = "ID编号")

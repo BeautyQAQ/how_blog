@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel(value = "文章搜索实体类")
-@Document(indexName="how",type="article")
+@Document(indexName="article",type="docs")
 public class Article implements Serializable {
 
     /**

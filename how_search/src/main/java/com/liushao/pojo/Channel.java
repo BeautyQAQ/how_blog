@@ -16,7 +16,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
  */
 @Data
 @ApiModel(value = "频道")
-@Document(indexName="how",type="channel")
+@Document(indexName="channel",type="docs")
 public class Channel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
