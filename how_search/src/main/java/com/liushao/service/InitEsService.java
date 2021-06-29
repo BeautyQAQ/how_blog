@@ -7,6 +7,8 @@ import com.liushao.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.hutool.json.JSONArray;
+
 import java.util.List;
 import java.util.Map;
 
@@ -43,12 +45,36 @@ public class InitEsService {
     public void init(){
         Result init = initEsClient.init();
         Map<String, Object> data = (Map<String, Object>)init.getData();
-        List<Article> article = (List<Article>) data.get("article");
-        List<Channel> channel = (List<Channel>) data.get("channel");
-        List<Label> label = (List<Label>) data.get("label");
-        List<Column> column = (List<Column>) data.get("column");
-        List<Problem> problem = (List<Problem>) data.get("problem");
-        List<Reply> reply = (List<Reply>) data.get("reply");
+        List<Map<String, Object>> articleMap = (List<Map<String,Object>>) data.get("article");
+        JSONArray articleArray = new JSONArray();
+        articleArray.addAll(articleMap);
+        List<Article> article = articleArray.toList(Article.class);
+
+        List<Map<String, Object>> channelMap = (List<Map<String,Object>>) data.get("channel");
+        JSONArray channelArray = new JSONArray();
+        channelArray.addAll(channelMap);
+        List<Channel> channel = channelArray.toList(Channel.class);
+
+        List<Map<String, Object>> labelMap = (List<Map<String,Object>>) data.get("label");
+        JSONArray labelArray = new JSONArray();
+        labelArray.addAll(labelMap);
+        List<Label> label = labelArray.toList(Label.class);
+
+        List<Map<String, Object>> columnMap = (List<Map<String,Object>>) data.get("column");
+        JSONArray columnArray = new JSONArray();
+        columnArray.addAll(columnMap);
+        List<Column> column = columnArray.toList(Column.class);
+
+        List<Map<String, Object>> problemMap = (List<Map<String,Object>>) data.get("problem");
+        JSONArray problemArray = new JSONArray();
+        problemArray.addAll(problemMap);
+        List<Problem> problem = problemArray.toList(Problem.class);
+
+        List<Map<String, Object>> replyMap = (List<Map<String,Object>>) data.get("reply");
+        JSONArray replyArray = new JSONArray();
+        replyArray.addAll(replyMap);
+        List<Reply> reply = replyArray.toList(Reply.class);
+
         searchArticleDao.deleteAll();
         searchArticleDao.saveAll(article);
         searchChannelDao.deleteAll();
