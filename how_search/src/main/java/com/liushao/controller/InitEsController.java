@@ -27,7 +27,7 @@ public class InitEsController {
     /**
      * 初始化elasticsearch索引
      */
-    @ApiOperation(value = "在es保存文章")
+    @ApiOperation(value = "初始化elasticsearch索引")
     @RequestMapping(value = "/init", method= RequestMethod.POST)
     public Result init(){
         initEsService.init();
