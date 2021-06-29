@@ -7,6 +7,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
 /**
@@ -27,7 +28,7 @@ public class Reply implements Serializable{
 	private String problemid;
 
 	@ApiModelProperty(value = "回答内容")
-	@Field(index= true,analyzer="ik_max_word",searchAnalyzer="ik_max_word")
+	@Field(type = FieldType.Text, analyzer="ik_max_word",searchAnalyzer="ik_max_word")
 	private String content;
 
 	@ApiModelProperty(value = "回答人ID")

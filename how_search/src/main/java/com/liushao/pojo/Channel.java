@@ -9,6 +9,8 @@ import java.io.Serializable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 /**
  * 频道搜索实体类
  * @author Administrator
@@ -26,7 +28,7 @@ public class Channel implements Serializable {
 	private String id;
 
 	@ApiModelProperty(value = "频道名称")
-	@Field(index= true,analyzer="ik_max_word",searchAnalyzer="ik_max_word")
+	@Field(type = FieldType.Text, analyzer="ik_max_word",searchAnalyzer="ik_max_word")
 	private String name;
 
 }

@@ -8,6 +8,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 
 /**
@@ -24,7 +25,7 @@ public class Label {
     private String id;
 
     @ApiModelProperty(value = "标签名称")
-    @Field(index= true,analyzer="ik_max_word",searchAnalyzer="ik_max_word")
+    @Field(type = FieldType.Text, analyzer="ik_max_word",searchAnalyzer="ik_max_word")
     private String labelname;
 
 }
