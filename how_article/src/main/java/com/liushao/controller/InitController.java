@@ -22,7 +22,7 @@ import java.util.Map;
  * @author Administrator
  *
  */
-@Api(tags = "数据初始化控制层")
+@Api(tags = "es数据初始化控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/init")

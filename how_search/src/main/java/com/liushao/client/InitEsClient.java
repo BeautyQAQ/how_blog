@@ -17,6 +17,6 @@ public interface InitEsClient {
      * 从文章服务拿到所有的数据库数据
      * @return Result
      */
-    @RequestMapping(value="/init/data", method = RequestMethod.POST)
+    @RequestMapping(value="/init/data", method = RequestMethod.GET)
     Result init();
 }
