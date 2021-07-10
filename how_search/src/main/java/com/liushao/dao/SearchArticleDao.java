@@ -11,10 +11,17 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
  */
 public interface SearchArticleDao extends ElasticsearchRepository<Article,String> {
     /**
-     * 检索
+     * 检索标题和文章内容
      * @param
      * @return
      */
     Page<Article> findByTitleOrContentLike(String title, String content, Pageable pageable);
+
+    /**
+     * 检索标题
+     * @param
+     * @return
+     */
+    Page<Article> findByTitleLike(String title, Pageable pageable);
 
 }

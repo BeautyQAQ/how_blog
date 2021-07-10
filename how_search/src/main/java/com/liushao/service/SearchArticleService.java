@@ -29,7 +29,7 @@ public class SearchArticleService {
     }
 
     /**
-     * 文章搜索
+     * 文章搜索--包含标题和内容
      * @param keywords
      * @param page
      * @param size
@@ -38,6 +38,18 @@ public class SearchArticleService {
     public Page<Article> findByTitleOrContentLike(String keywords, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page-1, size);
         return searchArticleDao.findByTitleOrContentLike(keywords, keywords, pageRequest);
+    }
+
+    /**
+     * 文章标题搜索
+     * @param keywords
+     * @param page
+     * @param size
+     * @return
+     */
+    public Page<Article> findByTitleLike(String keywords, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page-1, size);
+        return searchArticleDao.findByTitleLike(keywords, pageRequest);
     }
 
     /**

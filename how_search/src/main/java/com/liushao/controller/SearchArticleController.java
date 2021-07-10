@@ -34,16 +34,29 @@ public class SearchArticleController {
     }
 
     /**
-     * 文章搜索
+     * 文章搜索--包含标题和内容
      * @param keywords 关键字
      * @param page 页码
      * @param size 页面大小
      */
-    @ApiOperation(value = "文章搜索")
+    @ApiOperation(value = "文章搜索--包含标题和内容")
     @RequestMapping(value="/article/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByTitleOrContentLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Article> articlePage = searchArticleService.findByTitleOrContentLike(keywords,page,size);
-        return new Result(true, StatusCode.OK, "查询成功", new PageResult<Article>(articlePage.getTotalElements(), articlePage.getContent()));
+        return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(articlePage.getTotalElements(), articlePage.getContent()));
+    }
+
+    /**
+     * 文章标题搜索
+     * @param keywords 关键字
+     * @param page 页码
+     * @param size 页面大小
+     */
+    @ApiOperation(value = "文章标题搜索")
+    @RequestMapping(value="/article/title/{keywords}/{page}/{size}",method= RequestMethod.GET)
+    public Result findByTitleLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
+        Page<Article> articlePage = searchArticleService.findByTitleLike(keywords,page,size);
+        return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(articlePage.getTotalElements(), articlePage.getContent()));
     }
 
     /**
