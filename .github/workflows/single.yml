@@ -6,10 +6,10 @@ name: Master-Build-Docker-Images-single
 #    tags:
 #      - v*
 
- on:
-   push:
-     branches:
-       - master
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   push:
