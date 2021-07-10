@@ -1,15 +1,20 @@
 package com.liushao.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 import com.liushao.pojo.Article;
 import com.liushao.service.SearchArticleService;
+import com.liushao.vo.ArticleVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 前缀 /search
@@ -56,7 +61,14 @@ public class SearchArticleController {
     @RequestMapping(value="/article/title/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByTitleLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Article> articlePage = searchArticleService.findByTitleLike(keywords,page,size);
-        return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(articlePage.getTotalElements(), articlePage.getContent()));
+        List<Article> content = articlePage.getContent();
+        List<ArticleVo> articleVos = new ArrayList<>();
+        for (Article article : content) {
+            ArticleVo articleVo = new ArticleVo();
+            BeanUtil.copyProperties(article,articleVo);
+            articleVos.add(articleVo);
+        }
+        return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(articlePage.getTotalElements(), articleVos));
     }
 
     /**

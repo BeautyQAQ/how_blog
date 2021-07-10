@@ -12,4 +12,4 @@ how_sms             ----消息模块（rabbitMQ）
 how_user            ----用户模块（权限管理）（合并交友模块）
 活动模块砍掉
 
-todo：合并数据库
+tips:服务器拉取git有问题时,https改为gits
