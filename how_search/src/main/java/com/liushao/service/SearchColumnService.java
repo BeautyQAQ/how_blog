@@ -19,28 +19,41 @@ import org.springframework.stereotype.Service;
 public class SearchColumnService {
 
     @Autowired
-    private SearchColumnDao searchColumndDao;
+    private SearchColumnDao searchColumnDao;
 
     /**
      * 增加专栏
      * 
-     * @param article
+     * @param column 专栏
      */
     public void add(Column column) {
-        searchColumndDao.save(column);
+        searchColumnDao.save(column);
     }
 
     /**
-     * 专栏搜索
+     * 专栏名称搜索
      * 
-     * @param keywords
-     * @param page
-     * @param size
+     * @param keywords 关键字
+     * @param page 页码
+     * @param size 大小
      * @return 分页结果
      */
-    public Page<Column> findByNameOrSummaryLike(String keywords, int page, int size) {
+    public Page<Column> findByNameLike(String keywords, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
-        return searchColumndDao.findByNameOrSummaryLike(keywords, keywords, pageRequest);
+        return searchColumnDao.findByNameLike(keywords, pageRequest);
+    }
+
+    /**
+     * 专栏简介搜索
+     *
+     * @param keywords 关键字
+     * @param page 页码
+     * @param size 大小
+     * @return 分页结果
+     */
+    public Page<Column> findBySummaryLike(String keywords, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        return searchColumnDao.findBySummaryLike(keywords, pageRequest);
     }
 
     /**
@@ -49,9 +62,9 @@ public class SearchColumnService {
      */
     public Result deleteById(String id) {
         // 先查询索引中是否存在
-        Optional<Column> column = searchColumndDao.findById(id);
+        Optional<Column> column = searchColumnDao.findById(id);
         if(column.isPresent()){
-            searchColumndDao.deleteById(id);
+            searchColumnDao.deleteById(id);
             return new Result(true, StatusCode.OK, "删除成功");
         }
         return new Result(true, StatusCode.OK, "删除失败，该专栏不存在");
@@ -59,13 +72,13 @@ public class SearchColumnService {
 
     /**
      * 专栏更新
-     * @param channel 专栏
+     * @param column 专栏
      */
     public void update(Column column) {
         // 先查询索引中是否存在
-        Optional<Column> columnOptional = searchColumndDao.findById(column.getId());
+        Optional<Column> columnOptional = searchColumnDao.findById(column.getId());
         if(columnOptional.isPresent()){
-            searchColumndDao.save(column);
+            searchColumnDao.save(column);
         }
     }
 }

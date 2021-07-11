@@ -43,16 +43,29 @@ public class SearchColumnController {
     }
 
     /**
-     * 专栏搜索
+     * 专栏名称搜索
      * @param keywords 关键字
      * @param page 页码
      * @param size 页面大小
      */
-    @ApiOperation(value = "专栏搜索")
-    @RequestMapping(value="/column/{keywords}/{page}/{size}",method= RequestMethod.GET)
-    public Result findByTitleOrContentLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
-        Page<Column> columnPage = searchColumnService.findByNameOrSummaryLike(keywords, page, size);
-        return new Result(true, StatusCode.OK, "查询成功", new PageResult<Column>(columnPage.getTotalElements(), columnPage.getContent()));
+    @ApiOperation(value = "专栏名称搜索")
+    @RequestMapping(value="/column/name/{keywords}/{page}/{size}",method= RequestMethod.GET)
+    public Result findByNameLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
+        Page<Column> columnPage = searchColumnService.findByNameLike(keywords, page, size);
+        return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(columnPage.getTotalElements(), columnPage.getContent()));
+    }
+
+    /**
+     * 专栏简介搜索
+     * @param keywords 关键字
+     * @param page 页码
+     * @param size 页面大小
+     */
+    @ApiOperation(value = "专栏名称搜索")
+    @RequestMapping(value="/column/summary/{keywords}/{page}/{size}",method= RequestMethod.GET)
+    public Result findBySummaryLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
+        Page<Column> columnPage = searchColumnService.findBySummaryLike(keywords, page, size);
+        return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(columnPage.getTotalElements(), columnPage.getContent()));
     }
 
     /**

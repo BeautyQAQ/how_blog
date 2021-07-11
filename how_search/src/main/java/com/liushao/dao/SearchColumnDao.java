@@ -13,8 +13,12 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 public interface SearchColumnDao extends ElasticsearchRepository<Column,String> {
 
     /**
-     * 检索
+     * 专栏名称搜索
      */
-    Page<Column> findByNameOrSummaryLike(String name, String summary, Pageable pageable);
+    Page<Column> findByNameLike(String name, Pageable pageable);
 
+    /**
+     * 专栏简介搜索
+     */
+    Page<Column> findBySummaryLike(String summary, Pageable pageable);
 }
