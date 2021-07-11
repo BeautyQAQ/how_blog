@@ -50,9 +50,9 @@ public class SearchLabelController {
      */
     @ApiOperation(value = "标签搜索")
     @RequestMapping(value="/label/{keywords}/{page}/{size}",method= RequestMethod.GET)
-    public Result findByTitleOrContentLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
+    public Result findByLabelnameLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Label> labelPage = searchLabelService.findByLabelnameLike(keywords, page, size);
-        return new Result(true, StatusCode.OK, "查询成功", new PageResult<Label>(labelPage.getTotalElements(), labelPage.getContent()));
+        return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(labelPage.getTotalElements(), labelPage.getContent()));
     }
 
     /**

@@ -52,7 +52,7 @@ public class SearchProblemController {
     @RequestMapping(value="/problem/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByTitleOrContentLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Problem> problemPage = searchProblemService.findByTitleOrContentLike(keywords, page, size);
-        return new Result(true, StatusCode.OK, "查询成功", new PageResult<Problem>(problemPage.getTotalElements(), problemPage.getContent()));
+        return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(problemPage.getTotalElements(), problemPage.getContent()));
     }
 
     /**

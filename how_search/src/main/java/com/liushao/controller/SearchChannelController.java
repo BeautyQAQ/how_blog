@@ -50,9 +50,9 @@ public class SearchChannelController {
      */
     @ApiOperation(value = "频道搜索")
     @RequestMapping(value="/channel/{keywords}/{page}/{size}",method= RequestMethod.GET)
-    public Result findByTitleOrContentLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
+    public Result findByNameLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Channel> channelPage = searchChannelService.findByNameLike(keywords, page, size);
-        return new Result(true, StatusCode.OK, "查询成功", new PageResult<Channel>(channelPage.getTotalElements(), channelPage.getContent()));
+        return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(channelPage.getTotalElements(), channelPage.getContent()));
     }
 
     /**

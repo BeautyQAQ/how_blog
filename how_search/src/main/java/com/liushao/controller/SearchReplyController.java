@@ -33,8 +33,8 @@ public class SearchReplyController {
 
     /**
      * 回复索引添加
-     * @param problem
-     * @return
+     * @param reply 回复
+     * @return Result
      */
     @ApiOperation(value = "在es保存回复")
     @RequestMapping(value = "/reply", method= RequestMethod.POST)
@@ -51,9 +51,9 @@ public class SearchReplyController {
      */
     @ApiOperation(value = "回复搜索")
     @RequestMapping(value="/reply/{keywords}/{page}/{size}",method= RequestMethod.GET)
-    public Result findByTitleOrContentLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
+    public Result findByContentLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Reply> reply = searchReplyService.findByContentLike(keywords, page, size);
-        return new Result(true, StatusCode.OK, "查询成功", new PageResult<Reply>(reply.getTotalElements(), reply.getContent()));
+        return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(reply.getTotalElements(), reply.getContent()));
     }
 
     /**

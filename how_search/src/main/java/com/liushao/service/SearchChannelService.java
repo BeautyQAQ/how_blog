@@ -24,7 +24,7 @@ public class SearchChannelService {
     /**
      * 增加频道
      * 
-     * @param article
+     * @param channel
      */
     public void add(Channel channel) {
         searchChanneldDao.save(channel);
