@@ -1,16 +1,27 @@
 version: '3.1'
 services:
   nacos:
-    image: nacos/nacos-server
+    image: nacos/nacos-server:v2.5.5
     container_name: nacos
     env_file:
       - ./nacos/nacos-config.env
+    # Copy ../../deploy/nacos/.env.example to .env here and fill in credentials.
+    environment:
+      MYSQL_SERVICE_HOST: ${MYSQL_HOST:-host.docker.internal}
+      MYSQL_SERVICE_PORT: ${MYSQL_PORT:-3306}
+      MYSQL_SERVICE_USER: ${MYSQL_USER:?Please set MYSQL_USER in .env}
+      MYSQL_SERVICE_PASSWORD: ${MYSQL_PASSWORD:?Please set MYSQL_PASSWORD in .env}
+      NACOS_AUTH_TOKEN: ${NACOS_AUTH_TOKEN:?Please set NACOS_AUTH_TOKEN in .env}
+      NACOS_AUTH_IDENTITY_KEY: ${NACOS_AUTH_IDENTITY_KEY:?Please set NACOS_AUTH_IDENTITY_KEY in .env}
+      NACOS_AUTH_IDENTITY_VALUE: ${NACOS_AUTH_IDENTITY_VALUE:?Please set NACOS_AUTH_IDENTITY_VALUE in .env}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./nacos/standalone-logs/:/home/nacos/logs
-      - ./nacos/custom.properties:/home/nacos/init.d/custom.properties
+      - ./nacos/data/:/home/nacos/data
     ports:
       - "8848:8848"
-      - "9555:9555"
+      - "9848:9848"
     restart: always
     networks:
       - how

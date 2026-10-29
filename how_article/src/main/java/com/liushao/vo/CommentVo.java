@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 评论Vo（mongoDB）
+ * 评论视图，保留 _id 和 id 以兼容已有接口
  * @author huangshen
  */
 @Data

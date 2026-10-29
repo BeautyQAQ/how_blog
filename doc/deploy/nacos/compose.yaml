@@ -1,0 +1,45 @@
+services:
+  nacos:
+    image: nacos/nacos-server:v2.5.5
+    container_name: how-blog-nacos
+    restart: unless-stopped
+    environment:
+      MODE: standalone
+      PREFER_HOST_MODE: ip
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_DATABASE_NUM: "1"
+      MYSQL_SERVICE_HOST: ${MYSQL_HOST:-host.docker.internal}
+      MYSQL_SERVICE_PORT: ${MYSQL_PORT:-3306}
+      MYSQL_SERVICE_DB_NAME: nacos_config
+      MYSQL_SERVICE_USER: ${MYSQL_USER:?Please set MYSQL_USER in .env}
+      MYSQL_SERVICE_PASSWORD: ${MYSQL_PASSWORD:?Please set MYSQL_PASSWORD in .env}
+      MYSQL_SERVICE_DB_PARAM: "characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai"
+      NACOS_AUTH_ENABLE: "true"
+      NACOS_AUTH_TOKEN: ${NACOS_AUTH_TOKEN:?Please set NACOS_AUTH_TOKEN in .env}
+      NACOS_AUTH_IDENTITY_KEY: ${NACOS_AUTH_IDENTITY_KEY:?Please set NACOS_AUTH_IDENTITY_KEY in .env}
+      NACOS_AUTH_IDENTITY_VALUE: ${NACOS_AUTH_IDENTITY_VALUE:?Please set NACOS_AUTH_IDENTITY_VALUE in .env}
+      JVM_XMS: 256m
+      JVM_XMX: 512m
+      # The image defaults to 512m; override it when reducing the heap.
+      JVM_XMN: 128m
+      TZ: Asia/Shanghai
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    volumes:
+      - ./data:/home/nacos/data
+      - ./logs:/home/nacos/logs
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:8848/nacos/v1/console/health/readiness"]
+      interval: 10s
+      timeout: 3s
+      start_period: 60s
+      retries: 12
+    networks:
+      - how
+
+networks:
+  how:
+    external: true

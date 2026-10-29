@@ -1,29 +1,31 @@
 server:
   port: 9003
 spring:
-  application:  
-    name: how-user #指定服务名
+  application:
+    name: how-user
   datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://222.222.222.222:3306/how_user?characterEncoding=utf-8
-    username: root
-    password: root
-  jpa: 
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:how-blog}?characterEncoding=utf-8&serverTimezone=Asia/Shanghai"
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  jpa:
     database: MySQL
-    show-sql: true
+    show-sql: ${JPA_SHOW_SQL:false}
+    hibernate:
+      ddl-auto: none
   rabbitmq:
-    host: 111.111.111.111
-    username: guest
-    password: guest
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    virtual-host: ${RABBITMQ_VIRTUAL_HOST:/}
   redis:
-    host: 222.222.222.222
-  # nacos服务地址
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 222.222.222.222:8848
-        namespace: dev
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    database: ${REDIS_DATABASE:0}
+
 jwt:
   config:
-    key: xxxxxxxxxxxx  #注意这个key不能太短
-    ttl: 360000
+    key: ${JWT_SECRET}
+    ttl: ${JWT_TTL:360000}

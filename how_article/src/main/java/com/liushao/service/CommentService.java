@@ -9,12 +9,12 @@ import com.liushao.vo.CommentVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,13 +31,12 @@ public class CommentService {
     private CommentDao commentDao;
     @Autowired
     private IdWorker idWorker;
-    @Autowired
-    private MongoTemplate mongoTemplate;
 
     /**
      * 添加评论
      * @param comment
      */
+    @Transactional
     public void add(com.liushao.pojo.Comment comment){
         // 设置ID
         comment.set_id( idWorker.nextId()+"" );
@@ -51,8 +50,9 @@ public class CommentService {
     /**
      * 删除评论
      */
+    @Transactional
     public void deleteById(String id){
-        commentDao.deleteById(id);
+        commentDao.deleteExistingById(id);
     }
 
     /**
@@ -86,8 +86,13 @@ public class CommentService {
         if(StringUtils.isNotEmpty((String)searchMap.get("state"))){
             comment.setState((String)searchMap.get("state"));
         }
-        if(StringUtils.isNotEmpty((String)searchMap.get("publishdate"))){
-            comment.setPublishdate((Date) searchMap.get("publishdate"));
+        Object publishdate = searchMap.get("publishdate");
+        if (publishdate instanceof Date) {
+            comment.setPublishdate((Date) publishdate);
+        } else if (publishdate != null && StringUtils.isNotBlank(publishdate.toString())) {
+            LocalDateTime date = LocalDateTime.parse(publishdate.toString(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            comment.setPublishdate(Date.from(date.atZone(ZoneId.of("Asia/Shanghai")).toInstant()));
         }
 
         //条件匹配器 如果不设置匹配器默认精确匹配
@@ -105,7 +110,7 @@ public class CommentService {
             // 这个对象new在外面会不能刷新数据，原因未知
             CommentVo commentVo = new CommentVo();
             BeanUtil.copyProperties(commentOne, commentVo);
-            // 设置id，因为mogodb自带的是_id，需要转成id
+            // 管理界面使用 id，实体接口继续保留 _id。
             commentVo.setId(commentOne.get_id());
             // 设置文章标题
             commentVo.setArticle(articleService.findById(commentOne.getArticleid()).getTitle());
@@ -113,7 +118,7 @@ public class CommentService {
             commentVo.setUser((String)userClient.findNicknameById(commentOne.getUserid()).getData());
             commentVos.add(commentVo);
         }
-        Page<CommentVo> commentVoPage = new PageImpl<CommentVo>(commentVos);
+        Page<CommentVo> commentVoPage = new PageImpl<CommentVo>(commentVos, pageRequest, comments.getTotalElements());
         return commentVoPage;
     }
 
@@ -121,10 +126,8 @@ public class CommentService {
      * 审核
      * @param id
      */
+    @Transactional
     public void examine(String id) {
-        Query query=new Query();
-        query.addCriteria(Criteria.where("_id").is(id));
-        Update update = Update.update("state", "1");
-        mongoTemplate.updateFirst(query, update, "commentVo");
+        commentDao.examine(id, new Date());
     }
 }
