@@ -13,7 +13,7 @@ JDK 21、Spring Boot 4.0.9、Spring Cloud 2025.1.4、Spring Cloud Alibaba 2025.1
 
 ## Nacos 与本地应用启动
 
-NAS 使用 r-nacos v0.8.8，部署见 [部署说明](doc/deploy/nacos/README.md)，配置和用户持久化在 `/home/ubuntu/nacos/data`；原 MySQL `nacos_config` 保留供回退。业务应用连接 `how-blog`。应用现使用 Spring Boot 4.0 / Spring Cloud 2025.1，Nacos Client 3.1.1 由 Alibaba BOM 管理。新客户端与 r-nacos 的联调待后续统一测试。
+NAS 使用 r-nacos v0.8.8，部署见 [部署说明](doc/deploy/nacos/README.md)，配置和用户持久化在 `/home/ubuntu/nacos/data`；原 MySQL `nacos_config` 保留供回退。业务应用连接 `how-blog`。应用现使用 Spring Boot 4.0 / Spring Cloud 2025.1，Nacos Client 3.1.1 由 Alibaba BOM 管理。2026-11-04 已完成非短信服务的新客户端、MySQL、Redis、Kafka 和 ES 联调，详见 [测试记录及复跑方法](doc/testing/2026-11-04-test-environment.md)。
 
 1. 在 NAS 启动 r-nacos，打开内网无鉴权控制台 `http://192.168.20.5:8848/rnacos/`。应用使用 `192.168.20.5:8848`，本机需要能访问 NAS 的 `8848` 和 `9848` 两个端口。`10848/rnacos/` 另提供需要登录的控制台。
 2. 启动升级后的应用前，在 public 命名空间逐份发布或更新 [doc/nacos-public](doc/nacos-public) 中的 5 个配置。Data ID 使用完整文件名，例如 `how-article-dev.yaml`；Group 为 `DEFAULT_GROUP`，格式为 YAML，内容原样复制。文件已填写当前内网连接信息和凭据。`doc/nacos-dev` 提供相同配置，可选用其中一套。
@@ -49,7 +49,7 @@ API 文档采用 OpenAPI 3。文章、用户、搜索服务的入口为 `/swagge
 
 两个服务的 `spring.kafka.bootstrap-servers` 均为 `192.168.20.10:9092`，`messaging.sms.topic` 均为 `sms`；短信服务的 `spring.kafka.consumer.group-id` 为 `how-sms`，多实例共用此消费组。短信服务启动时声明一个分区、一个副本的 topic；已有 topic 可继续使用。连接按无鉴权的 PLAINTEXT 配置。旧 `doc/软件安装(docker版)/rabbitMongo/docker-compose.yml` 仅作历史资料。
 
-此次 ES / Kafka 及配置明文调整已同步到 `doc/nacos-public` 和 `doc/nacos-dev`；尚未发布到远程 Nacos。启用前请将五份 YAML 更新到 Nacos。按要求不执行测试或启动应用。
+此次 ES / Kafka 及配置明文调整已同步到 `doc/nacos-public` 和 `doc/nacos-dev`。2026-11-04 已将文章、用户、搜索、网关四份配置发布到测试 Nacos 并核对一致；四个服务已启动，17 项自动化测试及 32 项接口冒烟断言通过。短信配置和相关测试继续暂缓，`how_sms` 未启动。
 
 --模块列表  
 how_article         ----文章模块  （合并基础、问答、吐槽模块模块）

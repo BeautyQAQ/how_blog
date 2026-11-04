@@ -69,10 +69,7 @@ public class WebFilter implements GlobalFilter, Ordered {
             Claims claims = jwtUtil.parseJWT(token);
             if (claims != null) {
                 if ("admin".equals(claims.get("roles"))) {
-                    ServerHttpRequest host = exchange.getRequest().mutate().header("Authorization", token).build();
-                    // 将现在的request 变成 change对象
-                    exchange.mutate().request(host).build();
-                    log.info("token 验证通过，添加了头信息: {}", token);
+                    log.info("管理员 token 验证通过");
                     return chain.filter(exchange);
                 }
             }

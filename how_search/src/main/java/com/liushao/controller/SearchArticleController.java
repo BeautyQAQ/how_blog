@@ -33,7 +33,7 @@ public class SearchArticleController {
      */
     @Operation(summary = "在es保存文章")
     @RequestMapping(value = "/article", method= RequestMethod.POST)
-    public Result save(Article article){
+    public Result save(@RequestBody Article article){
         searchArticleService.add(article);
         return new Result(true, StatusCode.OK, "操作成功");
     }
@@ -85,7 +85,7 @@ public class SearchArticleController {
      */
     @Operation(summary = "文章更新")
     @RequestMapping(value="/article/update",method= RequestMethod.PUT)
-    public Result update(Article article){
+    public Result update(@RequestBody Article article){
         searchArticleService.update(article);
         return new Result(true, StatusCode.OK, "操作成功");
     }

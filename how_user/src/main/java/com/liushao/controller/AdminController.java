@@ -149,6 +149,9 @@ public class AdminController {
 	@RequestMapping(value="/info",method=RequestMethod.GET)
 	public Result adminInfo(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");	
+		if (token != null && token.startsWith("Bearer ")) {
+			token = token.substring(7);
+		}
 		Claims claims = jwtUtil.parseJWT(token);	
 		Map<String, Object> map=new HashMap<>();
 		map.put("avatar","");

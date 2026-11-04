@@ -1,6 +1,7 @@
 package com.liushao.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -32,6 +33,7 @@ public class Spit implements Serializable {
     private static final long serialVersionUID = -3220778639859847389L;
 
     @Schema(description = "_id")
+    @JsonProperty("_id")
     @Id
     @Column(name = "id", length = 20, nullable = false)
     private String _id;

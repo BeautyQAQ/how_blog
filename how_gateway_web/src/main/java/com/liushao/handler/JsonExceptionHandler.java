@@ -4,12 +4,12 @@ import com.liushao.entity.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebExceptionHandler;
+import org.springframework.boot.webflux.error.ErrorWebExceptionHandler;
 import reactor.core.publisher.Mono;
 import tools.jackson.databind.ObjectMapper;
 
 /** Preserves the gateway's JSON error contract across Spring Boot upgrades. */
-public class JsonExceptionHandler implements WebExceptionHandler {
+public class JsonExceptionHandler implements ErrorWebExceptionHandler {
     private final ObjectMapper objectMapper;
 
     public JsonExceptionHandler(ObjectMapper objectMapper) {

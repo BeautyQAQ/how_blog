@@ -56,6 +56,15 @@
     <!-- 依赖版本号管理 -->
     <dependencyManagement>
         <dependencies>
+            <!-- Keep Jackson 2 modules aligned with Boot alongside Jackson 3.
+                 The Alibaba BOM otherwise selects an older databind. -->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson-2-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
