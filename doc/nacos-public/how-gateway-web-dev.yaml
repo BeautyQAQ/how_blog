@@ -5,29 +5,31 @@ spring:
     name: how-gateway-web
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
-      routes:
-        - id: how-article
-          uri: lb://how-article
-          predicates:
-            - Path=/article/**
-          filters:
-            - StripPrefix=1
-        - id: how-user
-          uri: lb://how-user
-          predicates:
-            - Path=/user/**
-          filters:
-            - StripPrefix=1
-        - id: how-search
-          uri: lb://how-search
-          predicates:
-            - Path=/search/**
-          filters:
-            - StripPrefix=1
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+          routes:
+            - id: how-article
+              uri: lb://how-article
+              predicates:
+                - Path=/article/**
+              filters:
+                - StripPrefix=1
+            - id: how-user
+              uri: lb://how-user
+              predicates:
+                - Path=/user/**
+              filters:
+                - StripPrefix=1
+            - id: how-search
+              uri: lb://how-search
+              predicates:
+                - Path=/search/**
+              filters:
+                - StripPrefix=1
 
 jwt:
   config:

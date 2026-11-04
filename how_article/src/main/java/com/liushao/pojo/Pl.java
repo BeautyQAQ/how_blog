@@ -1,12 +1,11 @@
 package com.liushao.pojo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -14,7 +13,7 @@ import java.io.Serializable;
  * @author huangshen
  */
 @Data
-@ApiModel(value = "问题和标签关联对象")
+@Schema(description = "问题和标签关联对象")
 @Entity
 @Table(name="tb_pl")
 public class Pl implements Serializable {
@@ -24,11 +23,11 @@ public class Pl implements Serializable {
      */
     private static final long serialVersionUID = -4130801027386954396L;
 
-    @ApiModelProperty(value = "问题id")
+    @Schema(description = "问题id")
     @Id
     private String problemid;
 
-    @ApiModelProperty(value = "标签id")
+    @Schema(description = "标签id")
     @Id
     private String labelid;
 }

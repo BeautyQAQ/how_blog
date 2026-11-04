@@ -1,6 +1,7 @@
 package com.liushao.dao;
 
 import com.liushao.pojo.Friend;
+import com.liushao.pojo.FriendId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
  * 交友数据访问层
  * @author huangshen
  */
-public interface FriendDao extends JpaRepository<Friend,String> {
+public interface FriendDao extends JpaRepository<Friend, FriendId> {
     /**
      * 根据用户ID与被关注用户ID查询记录个数
      * @param userid

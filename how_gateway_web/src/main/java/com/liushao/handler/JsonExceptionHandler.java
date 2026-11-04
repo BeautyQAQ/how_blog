@@ -1,56 +1,30 @@
 package com.liushao.handler;
 
-import org.springframework.boot.autoconfigure.web.ErrorProperties;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
-import org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWebExceptionHandler;
-import org.springframework.boot.web.reactive.error.ErrorAttributes;
-import org.springframework.context.ApplicationContext;
+import com.liushao.entity.Result;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.reactive.function.server.*;
+import org.springframework.http.MediaType;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebExceptionHandler;
+import reactor.core.publisher.Mono;
+import tools.jackson.databind.ObjectMapper;
 
-import java.util.HashMap;
-import java.util.Map;
+/** Preserves the gateway's JSON error contract across Spring Boot upgrades. */
+public class JsonExceptionHandler implements WebExceptionHandler {
+    private final ObjectMapper objectMapper;
 
-/**
- * 自定义异常处理
- * <p>异常时用JSON代替HTML异常信息<p>
- * @author huangshen
- */
-public class JsonExceptionHandler extends DefaultErrorWebExceptionHandler {
-
-    public JsonExceptionHandler(ErrorAttributes errorAttributes, ResourceProperties resourceProperties,
-                                ErrorProperties errorProperties, ApplicationContext applicationContext) {
-        super(errorAttributes, resourceProperties, errorProperties, applicationContext);
+    public JsonExceptionHandler(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
-    /**
-     * 获取异常属性
-     */
     @Override
-    protected Map<String, Object> getErrorAttributes(ServerRequest request, boolean includeStackTrace) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("success", false);
-        map.put("code", 20005);
-        map.put("message", "网关失败");
-        map.put("data", null);
-        return map;
-    }
-
-    /**
-     * 指定响应处理方法为JSON处理的方法
-     * @param errorAttributes
-     */
-    @Override
-    protected RouterFunction<ServerResponse> getRoutingFunction(ErrorAttributes errorAttributes) {
-        return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse);
-    }
-
-    /**
-     * 根据code获取对应的HttpStatus
-     * @param errorAttributes
-     */
-    @Override
-    protected int getHttpStatus(Map<String, Object> errorAttributes) {
-        return HttpStatus.OK.value();
+    public Mono<Void> handle(ServerWebExchange exchange, Throwable error) {
+        var response = exchange.getResponse();
+        if (response.isCommitted()) {
+            return Mono.error(error);
+        }
+        byte[] json = objectMapper.writeValueAsBytes(new Result(false, 20005, "网关失败"));
+        response.setStatusCode(HttpStatus.OK);
+        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+        return response.writeWith(Mono.just(response.bufferFactory().wrap(json)));
     }
 }

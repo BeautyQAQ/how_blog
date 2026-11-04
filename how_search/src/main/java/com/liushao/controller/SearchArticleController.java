@@ -7,8 +7,8 @@ import com.liushao.entity.StatusCode;
 import com.liushao.pojo.Article;
 import com.liushao.service.SearchArticleService;
 import com.liushao.vo.ArticleVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ import java.util.List;
  * 前缀 /search
  * @author huangshen
  */
-@Api(tags = "文章搜索")
+@Tag(name = "文章搜索")
 @RestController
 @CrossOrigin
 @RequestMapping("/search")
@@ -31,7 +31,7 @@ public class SearchArticleController {
     /**
      * 文章索引添加
      */
-    @ApiOperation(value = "在es保存文章")
+    @Operation(summary = "在es保存文章")
     @RequestMapping(value = "/article", method= RequestMethod.POST)
     public Result save(Article article){
         searchArticleService.add(article);
@@ -44,7 +44,7 @@ public class SearchArticleController {
      * @param page 页码
      * @param size 页面大小
      */
-    @ApiOperation(value = "文章搜索--包含标题和内容")
+    @Operation(summary = "文章搜索--包含标题和内容")
     @RequestMapping(value="/article/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByTitleOrContentLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Article> articlePage = searchArticleService.findByTitleOrContentLike(keywords,page,size);
@@ -57,7 +57,7 @@ public class SearchArticleController {
      * @param page 页码
      * @param size 页面大小
      */
-    @ApiOperation(value = "文章标题搜索")
+    @Operation(summary = "文章标题搜索")
     @RequestMapping(value="/article/title/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByTitleLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Article> articlePage = searchArticleService.findByTitleLike(keywords,page,size);
@@ -74,7 +74,7 @@ public class SearchArticleController {
     /**
      * 删除文章索引
      */
-    @ApiOperation(value = "文章删除")
+    @Operation(summary = "文章删除")
     @RequestMapping(value="/article/delete/{id}",method= RequestMethod.DELETE)
     public Result delete(@PathVariable String id){
         return searchArticleService.deleteById(id);
@@ -83,7 +83,7 @@ public class SearchArticleController {
     /**
      * 更新文章索引
      */
-    @ApiOperation(value = "文章更新")
+    @Operation(summary = "文章更新")
     @RequestMapping(value="/article/update",method= RequestMethod.PUT)
     public Result update(Article article){
         searchArticleService.update(article);

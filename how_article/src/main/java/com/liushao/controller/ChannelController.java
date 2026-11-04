@@ -1,8 +1,8 @@
 package com.liushao.controller;
 import java.util.Map;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +24,7 @@ import com.liushao.entity.StatusCode;
  * @author Administrator
  *
  */
-@Api(tags = "频道控制层")
+@Tag(name = "频道控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/channel")
@@ -38,7 +38,7 @@ public class ChannelController {
 	 * 查询全部数据
 	 * @return
 	 */
-	@ApiOperation(value = "查询全部频道")
+	@Operation(summary = "查询全部频道")
 	@RequestMapping(method= RequestMethod.GET)
 	public Result findAll(){
 		return new Result(true,StatusCode.OK,"查询成功",channelService.findAll());
@@ -49,7 +49,7 @@ public class ChannelController {
 	 * @param id ID
 	 * @return
 	 */
-	@ApiOperation(value = "根据id查询频道")
+	@Operation(summary = "根据id查询频道")
 	@RequestMapping(value="/{id}",method= RequestMethod.GET)
 	public Result findById(@PathVariable String id){
 		return new Result(true,StatusCode.OK,"查询成功",channelService.findById(id));
@@ -63,7 +63,7 @@ public class ChannelController {
 	 * @param size 页大小
 	 * @return 分页结果
 	 */
-	@ApiOperation(value = "分页+条件查询")
+	@Operation(summary = "分页+条件查询")
 	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
 	public Result findSearch(@RequestBody Map<String, String> searchMap , @PathVariable int page, @PathVariable int size){
 		Page<Channel> pageList = channelService.findSearch(searchMap, page, size);
@@ -75,7 +75,7 @@ public class ChannelController {
      * @param searchMap
      * @return
      */
-	@ApiOperation(value = "条件查询")
+	@Operation(summary = "条件查询")
     @RequestMapping(value="/search",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map<String, String> searchMap){
         return new Result(true,StatusCode.OK,"查询成功",channelService.findSearch(searchMap));
@@ -85,7 +85,7 @@ public class ChannelController {
 	 * 增加
 	 * @param channel
 	 */
-	@ApiOperation(value = "增加频道")
+	@Operation(summary = "增加频道")
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Channel channel  ){
 		channelService.add(channel);
@@ -96,7 +96,7 @@ public class ChannelController {
 	 * 修改
 	 * @param channel
 	 */
-	@ApiOperation(value = "修改频道")
+	@Operation(summary = "修改频道")
 	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
 	public Result update(@RequestBody Channel channel, @PathVariable String id ){
 		channel.setId(id);
@@ -108,7 +108,7 @@ public class ChannelController {
 	 * 删除
 	 * @param id
 	 */
-	@ApiOperation(value = "删除频道")
+	@Operation(summary = "删除频道")
 	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
 		channelService.deleteById(id);

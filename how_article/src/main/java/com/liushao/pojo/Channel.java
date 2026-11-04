@@ -1,12 +1,11 @@
 package com.liushao.pojo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 /**
  * 频道实体类
@@ -14,21 +13,21 @@ import java.io.Serializable;
  *
  */
 @Data
-@ApiModel(value = "频道")
+@Schema(description = "频道")
 @Entity
 @Table(name="tb_channel")
 public class Channel implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty(value = "ID")
+	@Schema(description = "ID")
 	@Id
 	private String id;
 
-	@ApiModelProperty(value = "频道名称", required = true)
+	@Schema(description = "频道名称", requiredMode = Schema.RequiredMode.REQUIRED)
 	private String name;
 
-	@ApiModelProperty(value = "状态")
+	@Schema(description = "状态")
 	private String state;
 	
 }

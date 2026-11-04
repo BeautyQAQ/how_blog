@@ -4,8 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
@@ -16,22 +15,22 @@ import java.io.Serializable;
  *
  */
 @Data
-@ApiModel(value = "回复")
-@Document(indexName="reply",type="docs")
+@Schema(description = "回复")
+@Document(indexName="reply")
 public class Reply implements Serializable{
 
-	@ApiModelProperty(value = "ID编号")
+	@Schema(description = "ID编号")
 	@Id
 	private String id;
 
-	@ApiModelProperty(value = "问题id")
+	@Schema(description = "问题id")
 	private String problemid;
 
-	@ApiModelProperty(value = "回答内容")
-	@Field(type = FieldType.Text, analyzer="ik_max_word",searchAnalyzer="ik_max_word")
+	@Schema(description = "回答内容")
+	@Field(type = FieldType.Text, analyzer="smartcn",searchAnalyzer="smartcn")
 	private String content;
 
-	@ApiModelProperty(value = "回答人ID")
+	@Schema(description = "回答人ID")
 	private String userid;
 	
 }

@@ -1,7 +1,7 @@
 package com.liushao.filter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 import com.liushao.util.JwtUtil;
@@ -37,7 +37,7 @@ public class WebFilter implements GlobalFilter, Ordered {
         log.info("web过滤器");
         ServerHttpRequest request = exchange.getRequest();
         // 跨域请求允许通过
-        if ("OPTIONS".equals(request.getMethodValue())) {
+        if (org.springframework.http.HttpMethod.OPTIONS.equals(request.getMethod())) {
             return chain.filter(exchange);
         }
         // 登录请求允许通过
@@ -46,9 +46,10 @@ public class WebFilter implements GlobalFilter, Ordered {
             log.info("登陆页面:{}", url);
             return chain.filter(exchange);
         }
-        // 以下请求放行，如果存在Authorization，则下放到模块中验证，同时放行/v2/api-docs接口
+        // 以下请求放行，如果存在Authorization，则下放到模块中验证，同时放行/v3/api-docs接口
         if (url.contains("/article") || url.contains("/search") || url.contains("/channel") || url.contains("/city")
-                || url.contains("/column") || url.contains("/comment") || url.contains("/label") || url.contains("/v2/api-docs")
+                || url.contains("/column") || url.contains("/comment") || url.contains("/label") || url.contains("/v3/api-docs")
+                || url.startsWith("/swagger-ui") || url.startsWith("/webjars/")
                 || url.contains("/problem") || url.contains("/reply") || url.contains("/spit")) {
             log.info("请求url:{}", url);
             // 获取头信息
@@ -92,7 +93,7 @@ public class WebFilter implements GlobalFilter, Ordered {
         String jsonStr = "";
         try {
             jsonStr = objectMapper.writeValueAsString(result);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             e.printStackTrace();
             log.error(e.getMessage());
         }

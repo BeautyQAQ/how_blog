@@ -1,7 +1,7 @@
 package com.liushao.storage;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.liushao.dao.CommentDao;
 import com.liushao.dao.SpitDao;
 import com.liushao.pojo.Comment;
@@ -9,9 +9,9 @@ import com.liushao.pojo.Spit;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -49,7 +49,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         "spring.datasource.driver-class-name=org.h2.Driver",
         "spring.datasource.username=sa",
         "spring.datasource.password=",
+        "spring.config.import=",
         "spring.cloud.nacos.config.enabled=false",
+        "spring.cloud.nacos.config.import-check.enabled=false",
         "spring.cloud.nacos.discovery.enabled=false",
         "spring.cloud.discovery.enabled=false",
         "spring.jpa.show-sql=false"

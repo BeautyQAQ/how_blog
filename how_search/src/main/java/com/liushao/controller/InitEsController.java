@@ -3,8 +3,8 @@ package com.liushao.controller;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 import com.liushao.service.InitEsService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 前缀 /search
  * @author huangshen
  */
-@Api(tags = "初始化elasticsearch接口")
+@Tag(name = "初始化elasticsearch接口")
 @RestController
 @CrossOrigin
 @RequestMapping("/search")
@@ -27,7 +27,7 @@ public class InitEsController {
     /**
      * 初始化elasticsearch索引
      */
-    @ApiOperation(value = "初始化elasticsearch索引")
+    @Operation(summary = "初始化elasticsearch索引")
     @RequestMapping(value = "/init", method= RequestMethod.POST)
     public Result init(){
         initEsService.init();

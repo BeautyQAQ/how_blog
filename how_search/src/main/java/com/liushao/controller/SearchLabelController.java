@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 前缀 /search
  * @author huangshen
  */
-@Api(tags = "标签搜索")
+@Tag(name = "标签搜索")
 @RestController
 @CrossOrigin
 @RequestMapping("/search")
@@ -35,7 +35,7 @@ public class SearchLabelController {
      * @param label
      * @return
      */
-    @ApiOperation(value = "在es保存标签")
+    @Operation(summary = "在es保存标签")
     @RequestMapping(value = "/label", method= RequestMethod.POST)
     public Result save(@RequestBody Label label){
         searchLabelService.add(label);
@@ -48,7 +48,7 @@ public class SearchLabelController {
      * @param page 页码
      * @param size 页面大小
      */
-    @ApiOperation(value = "标签搜索")
+    @Operation(summary = "标签搜索")
     @RequestMapping(value="/label/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByLabelnameLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Label> labelPage = searchLabelService.findByLabelnameLike(keywords, page, size);
@@ -58,7 +58,7 @@ public class SearchLabelController {
     /**
      * 删除标签索引
      */
-    @ApiOperation(value = "标签删除")
+    @Operation(summary = "标签删除")
     @RequestMapping(value="/label/delete/{id}",method= RequestMethod.DELETE)
     public Result delete(@PathVariable String id){
         return searchLabelService.deleteById(id);
@@ -67,7 +67,7 @@ public class SearchLabelController {
     /**
      * 更新标签索引
      */
-    @ApiOperation(value = "标签更新")
+    @Operation(summary = "标签更新")
     @RequestMapping(value="/label/update",method= RequestMethod.PUT)
     public Result update(Label label){
         searchLabelService.update(label);

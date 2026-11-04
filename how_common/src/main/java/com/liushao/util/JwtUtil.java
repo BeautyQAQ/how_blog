@@ -3,7 +3,9 @@ package com.liushao.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Date;
@@ -46,12 +48,12 @@ public class JwtUtil {
     public String createJWT(String id, String subject, String roles) {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
-        JwtBuilder builder = Jwts.builder().setId(id)
-                .setSubject(subject)
-                .setIssuedAt(now)
-                .signWith(SignatureAlgorithm.HS256, key).claim("roles", roles);
+        JwtBuilder builder = Jwts.builder().id(id)
+                .subject(subject)
+                .issuedAt(now)
+                .signWith(signingKey(), Jwts.SIG.HS256).claim("roles", roles);
         if (ttl > 0) {
-            builder.setExpiration( new Date( nowMillis + ttl));
+            builder.expiration(new Date(nowMillis + ttl));
         }
         return builder.compact();
     }
@@ -63,9 +65,14 @@ public class JwtUtil {
      */
     public Claims parseJWT(String jwtStr){
         return  Jwts.parser()
-                .setSigningKey(key)
-                .parseClaimsJws(jwtStr)
-                .getBody();
+                .verifyWith(signingKey())
+                .build()
+                .parseSignedClaims(jwtStr)
+                .getPayload();
+    }
+
+    private SecretKey signingKey() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));
     }
 
 }

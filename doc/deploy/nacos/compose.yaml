@@ -1,42 +1,45 @@
+name: nacos
+
 services:
   nacos:
-    image: nacos/nacos-server:v2.5.5
+    # r-nacos latest stable on 2026-11-04; pin the published image digest.
+    image: qingpan/rnacos:v0.8.8@sha256:09a81fcd2f72f029865d560c604deebd1b3c1da1b51af3c6cccdad83f5ae254a
     container_name: how-blog-nacos
     restart: unless-stopped
+    mem_limit: 256m
     environment:
-      MODE: standalone
-      PREFER_HOST_MODE: ip
-      SPRING_DATASOURCE_PLATFORM: mysql
-      MYSQL_DATABASE_NUM: "1"
-      MYSQL_SERVICE_HOST: ${MYSQL_HOST:-host.docker.internal}
-      MYSQL_SERVICE_PORT: ${MYSQL_PORT:-3306}
-      MYSQL_SERVICE_DB_NAME: nacos_config
-      MYSQL_SERVICE_USER: ${MYSQL_USER:?Please set MYSQL_USER in .env}
-      MYSQL_SERVICE_PASSWORD: ${MYSQL_PASSWORD:?Please set MYSQL_PASSWORD in .env}
-      MYSQL_SERVICE_DB_PARAM: "characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai"
-      NACOS_AUTH_ENABLE: "true"
-      NACOS_AUTH_TOKEN: ${NACOS_AUTH_TOKEN:?Please set NACOS_AUTH_TOKEN in .env}
-      NACOS_AUTH_IDENTITY_KEY: ${NACOS_AUTH_IDENTITY_KEY:?Please set NACOS_AUTH_IDENTITY_KEY in .env}
-      NACOS_AUTH_IDENTITY_VALUE: ${NACOS_AUTH_IDENTITY_VALUE:?Please set NACOS_AUTH_IDENTITY_VALUE in .env}
-      JVM_XMS: 256m
-      JVM_XMX: 512m
-      # The image defaults to 512m; override it when reducing the heap.
-      JVM_XMN: 128m
+      RNACOS_DATA_DIR: /io/nacos_db
+      RNACOS_HTTP_WORKERS: "2"
+      RNACOS_HTTP_PORT: "8848"
+      RNACOS_GRPC_PORT: "9848"
+      RNACOS_HTTP_CONSOLE_PORT: "10848"
+      RNACOS_INIT_ADMIN_USERNAME: ${NACOS_USERNAME:?Please set NACOS_USERNAME in .env}
+      RNACOS_INIT_ADMIN_PASSWORD: ${NACOS_PASSWORD:?Please set NACOS_PASSWORD in .env}
+      # v0.8.8 only serves the no-auth console when OpenAPI auth is also disabled.
+      RNACOS_ENABLE_OPEN_API_AUTH: "false"
+      RNACOS_ENABLE_NO_AUTH_CONSOLE: "true"
+      RNACOS_CLUSTER_TOKEN: ${RNACOS_CLUSTER_TOKEN:?Please set RNACOS_CLUSTER_TOKEN in .env}
+      RNACOS_GMT_OFFSET_HOURS: "8"
+      RUST_LOG: warn
       TZ: Asia/Shanghai
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     ports:
       - "8848:8848"
       - "9848:9848"
+      - "10848:10848"
     volumes:
-      - ./data:/home/nacos/data
-      - ./logs:/home/nacos/logs
+      - ./data:/io/nacos_db
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
-      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:8848/nacos/v1/console/health/readiness"]
+      # The upstream image includes bash but no curl/wget.
+      test: ["CMD", "bash", "-ec", "exec 3<>/dev/tcp/127.0.0.1/8848; printf 'GET /health HTTP/1.0\r\nHost: localhost\r\n\r\n' >&3; head -n 1 <&3 | grep -q ' 200 '"]
       interval: 10s
       timeout: 3s
-      start_period: 60s
-      retries: 12
+      start_period: 10s
+      retries: 6
     networks:
       - how
 

@@ -13,15 +13,13 @@ spring:
     show-sql: ${JPA_SHOW_SQL:false}
     hibernate:
       ddl-auto: none
-  redis:
-    host: ${REDIS_HOST:localhost}
-    port: ${REDIS_PORT:6379}
-    password: ${REDIS_PASSWORD:}
-    database: ${REDIS_DATABASE:0}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:0}
 
-feign:
-  hystrix:
-    enabled: true
 
 jwt:
   config:

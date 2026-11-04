@@ -4,8 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
@@ -16,8 +15,8 @@ import java.io.Serializable;
  *
  */
 @Data
-@ApiModel(value = "问题")
-@Document(indexName="problem",type="docs")
+@Schema(description = "问题")
+@Document(indexName="problem")
 public class Problem implements Serializable{
 
 	/**
@@ -25,22 +24,22 @@ public class Problem implements Serializable{
 	 */
 	private static final long serialVersionUID = 455998952938095229L;
 
-	@ApiModelProperty(value = "ID编号")
+	@Schema(description = "ID编号")
 	@Id
 	private String id;
 
-	@ApiModelProperty(value = "标题")
-	@Field(type = FieldType.Text, analyzer="ik_max_word",searchAnalyzer="ik_max_word")
+	@Schema(description = "标题")
+	@Field(type = FieldType.Text, analyzer="smartcn",searchAnalyzer="smartcn")
 	private String title;
 
-	@ApiModelProperty(value = "内容")
-	@Field(type = FieldType.Text, analyzer="ik_max_word",searchAnalyzer="ik_max_word")
+	@Schema(description = "内容")
+	@Field(type = FieldType.Text, analyzer="smartcn",searchAnalyzer="smartcn")
 	private String content;
 
-	@ApiModelProperty(value = "用户ID")
+	@Schema(description = "用户ID")
 	private String userid;
 
-	@ApiModelProperty(value = "是否解决")
+	@Schema(description = "是否解决")
 	private String solve;
 
 }

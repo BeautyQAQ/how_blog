@@ -5,8 +5,8 @@ import java.util.Map;
 import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,7 +25,7 @@ import com.liushao.service.CityService;
  * @author Administrator
  *
  */
-@Api(tags = "城市控制层")
+@Tag(name = "城市控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/city")
@@ -37,7 +37,7 @@ public class CityController {
 	/**
 	 * 查询全部数据
 	 */
-	@ApiOperation(value = "查询全部城市数据")
+	@Operation(summary = "查询全部城市数据")
 	@RequestMapping(method= RequestMethod.GET)
 	public Result findAll(){
 		return new Result(true, StatusCode.OK,"查询成功",cityService.findAll());
@@ -48,7 +48,7 @@ public class CityController {
 	 * @param id ID
 	 * @return
 	 */
-	@ApiOperation(value = "根据id查询数据")
+	@Operation(summary = "根据id查询数据")
 	@RequestMapping(value="/{id}",method= RequestMethod.GET)
 	public Result findById(@PathVariable String id){
 		return new Result(true,StatusCode.OK,"查询成功",cityService.findById(id));
@@ -62,7 +62,7 @@ public class CityController {
 	 * @param size 页大小
 	 * @return 分页结果
 	 */
-	@ApiOperation(value = "分页+条件查询")
+	@Operation(summary = "分页+条件查询")
 	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
 	public Result findSearch(@RequestBody Map<String,String> searchMap , @PathVariable int page, @PathVariable int size){
 		Page<City> pageList = cityService.findSearch(searchMap, page, size);
@@ -74,7 +74,7 @@ public class CityController {
      * @param searchMap
      * @return
      */
-	@ApiOperation(value = "条件查询")
+	@Operation(summary = "条件查询")
     @RequestMapping(value="/search",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map<String,String> searchMap){
         return new Result(true,StatusCode.OK,"查询成功",cityService.findSearch(searchMap));
@@ -84,7 +84,7 @@ public class CityController {
 	 * 增加
 	 * @param city
 	 */
-	@ApiOperation(value = "增加")
+	@Operation(summary = "增加")
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody City city  ){
 		cityService.add(city);
@@ -95,7 +95,7 @@ public class CityController {
 	 * 修改
 	 * @param city
 	 */
-	@ApiOperation(value = "修改")
+	@Operation(summary = "修改")
 	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
 	public Result update(@RequestBody City city, @PathVariable String id ){
 		city.setId(id);
@@ -107,7 +107,7 @@ public class CityController {
 	 * 删除
 	 * @param id
 	 */
-	@ApiOperation(value = "删除")
+	@Operation(summary = "删除")
 	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
 		cityService.deleteById(id);

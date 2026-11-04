@@ -1,7 +1,6 @@
 package com.liushao.pojo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -15,8 +14,8 @@ import java.io.Serializable;
  * @author huangshen
  */
 @Data
-@ApiModel(value = "文章搜索实体类")
-@Document(indexName="article",type="docs")
+@Schema(description = "文章搜索实体类")
+@Document(indexName="article")
 public class Article implements Serializable {
 
     /**
@@ -24,16 +23,16 @@ public class Article implements Serializable {
      */
     private static final long serialVersionUID = 4018596605143052936L;
 
-    @ApiModelProperty(value = "ID编号")
+    @Schema(description = "ID编号")
     @Id
     private String id;
 
-    @ApiModelProperty(value = "标题")
-    @Field(type = FieldType.Text, analyzer="ik_max_word",searchAnalyzer="ik_max_word")
+    @Schema(description = "标题")
+    @Field(type = FieldType.Text, analyzer="smartcn",searchAnalyzer="smartcn")
     private String title;
 
-    @ApiModelProperty(value = "文章正文")
-    @Field(type = FieldType.Text, analyzer="ik_max_word",searchAnalyzer="ik_max_word")
+    @Schema(description = "文章正文")
+    @Field(type = FieldType.Text, analyzer="smartcn",searchAnalyzer="smartcn")
     private String content;
 
 }

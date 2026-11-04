@@ -60,18 +60,19 @@ class NacosConfigurationContractTest {
     }
 
     @Test
-    void bootstrapDefaultsKeepBothNacosClientsInThePublicNamespace() throws Exception {
+    void applicationDefaultsKeepBothNacosClientsInThePublicNamespace() throws Exception {
         for (Map.Entry<String, String> application : APPLICATIONS.entrySet()) {
             ConfigurableEnvironment environment = environment(application.getKey(), null, credentials());
             assertEquals(application.getValue(), environment.getProperty("spring.application.name"));
             assertEquals("dev", environment.getProperty("spring.profiles.active"));
-            assertEquals("yaml", environment.getProperty("spring.cloud.nacos.config.file-extension"));
+            assertEquals("nacos:" + application.getValue() + "-dev.yaml?group=DEFAULT_GROUP&refreshEnabled=true",
+                    environment.getProperty("spring.config.import"));
             assertNacosProperties(environment, "localhost:8848", "", "DEFAULT_GROUP");
         }
     }
 
     @Test
-    void bootstrapRequiresExplicitNacosCredentials() throws Exception {
+    void applicationRequiresExplicitNacosCredentials() throws Exception {
         for (String module : APPLICATIONS.keySet()) {
             ConfigurableEnvironment environment = environment(module, null, Collections.emptyMap());
             assertThrows(IllegalArgumentException.class,
@@ -115,8 +116,8 @@ class NacosConfigurationContractTest {
             assertNotNull(stream, "The selected nacos-client must expose its Maven coordinates");
             coordinates.load(stream);
         }
-        assertTrue(coordinates.getProperty("version").startsWith("2."),
-                "Use the pinned 2.x client rather than the Alibaba BOM's legacy 1.x client");
+        assertTrue(coordinates.getProperty("version").startsWith("3."),
+                "Use the 3.x client managed by the Spring Cloud Alibaba BOM");
         assertEquals(ConfigService.class,
                 NacosFactory.class.getMethod("createConfigService", Properties.class).getReturnType());
         assertEquals(NamingService.class,
@@ -138,7 +139,8 @@ class NacosConfigurationContractTest {
             ConfigurableEnvironment environment = environment("how_gateway_web", yaml, serviceEnvironment());
             Set<String> targets = new HashSet<>();
             for (int i = 0; i < 3; i++) {
-                targets.add(environment.getRequiredProperty("spring.cloud.gateway.routes[" + i + "].uri"));
+                targets.add(environment.getRequiredProperty(
+                        "spring.cloud.gateway.server.webflux.routes[" + i + "].uri"));
             }
             assertEquals(new HashSet<>(Arrays.asList("lb://how-article", "lb://how-user", "lb://how-search")),
                     targets);
@@ -154,12 +156,13 @@ class NacosConfigurationContractTest {
 
         NacosDiscoveryProperties discovery = Binder.get(environment)
                 .bind("spring.cloud.nacos.discovery", Bindable.of(NacosDiscoveryProperties.class)).get();
+        // Spring injects this field in production; property enrichment also reads it.
         ReflectionTestUtils.setField(discovery, "environment", environment);
         // Production init() calls this to fill optional fields (logName, endpoint, accessKey)
         // before assembling Properties. Invoke this step without init()'s host detection.
         discovery.overrideFromEnv(environment);
-        // This private method assembles Properties only; namingServiceInstance would start a client.
-        Properties discoveryClient = ReflectionTestUtils.invokeMethod(discovery, "getNacosProperties");
+        // Assemble Properties only; do not start a naming client.
+        Properties discoveryClient = discovery.getNacosProperties();
 
         assertEquals(group, config.getGroup());
         assertEquals(group, discovery.getGroup());
@@ -168,7 +171,6 @@ class NacosConfigurationContractTest {
             assertEquals(namespace, properties.getProperty(PropertyKeyConst.NAMESPACE));
             // An empty SCA contextPath overrides the client's /nacos default and breaks login URLs.
             assertEquals("/nacos", properties.getProperty("contextPath"));
-            // SCA 2.2.0 forwards these through its enrichment path despite lacking Java fields.
             assertEquals("test-nacos-user", properties.getProperty("username"));
             assertEquals("test-nacos-password", properties.getProperty("password"));
         }
@@ -207,12 +209,12 @@ class NacosConfigurationContractTest {
                 environment.getPropertySources().addLast(source);
             }
         }
-        Properties bootstrap = new Properties();
+        Properties application = new Properties();
         try (Reader reader = Files.newBufferedReader(repositoryRoot().resolve(module)
-                .resolve("src/main/resources/bootstrap.properties"), StandardCharsets.UTF_8)) {
-            bootstrap.load(reader);
+                .resolve("src/main/resources/application.properties"), StandardCharsets.UTF_8)) {
+            application.load(reader);
         }
-        environment.getPropertySources().addLast(new PropertiesPropertySource("bootstrap", bootstrap));
+        environment.getPropertySources().addLast(new PropertiesPropertySource("application", application));
         return environment;
     }
 
@@ -238,7 +240,7 @@ class NacosConfigurationContractTest {
         values.put("RABBITMQ_HOST", "127.0.0.1");
         values.put("RABBITMQ_USERNAME", "test-rabbit-user");
         values.put("RABBITMQ_PASSWORD", "test-rabbit-password");
-        values.put("ELASTICSEARCH_CLUSTER_NODES", "127.0.0.1:19300");
+        values.put("ELASTICSEARCH_URIS", "http://127.0.0.1:19200");
         values.put("JWT_SECRET", "test-jwt-secret-shared-between-all-services");
         values.put("ALIYUN_SMS_TEMPLATE_CODE", "test-template-code");
         values.put("ALIYUN_SMS_SIGN_NAME", "test-sign");

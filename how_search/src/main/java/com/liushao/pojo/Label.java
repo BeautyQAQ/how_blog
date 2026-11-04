@@ -5,8 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
@@ -16,16 +15,16 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
  * @author huangshen
  */
 @Data
-@ApiModel(value = "标签")
-@Document(indexName="label",type="docs")
+@Schema(description = "标签")
+@Document(indexName="label")
 public class Label {
 
-    @ApiModelProperty(value = "ID")
+    @Schema(description = "ID")
     @Id
     private String id;
 
-    @ApiModelProperty(value = "标签名称")
-    @Field(type = FieldType.Text, analyzer="ik_max_word",searchAnalyzer="ik_max_word")
+    @Schema(description = "标签名称")
+    @Field(type = FieldType.Text, analyzer="smartcn",searchAnalyzer="smartcn")
     private String labelname;
 
 }

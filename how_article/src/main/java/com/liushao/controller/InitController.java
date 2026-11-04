@@ -4,8 +4,8 @@ import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 import com.liushao.pojo.*;
 import com.liushao.service.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ import java.util.Map;
  * @author Administrator
  *
  */
-@Api(tags = "es数据初始化控制层")
+@Tag(name = "es数据初始化控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/init")
@@ -50,7 +50,7 @@ public class InitController {
      * 查询全部可搜索数据,用于搜索模块初始化
      * @return 全部可搜索数据
      */
-    @ApiOperation(value = "初始化es索引数据")
+    @Operation(summary = "初始化es索引数据")
     @RequestMapping(value="/data", method= RequestMethod.GET)
     public Result init(){
         List<Article> articles = articleService.findAll();

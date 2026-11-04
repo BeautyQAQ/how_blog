@@ -1,21 +1,20 @@
 package com.liushao.pojo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 
 /**
  * @author huangshen
  */
-@ApiModel(value = "好友")
+@Schema(description = "好友")
 @Entity
 @Table(name="tb_friend")
-@IdClass(Friend.class)
+@IdClass(FriendId.class)
 public class Friend implements Serializable {
 
     /**
@@ -23,15 +22,15 @@ public class Friend implements Serializable {
      */
     private static final long serialVersionUID = -6849107332525437532L;
 
-    @ApiModelProperty(value = "userid")
+    @Schema(description = "userid")
     @Id
     private String userid;
 
-    @ApiModelProperty(value = "friendid", required = true)
+    @Schema(description = "friendid", requiredMode = Schema.RequiredMode.REQUIRED)
     @Id
     private String friendid;
 
-    @ApiModelProperty(value = "是否喜欢")
+    @Schema(description = "是否喜欢")
     private String islike;
 
     public String getIslike() {

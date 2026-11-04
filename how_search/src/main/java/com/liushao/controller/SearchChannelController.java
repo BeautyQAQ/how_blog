@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 前缀 /search
  * @author huangshen
  */
-@Api(tags = "频道搜索")
+@Tag(name = "频道搜索")
 @RestController
 @CrossOrigin
 @RequestMapping("/search")
@@ -35,7 +35,7 @@ public class SearchChannelController {
      * @param channel
      * @return
      */
-    @ApiOperation(value = "在es保存频道")
+    @Operation(summary = "在es保存频道")
     @RequestMapping(value = "/channel", method= RequestMethod.POST)
     public Result save(@RequestBody Channel channel){
         searchChannelService.add(channel);
@@ -48,7 +48,7 @@ public class SearchChannelController {
      * @param page 页码
      * @param size 页面大小
      */
-    @ApiOperation(value = "频道搜索")
+    @Operation(summary = "频道搜索")
     @RequestMapping(value="/channel/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByNameLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Channel> channelPage = searchChannelService.findByNameLike(keywords, page, size);
@@ -58,7 +58,7 @@ public class SearchChannelController {
     /**
      * 删除频道索引
      */
-    @ApiOperation(value = "频道删除")
+    @Operation(summary = "频道删除")
     @RequestMapping(value="/channel/delete/{id}",method= RequestMethod.DELETE)
     public Result delete(@PathVariable String id){
         return searchChannelService.deleteById(id);
@@ -67,7 +67,7 @@ public class SearchChannelController {
     /**
      * 更新频道索引
      */
-    @ApiOperation(value = "频道更新")
+    @Operation(summary = "频道更新")
     @RequestMapping(value="/channel/update",method= RequestMethod.PUT)
     public Result update(Channel channel){
         searchChannelService.update(channel);

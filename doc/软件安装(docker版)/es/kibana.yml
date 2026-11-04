@@ -1,4 +1,4 @@
-# kibana.yml
+# 历史 Kibana 7.8 配置，仅配合旧 ES 使用，见本目录 README.md。
 version: '3.2'
 services:
   kibana:

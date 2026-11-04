@@ -3,10 +3,10 @@ package com.liushao.service;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import com.liushao.util.IdWorker;
 import lombok.extern.slf4j.Slf4j;

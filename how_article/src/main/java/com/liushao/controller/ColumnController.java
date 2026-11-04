@@ -4,8 +4,8 @@ import java.util.Map;
 import com.liushao.entity.PageResult;
 import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,7 +25,7 @@ import com.liushao.service.ColumnService;
  * @author Administrator
  *
  */
-@Api(tags = "专栏控制层")
+@Tag(name = "专栏控制层")
 @RestController
 @CrossOrigin
 @RequestMapping("/column")
@@ -39,7 +39,7 @@ public class ColumnController {
 	 * 查询全部数据
 	 * @return
 	 */
-	@ApiOperation(value = "查询全部专栏数据")
+	@Operation(summary = "查询全部专栏数据")
 	@RequestMapping(method= RequestMethod.GET)
 	public Result findAll(){
 		return new Result(true, StatusCode.OK,"查询成功",columnService.findAll());
@@ -50,7 +50,7 @@ public class ColumnController {
 	 * @param id ID
 	 * @return
 	 */
-	@ApiOperation(value = "根据id查询数据")
+	@Operation(summary = "根据id查询数据")
 	@RequestMapping(value="/{id}",method= RequestMethod.GET)
 	public Result findById(@PathVariable String id){
 		return new Result(true,StatusCode.OK,"查询成功",columnService.findById(id));
@@ -64,7 +64,7 @@ public class ColumnController {
 	 * @param size 页大小
 	 * @return 分页结果
 	 */
-	@ApiOperation(value = "分页+条件查询")
+	@Operation(summary = "分页+条件查询")
 	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
 	public Result findSearch(@RequestBody Map<String, String> searchMap , @PathVariable int page, @PathVariable int size){
 		Page<Column> pageList = columnService.findSearch(searchMap, page, size);
@@ -76,7 +76,7 @@ public class ColumnController {
      * @param searchMap
      * @return
      */
-	@ApiOperation(value = "条件查询")
+	@Operation(summary = "条件查询")
     @RequestMapping(value="/search",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map<String, String> searchMap){
         return new Result(true,StatusCode.OK,"查询成功",columnService.findSearch(searchMap));
@@ -86,7 +86,7 @@ public class ColumnController {
 	 * 增加
 	 * @param column
 	 */
-	@ApiOperation(value = "添加频道")
+	@Operation(summary = "添加频道")
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Column column  ){
 		columnService.add(column);
@@ -97,7 +97,7 @@ public class ColumnController {
 	 * 修改
 	 * @param column
 	 */
-	@ApiOperation(value = "修改频道")
+	@Operation(summary = "修改频道")
 	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
 	public Result update(@RequestBody Column column, @PathVariable String id ){
 		column.setId(id);
@@ -109,7 +109,7 @@ public class ColumnController {
 	 * 删除
 	 * @param id
 	 */
-	@ApiOperation(value = "删除频道")
+	@Operation(summary = "删除频道")
 	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
 		columnService.deleteById(id);

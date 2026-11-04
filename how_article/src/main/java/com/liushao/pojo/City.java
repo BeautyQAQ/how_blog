@@ -1,13 +1,12 @@
 package com.liushao.pojo;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 /**
  * 城市实体类
@@ -15,7 +14,7 @@ import java.io.Serializable;
  *
  */
 @Data
-@ApiModel(value = "城市")
+@Schema(description = "城市")
 @Entity
 @Table(name="tb_city")
 public class City implements Serializable{
@@ -25,13 +24,13 @@ public class City implements Serializable{
 	 */
 	private static final long serialVersionUID = 7638885999116727655L;
 
-	@ApiModelProperty(value = "ID")
+	@Schema(description = "ID")
 	@Id
 	private String id;
 
-	@ApiModelProperty(value = "城市名称", required = true)
+	@Schema(description = "城市名称", requiredMode = Schema.RequiredMode.REQUIRED)
 	private String name;
 
-	@ApiModelProperty(value = "是否热门")
+	@Schema(description = "是否热门")
 	private String ishot;
 }

@@ -3,7 +3,7 @@ server:
 spring:
   application:
     name: how-search
-  data:
-    elasticsearch:
-      cluster-name: ${ELASTICSEARCH_CLUSTER_NAME:elasticsearch}
-      cluster-nodes: ${ELASTICSEARCH_CLUSTER_NODES:localhost:9300}
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URIS:http://localhost:9200}
+    username: ${ELASTICSEARCH_USERNAME:}
+    password: ${ELASTICSEARCH_PASSWORD:}

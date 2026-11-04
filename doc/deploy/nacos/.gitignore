@@ -3,3 +3,5 @@
 !.env.example
 /data/
 /logs/
+/backups/
+/compose.verify.yaml

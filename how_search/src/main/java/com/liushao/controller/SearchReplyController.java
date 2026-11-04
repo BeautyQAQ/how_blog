@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 前缀 /search
  * @author huangshen
  */
-@Api(tags = "回复搜索")
+@Tag(name = "回复搜索")
 @RestController
 @CrossOrigin
 @RequestMapping("/search")
@@ -36,7 +36,7 @@ public class SearchReplyController {
      * @param reply 回复
      * @return Result
      */
-    @ApiOperation(value = "在es保存回复")
+    @Operation(summary = "在es保存回复")
     @RequestMapping(value = "/reply", method= RequestMethod.POST)
     public Result save(@RequestBody Reply reply){
         searchReplyService.add(reply);
@@ -49,7 +49,7 @@ public class SearchReplyController {
      * @param page 页码
      * @param size 页面大小
      */
-    @ApiOperation(value = "回复搜索")
+    @Operation(summary = "回复搜索")
     @RequestMapping(value="/reply/{keywords}/{page}/{size}",method= RequestMethod.GET)
     public Result findByContentLike(@PathVariable String keywords, @PathVariable int page, @PathVariable int size){
         Page<Reply> reply = searchReplyService.findByContentLike(keywords, page, size);
@@ -59,7 +59,7 @@ public class SearchReplyController {
     /**
      * 删除回复索引
      */
-    @ApiOperation(value = "回复删除")
+    @Operation(summary = "回复删除")
     @RequestMapping(value="/reply/delete/{id}",method= RequestMethod.DELETE)
     public Result delete(@PathVariable String id){
         return searchReplyService.deleteById(id);
@@ -68,7 +68,7 @@ public class SearchReplyController {
     /**
      * 更新回复索引
      */
-    @ApiOperation(value = "回复更新")
+    @Operation(summary = "回复更新")
     @RequestMapping(value="/reply/update",method= RequestMethod.PUT)
     public Result update(Reply reply){
         searchReplyService.update(reply);

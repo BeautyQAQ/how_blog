@@ -4,21 +4,21 @@ import com.liushao.entity.Result;
 import com.liushao.entity.StatusCode;
 import com.liushao.service.FriendService;
 import io.jsonwebtoken.Claims;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 前缀 /friend
  * @author huangshen
  */
-@Api(tags = "交友模块")
+@Tag(name = "交友模块")
 @RestController
 @RequestMapping("/friend")
 public class FriendController {
@@ -32,7 +32,7 @@ public class FriendController {
      * @param type 1：喜欢 0：不喜欢
      * @return
      */
-    @ApiOperation(value = "添加好友")
+    @Operation(summary = "添加好友")
     @RequestMapping(value="/like/{friendid}/{type}",method= RequestMethod.PUT)
     public Result addFriend(@PathVariable String friendid , @PathVariable String type){
         Claims claims=(Claims)request.getAttribute("user_claims");
@@ -56,7 +56,7 @@ public class FriendController {
      * @param friendid
      * @return
      */
-    @ApiOperation(value = "删除好友")
+    @Operation(summary = "删除好友")
     @RequestMapping(value="/{friendid}",method=RequestMethod.DELETE)
     public Result remove(@PathVariable String friendid){
         Claims claims=(Claims)request.getAttribute("user_claims");
