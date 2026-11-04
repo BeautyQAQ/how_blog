@@ -33,5 +33,5 @@ spring:
 
 jwt:
   config:
-    key: ${JWT_SECRET}
-    ttl: ${JWT_TTL:360000}
+    key: P1AXH29zhYz/U7v0Ft4jWjUs3myjsVBfd6SnhzoTNO4=
+    ttl: 360000

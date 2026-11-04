@@ -15,7 +15,6 @@ import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
-import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.StandardEnvironment;
@@ -30,8 +29,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -40,7 +37,6 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -62,47 +58,45 @@ class NacosConfigurationContractTest {
     @Test
     void applicationDefaultsKeepBothNacosClientsInThePublicNamespace() throws Exception {
         for (Map.Entry<String, String> application : APPLICATIONS.entrySet()) {
-            ConfigurableEnvironment environment = environment(application.getKey(), null, credentials());
+            ConfigurableEnvironment environment = environment(application.getKey(), null);
             assertEquals(application.getValue(), environment.getProperty("spring.application.name"));
             assertEquals("dev", environment.getProperty("spring.profiles.active"));
             assertEquals("nacos:" + application.getValue() + "-dev.yaml?group=DEFAULT_GROUP&refreshEnabled=true",
                     environment.getProperty("spring.config.import"));
-            assertNacosProperties(environment, "localhost:8848", "", "DEFAULT_GROUP");
+            assertNacosProperties(environment, "192.168.20.5:8848", "", "DEFAULT_GROUP");
         }
     }
 
     @Test
-    void applicationRequiresExplicitNacosCredentials() throws Exception {
+    void applicationContainsNacosCredentialsWithoutEnvironmentVariables() throws Exception {
         for (String module : APPLICATIONS.keySet()) {
-            ConfigurableEnvironment environment = environment(module, null, Collections.emptyMap());
-            assertThrows(IllegalArgumentException.class,
-                    () -> environment.getRequiredProperty("spring.cloud.nacos.config.username"), module);
-            assertThrows(IllegalArgumentException.class,
-                    () -> environment.getRequiredProperty("spring.cloud.nacos.discovery.password"), module);
+            ConfigurableEnvironment environment = environment(module, null);
+            assertEquals("nacos", environment.getRequiredProperty("spring.cloud.nacos.config.username"), module);
+            assertEquals("ssyhsup", environment.getRequiredProperty("spring.cloud.nacos.discovery.password"), module);
         }
     }
 
     @Test
     void remoteDocumentsPreserveTheSameAuthenticatedNacosConnection() throws Exception {
-        Map<String, Object> values = serviceEnvironment();
         for (String directory : Arrays.asList("nacos-public", "nacos-dev")) {
             for (Map.Entry<String, String> application : APPLICATIONS.entrySet()) {
                 Path yaml = repositoryRoot().resolve("doc").resolve(directory)
                         .resolve(application.getValue() + "-dev.yaml");
-                ConfigurableEnvironment environment = environment(application.getKey(), yaml, values);
+                ConfigurableEnvironment environment = environment(application.getKey(), yaml);
                 assertEquals(application.getValue(), environment.getProperty("spring.application.name"));
-                assertNacosProperties(environment, "127.0.0.1:18848", "test-namespace-id", "test-group");
+                assertNacosProperties(environment, "192.168.20.5:8848", "", "DEFAULT_GROUP");
                 assertAllPlaceholdersResolve(environment);
                 if (Arrays.asList("how_article", "how_user").contains(application.getKey())) {
                     assertTrue(environment.getRequiredProperty("spring.datasource.url")
-                            .startsWith("jdbc:mysql://127.0.0.1:13306/how-blog?"));
-                    assertEquals("test-blog-user", environment.getProperty("spring.datasource.username"));
-                    assertEquals("test-blog-password", environment.getProperty("spring.datasource.password"));
+                            .startsWith("jdbc:mysql://192.168.20.5:3306/how-blog?"));
+                    assertEquals("root", environment.getProperty("spring.datasource.username"));
+                    assertEquals("ssyhsup", environment.getProperty("spring.datasource.password"));
                     assertEquals("none", environment.getProperty("spring.jpa.hibernate.ddl-auto"));
                 }
                 if (Arrays.asList("how_article", "how_user", "how_gateway_web")
                         .contains(application.getKey())) {
-                    assertEquals(values.get("JWT_SECRET"), environment.getProperty("jwt.config.key"));
+                    assertEquals("P1AXH29zhYz/U7v0Ft4jWjUs3myjsVBfd6SnhzoTNO4=",
+                            environment.getProperty("jwt.config.key"));
                 }
             }
         }
@@ -136,7 +130,7 @@ class NacosConfigurationContractTest {
         for (String directory : Arrays.asList("nacos-public", "nacos-dev")) {
             Path yaml = repositoryRoot().resolve("doc").resolve(directory)
                     .resolve("how-gateway-web-dev.yaml");
-            ConfigurableEnvironment environment = environment("how_gateway_web", yaml, serviceEnvironment());
+            ConfigurableEnvironment environment = environment("how_gateway_web", yaml);
             Set<String> targets = new HashSet<>();
             for (int i = 0; i < 3; i++) {
                 targets.add(environment.getRequiredProperty(
@@ -171,8 +165,8 @@ class NacosConfigurationContractTest {
             assertEquals(namespace, properties.getProperty(PropertyKeyConst.NAMESPACE));
             // An empty SCA contextPath overrides the client's /nacos default and breaks login URLs.
             assertEquals("/nacos", properties.getProperty("contextPath"));
-            assertEquals("test-nacos-user", properties.getProperty("username"));
-            assertEquals("test-nacos-password", properties.getProperty("password"));
+            assertEquals("nacos", properties.getProperty("username"));
+            assertEquals("ssyhsup", properties.getProperty("password"));
         }
     }
 
@@ -196,13 +190,12 @@ class NacosConfigurationContractTest {
         }
     }
 
-    private ConfigurableEnvironment environment(String module, Path yaml, Map<String, Object> values)
+    private ConfigurableEnvironment environment(String module, Path yaml)
             throws IOException {
         StandardEnvironment environment = new StandardEnvironment();
-        // Test credentials and defaults must be independent of the developer's actual environment.
+        // Read the checked-in intranet values independently of the developer's process environment.
         environment.getPropertySources().remove(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME);
         environment.getPropertySources().remove(StandardEnvironment.SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME);
-        environment.getPropertySources().addLast(new MapPropertySource("test-environment", values));
         if (yaml != null) {
             for (PropertySource<?> source : new YamlPropertySourceLoader()
                     .load("remote-config", new FileSystemResource(yaml.toFile()))) {
@@ -216,37 +209,6 @@ class NacosConfigurationContractTest {
         }
         environment.getPropertySources().addLast(new PropertiesPropertySource("application", application));
         return environment;
-    }
-
-    private Map<String, Object> credentials() {
-        Map<String, Object> values = new HashMap<>();
-        values.put("NACOS_USERNAME", "test-nacos-user");
-        values.put("NACOS_PASSWORD", "test-nacos-password");
-        return values;
-    }
-
-    private Map<String, Object> serviceEnvironment() {
-        Map<String, Object> values = credentials();
-        values.put("NACOS_SERVER_ADDR", "127.0.0.1:18848");
-        values.put("NACOS_NAMESPACE", "test-namespace-id");
-        values.put("NACOS_GROUP", "test-group");
-        values.put("MYSQL_HOST", "127.0.0.1");
-        values.put("MYSQL_PORT", "13306");
-        values.put("MYSQL_DATABASE", "how-blog");
-        values.put("MYSQL_USERNAME", "test-blog-user");
-        values.put("MYSQL_PASSWORD", "test-blog-password");
-        values.put("REDIS_HOST", "127.0.0.1");
-        values.put("REDIS_PASSWORD", "test-redis-password");
-        values.put("RABBITMQ_HOST", "127.0.0.1");
-        values.put("RABBITMQ_USERNAME", "test-rabbit-user");
-        values.put("RABBITMQ_PASSWORD", "test-rabbit-password");
-        values.put("ELASTICSEARCH_URIS", "http://127.0.0.1:19200");
-        values.put("JWT_SECRET", "test-jwt-secret-shared-between-all-services");
-        values.put("ALIYUN_SMS_TEMPLATE_CODE", "test-template-code");
-        values.put("ALIYUN_SMS_SIGN_NAME", "test-sign");
-        values.put("ALIYUN_SMS_ACCESS_KEY_ID", "test-access-key");
-        values.put("ALIYUN_SMS_ACCESS_KEY_SECRET", "test-access-secret");
-        return values;
     }
 
     private Path repositoryRoot() {

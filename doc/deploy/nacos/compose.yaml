@@ -13,12 +13,12 @@ services:
       RNACOS_HTTP_PORT: "8848"
       RNACOS_GRPC_PORT: "9848"
       RNACOS_HTTP_CONSOLE_PORT: "10848"
-      RNACOS_INIT_ADMIN_USERNAME: ${NACOS_USERNAME:?Please set NACOS_USERNAME in .env}
-      RNACOS_INIT_ADMIN_PASSWORD: ${NACOS_PASSWORD:?Please set NACOS_PASSWORD in .env}
+      RNACOS_INIT_ADMIN_USERNAME: "nacos"
+      RNACOS_INIT_ADMIN_PASSWORD: "ssyhsup"
       # v0.8.8 only serves the no-auth console when OpenAPI auth is also disabled.
       RNACOS_ENABLE_OPEN_API_AUTH: "false"
       RNACOS_ENABLE_NO_AUTH_CONSOLE: "true"
-      RNACOS_CLUSTER_TOKEN: ${RNACOS_CLUSTER_TOKEN:?Please set RNACOS_CLUSTER_TOKEN in .env}
+      RNACOS_CLUSTER_TOKEN: "e2556b4e3bb40e498407bbce40fdc28c2a8a9ef9b77fb1f3ab412b716ad8cb44"
       RNACOS_GMT_OFFSET_HOURS: "8"
       RUST_LOG: warn
       TZ: Asia/Shanghai

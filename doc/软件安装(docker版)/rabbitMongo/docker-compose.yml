@@ -1,3 +1,4 @@
+# 历史 RabbitMQ 安装参考。当前项目已使用 Kafka 192.168.20.10:9092，无需启动此服务。
 version: '3.1'
 services:
   rabbitmq:

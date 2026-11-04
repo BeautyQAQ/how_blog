@@ -14,7 +14,7 @@ NAS 当前使用 **r-nacos v0.8.8**，部署目录为 `/home/ubuntu/nacos`，容
 
 已按内网使用需求设置 `RNACOS_ENABLE_NO_AUTH_CONSOLE=true` 和 `RNACOS_ENABLE_OPEN_API_AUTH=false`，通过 `8848/rnacos/` 可直接管理配置与服务，无需登录。v0.8.8 在 OpenAPI 鉴权开启时会关闭无鉴权控制台，因此两个参数需要一起调整，应用 SDK / OpenAPI 也无需鉴权。`10848/rnacos/` 保留鉴权控制台。开关逻辑见 [v0.8.8 源码](https://github.com/nacos-group/r-nacos/blob/v0.8.8/src/web_config.rs)。
 
-管理员用户名为 `nacos`。真实密码保存在 NAS `/home/ubuntu/nacos/.env` 和本机私密文件 `doc/deploy/app.env` 的 `NACOS_PASSWORD` 中，不写入 Git。当前应用启动配置仍要求填写 `NACOS_USERNAME` / `NACOS_PASSWORD`，可沿用已有凭据；该账号也用于 `10848` 的鉴权控制台。旧的 `8848/nacos/` 控制台入口已改为上表中的 r-nacos 控制台入口。
+管理员用户名为 `nacos`。当前内网账号密码已直接填写在 `compose.yaml` 和五个应用的 `application.properties` 中，应用启动无需设置环境变量；该账号也用于 `10848` 的鉴权控制台。NAS 原 `/home/ubuntu/nacos/.env` 可保留作原部署记录。旧的 `8848/nacos/` 控制台入口已改为上表中的 r-nacos 控制台入口。
 
 ## 迁移记录（2026-11-04）
 
@@ -32,7 +32,7 @@ NAS 当前使用 **r-nacos v0.8.8**，部署目录为 `/home/ubuntu/nacos`，容
 
 上述验证发生在应用升级前，使用 Spring Boot 2.2.1、Spring Cloud Hoxton、Spring Cloud Alibaba 2.2.0 及 Nacos Client 2.5.5。当前代码已升级为 JDK 21 / Spring Boot 4.0 / Spring Cloud 2025.1 / Alibaba 2025.1，BOM 选择 Nacos Client 3.1.1；新组合尚未联调，旧 SDK 的结果不能替代新版本验证。详见 [应用升级记录](../../upgrade-java21.md)。五个模块继续显式设置配置中心和注册中心的 `context-path=/nacos`；此路径是客户端 API 路径，与新的 Web 控制台地址不同。
 
-升级后的本地配置模板已调整 Redis、Elasticsearch 和 Gateway 配置项；这些改动尚未发布到 NAS。后续联调前需将 `doc/nacos-public` 中的 5 份配置更新到服务端。
+升级后的本地配置已调整 Redis、Elasticsearch 和 Gateway 配置项，用户与短信服务已从 RabbitMQ 切换为 Kafka `192.168.20.10:9092`，搜索服务使用 ES `http://192.168.20.5:9200` 和 `elastic` 账号。连接信息、密码和 JWT 密钥均已直接填入 YAML；这些改动尚未发布到 NAS。后续联调前需将 `doc/nacos-public` 中的 5 份配置更新到服务端。
 
 ## 存储与日常管理
 
@@ -48,19 +48,11 @@ docker stats how-blog-nacos --no-stream
 docker compose restart nacos
 ```
 
-`.env` 中的 `NACOS_USERNAME` / `NACOS_PASSWORD` 仅在空数据目录首次启动时初始化管理员。已有用户需要在控制台的用户管理中修改密码，并同步应用进程环境，不能仅修改 `.env` 来重置已有密码。`RNACOS_CLUSTER_TOKEN` 使用独立随机密钥，不能替换为管理员密码。
+`compose.yaml` 中的 `RNACOS_INIT_ADMIN_USERNAME` / `RNACOS_INIT_ADMIN_PASSWORD` 仅在空数据目录首次启动时初始化管理员。已有用户需要在控制台的用户管理中修改密码，并同步应用的 `application.properties`，不能仅修改 Compose 来重置已有密码。`RNACOS_CLUSTER_TOKEN` 沿用现有的独立集群密钥。
 
 ## 在空目录新建实例
 
-把本目录的 `compose.yaml`、`.env.example` 复制到目标目录，运行：
-
-```sh
-cp .env.example .env
-chmod 600 .env
-openssl rand -hex 32
-```
-
-编辑 `.env`，填写管理员用户名、密码，并把随机值填入 `RNACOS_CLUSTER_TOKEN`。然后启动：
+把本目录的 `compose.yaml` 复制到目标目录，直接编辑其中的管理员用户名、密码和集群密钥。当前文件已填写本项目的内网值，无需创建 `.env`。然后启动：
 
 ```sh
 docker network inspect how >/dev/null 2>&1 || docker network create how
@@ -69,7 +61,7 @@ docker compose up -d
 docker compose ps
 ```
 
-此操作只创建空实例，不会自动导入旧 MySQL 配置。需要时从控制台导入，或通过 SDK / OpenAPI 发布 `doc/nacos-public` 中的配置。保留 `${MYSQL_PASSWORD}` 等占位符，业务凭据仍由应用进程环境提供，参考 [应用环境变量示例](../app.env.example)。
+此操作只创建空实例，不会自动导入旧 MySQL 配置。需要时从控制台导入，或通过 SDK / OpenAPI 发布 `doc/nacos-public` 中已填写实际值的配置。当前连接值也可查阅 [连接值参考](../app.env.example)。
 
 ## 备份与回退
 
@@ -93,7 +85,7 @@ docker update --restart=unless-stopped how-blog-nacos
 docker start how-blog-nacos
 ```
 
-回退后使用旧部署 `.env` 中的原管理员凭据，并同步应用环境。切换到 r-nacos 后新增或修改的配置，需先另行导出并同步到旧服务；旧 MySQL 备份只代表迁移时状态。旧服务的管理员凭据仍保存在 NAS 原部署目录的私密环境文件中。
+回退后使用旧部署 `.env` 中的原管理员凭据，并同步应用的 `application.properties`。切换到 r-nacos 后新增或修改的配置，需先另行导出并同步到旧服务；旧 MySQL 备份只代表迁移时状态。旧服务的管理员凭据仍保存在 NAS 原部署目录的环境文件中。
 
 ## 方案评估与依据
 

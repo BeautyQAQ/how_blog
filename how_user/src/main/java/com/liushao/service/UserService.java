@@ -1,7 +1,9 @@
 package com.liushao.service;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -10,12 +12,13 @@ import jakarta.persistence.criteria.Root;
 
 import com.liushao.util.IdWorker;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +38,9 @@ public class UserService {
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
 	@Autowired
-	private RabbitTemplate rabbitTemplate;
+	private KafkaTemplate<String, Map<String, String>> kafkaTemplate;
+	@Value("${messaging.sms.topic:sms}")
+	private String smsTopic;
 
 	@Autowired
 	private UserDao userDao;
@@ -126,14 +131,21 @@ public class UserService {
 		if(code<min){
 			code=code+min;
 		}
-		log.info(mobile+"收到验证码是："+code);
 		//2.将验证码放入redis  //五分钟过期
 		redisTemplate.opsForValue().set("smscode_"+mobile, code+"" ,5, TimeUnit.MINUTES );
-		//3.将验证码和手机号发动到rabbitMQ中
+		//3.将验证码和手机号发送到 Kafka，以手机号作为 key 保持同一手机号的消息顺序
 		Map<String,String> map=new HashMap<>();
 		map.put("mobile",mobile);
 		map.put("code",code+"");
-		rabbitTemplate.convertAndSend("sms",map);
+		try {
+			// 等待 broker 确认，发送失败时由接口返回错误。
+			kafkaTemplate.send(smsTopic, mobile, map).get(30, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new IllegalStateException("短信验证码消息发送被中断", e);
+		} catch (ExecutionException | TimeoutException e) {
+			throw new IllegalStateException("短信验证码消息发送失败，请稍后重试", e);
+		}
 	}
 
 	/**

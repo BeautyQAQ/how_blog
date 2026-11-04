@@ -5,28 +5,38 @@ spring:
     name: how-user
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:how-blog}?characterEncoding=utf-8&serverTimezone=Asia/Shanghai"
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
+    url: "jdbc:mysql://192.168.20.5:3306/how-blog?characterEncoding=utf-8&serverTimezone=Asia/Shanghai"
+    username: root
+    password: ssyhsup
   jpa:
     database: MySQL
-    show-sql: ${JPA_SHOW_SQL:false}
+    show-sql: false
     hibernate:
       ddl-auto: none
-  rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}
-    port: ${RABBITMQ_PORT:5672}
-    username: ${RABBITMQ_USERNAME}
-    password: ${RABBITMQ_PASSWORD}
-    virtual-host: ${RABBITMQ_VIRTUAL_HOST:/}
+  kafka:
+    bootstrap-servers: 192.168.20.10:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      acks: all
+      properties:
+        "[enable.idempotence]": true
+        "[spring.json.add.type.headers]": false
+        "[max.block.ms]": 10000
+        "[request.timeout.ms]": 10000
+        "[delivery.timeout.ms]": 30000
   data:
     redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:}
-      database: ${REDIS_DATABASE:0}
+      host: 192.168.20.5
+      port: 6379
+      password: ssyhsup
+      database: 0
+
+messaging:
+  sms:
+    topic: sms
 
 jwt:
   config:
-    key: ${JWT_SECRET}
-    ttl: ${JWT_TTL:360000}
+    key: P1AXH29zhYz/U7v0Ft4jWjUs3myjsVBfd6SnhzoTNO4=
+    ttl: 360000

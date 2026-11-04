@@ -3,16 +3,28 @@ server:
 spring:
   application:
     name: how-sms
-  rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}
-    port: ${RABBITMQ_PORT:5672}
-    username: ${RABBITMQ_USERNAME}
-    password: ${RABBITMQ_PASSWORD}
-    virtual-host: ${RABBITMQ_VIRTUAL_HOST:/}
+  kafka:
+    bootstrap-servers: 192.168.20.10:9092
+    consumer:
+      group-id: how-sms
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      properties:
+        "[spring.json.value.default.type]": java.util.Map
+        "[spring.json.use.type.headers]": false
+    listener:
+      ack-mode: record
 
+messaging:
+  sms:
+    topic: sms
+
+# TODO: Fill in the four Aliyun SMS values below before sending SMS.
 aliyun:
   sms:
-    template_code: ${ALIYUN_SMS_TEMPLATE_CODE}
-    sign_name: ${ALIYUN_SMS_SIGN_NAME}
-    accessKeyId: ${ALIYUN_SMS_ACCESS_KEY_ID}
-    accessKeySecret: ${ALIYUN_SMS_ACCESS_KEY_SECRET}
+    template_code: ""
+    sign_name: ""
+    accessKeyId: ""
+    accessKeySecret: ""

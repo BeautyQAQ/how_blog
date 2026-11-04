@@ -4,6 +4,6 @@ spring:
   application:
     name: how-search
   elasticsearch:
-    uris: ${ELASTICSEARCH_URIS:http://localhost:9200}
-    username: ${ELASTICSEARCH_USERNAME:}
-    password: ${ELASTICSEARCH_PASSWORD:}
+    uris: http://192.168.20.5:9200
+    username: elastic
+    password: ssyhsup
