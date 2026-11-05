@@ -87,8 +87,7 @@ public class ArticleController {
 	@Operation(summary = "增加文章")
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Article article){
-		articleService.add(article);
-		return new Result(true,StatusCode.OK,"增加成功");
+		return new Result(true,StatusCode.OK,"增加成功",articleService.add(article));
 	}
 	
 	/**

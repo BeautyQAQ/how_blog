@@ -1,5 +1,7 @@
 # 怎样博客
 
+2026-11-05 开始推进文章发布链路和前端现代化。管理端已迁移到 Vue 3 / Vite 8 / Element Plus / Pinia，前台已迁移到 Nuxt 4 / Vue 3 / TypeScript。范围、已实现功能和后续优先级见 [项目推进记录](doc/project-progress.md)，启动命令见两个前端仓库的 README。阿里云短信继续暂缓。
+
 ## 主要技术栈
 JDK 21、Spring Boot 4.0.9、Spring Cloud 2025.1.4、Spring Cloud Alibaba 2025.1.0.0；MySQL、Redis、Kafka、Elasticsearch HTTP API。依赖版本由根 POM 和官方 BOM 统一管理。
 

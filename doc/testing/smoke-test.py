@@ -51,6 +51,11 @@ def http(port, path, method="GET", body=None, token=None, expected=200):
 
 
 def api(port, path, method="GET", body=None, token=None):
+    if token is None and globals().get("admin_token") and (
+        port == 9001 and (path == "/article" or path.startswith("/article/"))
+        or port == 9005 and path.startswith("/article/article")
+    ):
+        token = admin_token
     result = http(port, path, method, body, token)
     if result.get("flag") is not True or result.get("code") != 20000:
         raise AssertionError(f"{method} :{port}{path}: {result}")
@@ -114,7 +119,7 @@ try:
         check(f"Gateway discovery /{prefix}/v3/api-docs", bool(spec["paths"]))
     denied = http(9005, "/user/admin", expected=401)
     check("Gateway rejects missing JWT", denied["flag"] is False)
-    for resource in ("article", "channel", "city", "column", "label", "problem", "reply", "spit"):
+    for resource in ("channel", "city", "column", "label", "problem", "reply", "spit"):
         check(f"MySQL list {resource}", isinstance(api(9005, f"/article/{resource}"), list))
 
     password = secrets.token_urlsafe(20)
@@ -125,6 +130,7 @@ try:
     login = api(9005, "/user/admin/login", "POST", {"loginname": RUN, "password": password})
     admin_token = login["token"]
     check("Admin JWT login", admin_token.startswith("Bearer "))
+    check("MySQL list article", isinstance(api(9005, "/article/article"), list))
     info = api(9005, "/user/admin/info", token=admin_token)
     check("Gateway forwards authenticated admin", info["roles"] == "admin")
     bad = http(9005, "/user/admin/login", "POST", {"loginname": RUN, "password": "wrong"})
@@ -145,6 +151,12 @@ try:
     api(9005, "/article/article", "POST", article_body)
     article = api(9001, "/article/search", "POST", {"title": RUN})[0]
     article_id = fixtures["article"] = article["id"]
+    check("Article defaults initialized", article["state"] == "0" and article["istop"] == "0" and bool(article["createtime"]) and bool(article["updatetime"]))
+    check("Draft hidden from public detail", http(9005, "/article/article/public/" + article_id, expected=404)["flag"] is False)
+    check("Draft hidden from public list", not http(9005, "/article/article/public?keyword=" + quote(RUN))["data"]["rows"])
+    check("Raw article read requires admin", http(9001, "/article/" + article_id, expected=401)["flag"] is False)
+    check("Anonymous review denied", http(9005, "/article/article/examine/" + article_id, "PUT", expected=401)["flag"] is False)
+    check("Invalid pagination rejected", http(9005, "/article/article/public?page=0", expected=400)["flag"] is False)
     for _ in range(2):
         stored = api(9005, "/article/article/" + article_id)
         check("Article read / Redis cached read", stored["content"] == article_body["content"])
@@ -153,11 +165,27 @@ try:
     check("Article MySQL counter", page["rows"][0]["thumbup"] == 1)
     api(9005, "/article/article/examine/" + article_id, "PUT")
     check("Article review -> Feign -> ES search", indexed(RUN, article_id))
+    check("Published public detail", http(9005, "/article/article/public/" + article_id)["data"]["state"] == "1")
+    check("Published public list", http(9005, "/article/article/public?keyword=" + quote(RUN))["data"]["total"] == 1)
+    check("Review invalidates cached state", api(9001, "/article/" + article_id)["state"] == "1")
     article_body["title"] = RUN + " updated"
     article_body["content"] = RUN + " updated正文🙂"
     api(9005, "/article/article/" + article_id, "PUT", article_body)
     check("Article update clears Redis", api(9001, "/article/" + article_id)["content"] == article_body["content"])
     check("Article update reaches ES", indexed("updated", article_id))
+    check("Article edit preserves counter", api(9001, "/article/" + article_id)["thumbup"] == 1)
+    article_body["ispublic"] = "0"
+    api(9005, "/article/article/" + article_id, "PUT", article_body)
+    check("Hidden article detail is 404", http(9005, "/article/article/public/" + article_id, expected=404)["flag"] is False)
+    check("Hidden article removed from public list", not http(9005, "/article/article/public?keyword=" + quote(RUN))["data"]["rows"])
+    for _ in range(12):
+        if not api(9005, f"/search/search/article/{quote(RUN)}/1/10")["rows"]:
+            break
+        time.sleep(0.5)
+    check("Hidden article removed from ES", not api(9005, f"/search/search/article/{quote(RUN)}/1/10")["rows"])
+    article_body["ispublic"] = "1"
+    api(9005, "/article/article/" + article_id, "PUT", article_body)
+    check("Republished article restored to ES", indexed(RUN, article_id))
 
     api(9005, "/article/comment", "POST", {"articleid": article_id, "userid": user["id"], "content": RUN + " 评论🙂"})
     comments = api(9005, "/article/comment/article/" + article_id)

@@ -35,6 +35,7 @@ public class Article implements Serializable{
 	private String title;
 
 	@Schema(description = "文章正文", requiredMode = Schema.RequiredMode.REQUIRED)
+	@jakarta.persistence.Column(columnDefinition = "longtext")
 	private String content;
 
 	@Schema(description = "文章封面", requiredMode = Schema.RequiredMode.REQUIRED)

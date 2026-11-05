@@ -53,7 +53,7 @@ public class InitController {
     @Operation(summary = "初始化es索引数据")
     @RequestMapping(value="/data", method= RequestMethod.GET)
     public Result init(){
-        List<Article> articles = articleService.findAll();
+        List<Article> articles = articleService.findPublished();
         List<Channel> channels = channelService.findAll();
         List<Label> labels = labelService.findAll();
         List<Column> columns = columnService.findAll();
