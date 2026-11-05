@@ -19,11 +19,11 @@ JDK 21、Spring Boot 4.0.9、Spring Cloud 2025.1.4、Spring Cloud Alibaba 2025.1
 
 ## Nacos 与本地应用启动
 
-NAS 使用 r-nacos v0.8.8，部署见 [部署说明](doc/deploy/nacos/README.md)，配置和用户持久化在 `/home/ubuntu/nacos/data`；原 MySQL `nacos_config` 保留供回退。业务应用连接 `how-blog`。应用现使用 Spring Boot 4.0 / Spring Cloud 2025.1，Nacos Client 3.1.1 由 Alibaba BOM 管理。2026-11-04 已完成非短信服务的新客户端、MySQL、Redis、Kafka 和 ES 联调，详见 [测试记录及复跑方法](doc/testing/2026-11-04-test-environment.md)。
+服务器 `192.168.20.10` 使用 r-nacos v0.8.8，部署见 [部署说明](doc/deploy/nacos/README.md)，配置和用户持久化在 `/opt/nacos/data`；原 NAS 上的 MySQL `nacos_config` 保留供回退。Nacos 和应用的 Compose 使用各自自动创建的默认网络，跨机器通过服务器 IP 和映射端口访问，无需预先创建 `how` 网络。业务应用连接 `how-blog`。应用现使用 Spring Boot 4.0 / Spring Cloud 2025.1，Nacos Client 3.1.1 由 Alibaba BOM 管理。2026-11-04 已完成非短信服务的新客户端、MySQL、Redis、Kafka 和 ES 联调，详见 [测试记录及复跑方法](doc/testing/2026-11-04-test-environment.md)。
 
-1. 在 NAS 启动 r-nacos，打开内网无鉴权控制台 `http://192.168.20.5:8848/rnacos/`。应用使用 `192.168.20.5:8848`，本机需要能访问 NAS 的 `8848` 和 `9848` 两个端口。`10848/rnacos/` 另提供需要登录的控制台。
+1. 在服务器 `/opt/nacos` 启动 r-nacos，打开内网无鉴权控制台 `http://192.168.20.10:8848/rnacos/`。应用使用 `192.168.20.10:8848`，运行应用的机器和容器需要能访问服务器的 `8848` 和 `9848` 两个端口。`http://192.168.20.10:10848/rnacos/` 另提供需要登录的控制台。
 2. 启动升级后的应用前，在 public 命名空间逐份发布或更新 [doc/nacos-public](doc/nacos-public) 中的 5 个配置。Data ID 使用完整文件名，例如 `how-article-dev.yaml`；Group 为 `DEFAULT_GROUP`，格式为 YAML，内容原样复制。文件已填写当前内网连接信息和凭据。`doc/nacos-dev` 提供相同配置，可选用其中一套。
-3. 五个模块的 `src/main/resources/application.properties` 已直接填写 Nacos 地址 `192.168.20.5:8848`、账号密码、public 命名空间、`DEFAULT_GROUP` 和 `dev` 配置，无需在 IDE 设置环境变量或加载 `app.env`。如果改用其他命名空间，直接修改这些文件的 namespace ID 和配置导入地址，并将业务 YAML 发布到对应命名空间。
+3. 五个模块的 `src/main/resources/application.properties` 已直接填写 Nacos 地址 `192.168.20.10:8848`、账号密码、public 命名空间、`DEFAULT_GROUP` 和 `dev` 配置，无需在 IDE 设置环境变量或加载 `app.env`。如果改用其他命名空间，直接修改这些文件的 namespace ID 和配置导入地址，并将业务 YAML 发布到对应命名空间。
 4. 将 IDE 的项目 SDK、Maven Runner 和各启动项 JRE 均设为 JDK 21，再运行各模块的启动类。可以先启动文章服务验证 MySQL/Redis，再按需启动用户、网关、搜索和短信服务；用户服务还需要 Kafka，搜索需要 Elasticsearch，短信需要 Kafka 和阿里云短信配置。首次使用 Kafka 时先启动短信服务以创建 topic。
 
 从后端根目录构建（只编译生产源码，不执行测试）：

@@ -63,7 +63,7 @@ class NacosConfigurationContractTest {
             assertEquals("dev", environment.getProperty("spring.profiles.active"));
             assertEquals("nacos:" + application.getValue() + "-dev.yaml?group=DEFAULT_GROUP&refreshEnabled=true",
                     environment.getProperty("spring.config.import"));
-            assertNacosProperties(environment, "192.168.20.5:8848", "", "DEFAULT_GROUP");
+            assertNacosProperties(environment, "192.168.20.10:8848", "", "DEFAULT_GROUP");
         }
     }
 
@@ -84,7 +84,7 @@ class NacosConfigurationContractTest {
                         .resolve(application.getValue() + "-dev.yaml");
                 ConfigurableEnvironment environment = environment(application.getKey(), yaml);
                 assertEquals(application.getValue(), environment.getProperty("spring.application.name"));
-                assertNacosProperties(environment, "192.168.20.5:8848", "", "DEFAULT_GROUP");
+                assertNacosProperties(environment, "192.168.20.10:8848", "", "DEFAULT_GROUP");
                 assertAllPlaceholdersResolve(environment);
                 if (Arrays.asList("how_article", "how_user").contains(application.getKey())) {
                     assertTrue(environment.getRequiredProperty("spring.datasource.url")

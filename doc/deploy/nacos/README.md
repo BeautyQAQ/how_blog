@@ -1,22 +1,22 @@
 # r-nacos 单机部署
 
-NAS 当前使用 **r-nacos v0.8.8**，部署目录为 `/home/ubuntu/nacos`，容器名为 `how-blog-nacos`，Compose 项目名为 `nacos`。镜像固定版本及摘要，避免 `stable` 标签更新后意外升级。r-nacos 是 Rust 实现的兼容服务，有自己的版本号，并非官方 Nacos 3.3.0 的 Rust 发行包。
+当前在服务器 `192.168.20.10` 使用 **r-nacos v0.8.8**，部署目录为 `/opt/nacos`，容器名为 `how-blog-nacos`，Compose 项目名为 `nacos`。2026-11-05 已移除外部 `how` 网络依赖，改用 Compose 自动创建的 `nacos_default` 桥接网络；其他机器通过服务器 IP 和映射端口访问。镜像固定版本及摘要，避免 `stable` 标签更新后意外升级。r-nacos 是 Rust 实现的兼容服务，有自己的版本号，并非官方 Nacos 3.3.0 的 Rust 发行包。
 
 ## 访问和凭据
 
 | 用途 | 地址 |
 | --- | --- |
-| 无鉴权 Web 控制台（内网使用） | http://192.168.20.5:8848/rnacos/ |
-| 鉴权 Web 控制台 | http://192.168.20.5:10848/rnacos/ |
-| 应用连接地址 | 192.168.20.5:8848 |
-| SDK gRPC | 192.168.20.5:9848 |
-| 健康检查 | http://192.168.20.5:8848/health |
+| 无鉴权 Web 控制台（内网使用） | http://192.168.20.10:8848/rnacos/ |
+| 鉴权 Web 控制台 | http://192.168.20.10:10848/rnacos/ |
+| 应用连接地址 | 192.168.20.10:8848 |
+| SDK gRPC | 192.168.20.10:9848 |
+| 健康检查 | http://192.168.20.10:8848/health |
 
 已按内网使用需求设置 `RNACOS_ENABLE_NO_AUTH_CONSOLE=true` 和 `RNACOS_ENABLE_OPEN_API_AUTH=false`，通过 `8848/rnacos/` 可直接管理配置与服务，无需登录。v0.8.8 在 OpenAPI 鉴权开启时会关闭无鉴权控制台，因此两个参数需要一起调整，应用 SDK / OpenAPI 也无需鉴权。`10848/rnacos/` 保留鉴权控制台。开关逻辑见 [v0.8.8 源码](https://github.com/nacos-group/r-nacos/blob/v0.8.8/src/web_config.rs)。
 
 管理员用户名为 `nacos`。当前内网账号密码已直接填写在 `compose.yaml` 和五个应用的 `application.properties` 中，应用启动无需设置环境变量；该账号也用于 `10848` 的鉴权控制台。NAS 原 `/home/ubuntu/nacos/.env` 可保留作原部署记录。旧的 `8848/nacos/` 控制台入口已改为上表中的 r-nacos 控制台入口。
 
-## 迁移记录（2026-11-04）
+## NAS 迁移记录（2026-11-04）
 
 原服务是 `nacos/nacos-server:v2.5.5`，在 `/home/ubuntu/how-blog/nacos` 运行。迁移前 Java 堆已降至初始 96 MiB、最大 192 MiB，容器仍约占 450 MiB。r-nacos 旁路验证时约占 9 MiB，正式切换后验证结束采样约为 7 MiB；这是 5 份配置、少量临时 SDK 操作下的采样，不能代表高负载上限。新容器的内存上限设为 256 MiB。
 
@@ -36,12 +36,12 @@ NAS 当前使用 **r-nacos v0.8.8**，部署目录为 `/home/ubuntu/nacos`，容
 
 ## 存储与日常管理
 
-r-nacos 使用自己的本地持久化文件，宿主机 `/home/ubuntu/nacos/data` 挂载到容器 `/io/nacos_db`，**不再连接 MySQL**。原 `nacos_config` 库完整保留供备份和回退使用，新服务的修改不会回写到该库。业务数据库 `how-blog` 不受影响。
+r-nacos 使用自己的本地持久化文件，当前宿主机 `/opt/nacos/data` 挂载到容器 `/io/nacos_db`，**不再连接 MySQL**。原 NAS 的 `nacos_config` 库完整保留供备份和回退使用，新服务的修改不会回写到该库。业务数据库 `how-blog` 不受影响。
 
 日志写入 Docker stdout/stderr，设置每个文件 10 MiB、保留 3 个文件。健康检查使用镜像自带 bash 请求 `/health`；上游镜像未附带 curl/wget。
 
 ```sh
-cd /home/ubuntu/nacos
+cd /opt/nacos
 docker compose ps
 docker compose logs --tail=100 nacos
 docker stats how-blog-nacos --no-stream
@@ -55,7 +55,6 @@ docker compose restart nacos
 把本目录的 `compose.yaml` 复制到目标目录，直接编辑其中的管理员用户名、密码和集群密钥。当前文件已填写本项目的内网值，无需创建 `.env`。然后启动：
 
 ```sh
-docker network inspect how >/dev/null 2>&1 || docker network create how
 docker compose config --quiet
 docker compose up -d
 docker compose ps
