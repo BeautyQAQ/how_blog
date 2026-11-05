@@ -14,7 +14,7 @@
 
 已按内网使用需求设置 `RNACOS_ENABLE_NO_AUTH_CONSOLE=true` 和 `RNACOS_ENABLE_OPEN_API_AUTH=false`，通过 `8848/rnacos/` 可直接管理配置与服务，无需登录。v0.8.8 在 OpenAPI 鉴权开启时会关闭无鉴权控制台，因此两个参数需要一起调整，应用 SDK / OpenAPI 也无需鉴权。`10848/rnacos/` 保留鉴权控制台。开关逻辑见 [v0.8.8 源码](https://github.com/nacos-group/r-nacos/blob/v0.8.8/src/web_config.rs)。
 
-管理员用户名为 `nacos`。当前内网账号密码已直接填写在 `compose.yaml` 和五个应用的 `application.properties` 中，应用启动无需设置环境变量；该账号也用于 `10848` 的鉴权控制台。NAS 原 `/home/ubuntu/nacos/.env` 可保留作原部署记录。旧的 `8848/nacos/` 控制台入口已改为上表中的 r-nacos 控制台入口。
+管理员用户名为 `nacos`。当前内网账号密码已直接填写在 `compose.yaml` 和五个应用的 `application.properties` 中，应用启动无需设置环境变量；该账号也用于 `10848` 的鉴权控制台。NAS 原 `/home/ubuntu/nacos/.env` 已随旧部署归档，备份位置见下文。旧的 `8848/nacos/` 控制台入口已改为上表中的 r-nacos 控制台入口。
 
 ## NAS 迁移记录（2026-11-04）
 
@@ -64,27 +64,17 @@ docker compose ps
 
 ## 备份与回退
 
-迁移备份位于 NAS `/home/ubuntu/nacos/backups/`：
+2026-11-05 已核对 `192.168.20.5` 与 `192.168.20.10` 的 5 份 public / DEFAULT_GROUP 业务配置，SHA-256 全部一致。随后停止旧 NAS 上的 r-nacos，并归档完整部署目录，再删除旧容器、`/home/ubuntu/nacos`、闲置的 r-nacos 镜像和仅供旧 Nacos 使用的 `how` 网络。
 
-- `nacos_config-2.5.5.sql`：旧 MySQL 库的 schema、数据及历史记录。
-- `nacos-2.5.5-configs.json`：5 份原始配置与 MD5。
-- `legacy-compose.yaml`：切换前实际运行的 Java Compose。
+停机归档保存在旧 NAS `192.168.20.5`：
 
-旧部署目录 `/home/ubuntu/how-blog/nacos` 保留，旧容器重命名为 `how-blog-nacos-legacy-2.5.5`，已停止且关闭自动重启。其 `prod/` 是此前保存的 Java 部署参考，不属于当前 r-nacos 部署。不要同时启动新旧实例竞争端口。
-
-日常可使用 r-nacos 控制台「数据迁移」导出备份；也可停止新服务后备份完整 `data/` 目录，再启动服务，避免在写入过程中直接复制持久化文件。
-
-如需回退到迁移前状态：
-
-```sh
-cd /home/ubuntu/nacos
-docker compose down
-docker rename how-blog-nacos-legacy-2.5.5 how-blog-nacos
-docker update --restart=unless-stopped how-blog-nacos
-docker start how-blog-nacos
+```text
+/home/ubuntu/backups/nacos-retired-20261105-144302.tar.gz
 ```
 
-回退后使用旧部署 `.env` 中的原管理员凭据，并同步应用的 `application.properties`。切换到 r-nacos 后新增或修改的配置，需先另行导出并同步到旧服务；旧 MySQL 备份只代表迁移时状态。旧服务的管理员凭据仍保存在 NAS 原部署目录的环境文件中。
+归档包含旧 `compose.yaml`、`.env` 和 `data/`，权限为 `600`。需要恢复旧部署时，从该归档恢复目录；归档中的 Compose 仍引用外部 `how` 网络，启动前需调整为默认网络或重新创建该网络，并同步应用连接地址。
+
+当前服务的数据目录为新服务器 `/opt/nacos/data`。日常可使用 r-nacos 控制台「数据迁移」导出备份；也可停止新服务后备份完整 `data/` 目录，再启动服务，避免在写入过程中直接复制持久化文件。旧 MySQL `nacos_config` 保留作历史备份，新服务不会回写该库。
 
 ## 方案评估与依据
 
