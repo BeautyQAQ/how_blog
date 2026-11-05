@@ -38,6 +38,18 @@ public class Article implements Serializable{
 	@jakarta.persistence.Column(columnDefinition = "longtext")
 	private String content;
 
+	@Schema(description = "正文格式：text 或 markdown")
+	@jakarta.persistence.Column(length = 16)
+	private String contentformat;
+
+	@Schema(description = "手工摘要，留空自动生成")
+	@jakarta.persistence.Column(length = 300)
+	private String summary;
+
+	@Schema(description = "服务端生成的正文摘要")
+	@jakarta.persistence.Column(length = 300)
+	private String excerpt;
+
 	@Schema(description = "文章封面", requiredMode = Schema.RequiredMode.REQUIRED)
 	private String image;
 

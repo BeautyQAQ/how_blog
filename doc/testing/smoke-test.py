@@ -13,6 +13,7 @@ from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
+from test_support import admin_credentials
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "target/test-env-runtime"
@@ -51,10 +52,7 @@ def http(port, path, method="GET", body=None, token=None, expected=200):
 
 
 def api(port, path, method="GET", body=None, token=None):
-    if token is None and globals().get("admin_token") and (
-        port == 9001 and (path == "/article" or path.startswith("/article/"))
-        or port == 9005 and path.startswith("/article/article")
-    ):
+    if token is None and globals().get("admin_token"):
         token = admin_token
     result = http(port, path, method, body, token)
     if result.get("flag") is not True or result.get("code") != 20000:
@@ -119,6 +117,7 @@ try:
         check(f"Gateway discovery /{prefix}/v3/api-docs", bool(spec["paths"]))
     denied = http(9005, "/user/admin", expected=401)
     check("Gateway rejects missing JWT", denied["flag"] is False)
+    admin_token = api(9005, "/user/admin/login", "POST", admin_credentials())["token"]
     for resource in ("channel", "city", "column", "label", "problem", "reply", "spit"):
         check(f"MySQL list {resource}", isinstance(api(9005, f"/article/{resource}"), list))
 
@@ -126,7 +125,7 @@ try:
     api(9003, "/admin", "POST", {"loginname": RUN, "password": password, "state": "1"})
     admin = api(9003, "/admin/search", "POST", {"loginname": RUN})[0]
     fixtures["admin"] = admin["id"]
-    check("Admin password stored as BCrypt", admin["password"].startswith("$2"))
+    check("Admin API omits password", "password" not in admin)
     login = api(9005, "/user/admin/login", "POST", {"loginname": RUN, "password": password})
     admin_token = login["token"]
     check("Admin JWT login", admin_token.startswith("Bearer "))
@@ -136,11 +135,12 @@ try:
     bad = http(9005, "/user/admin/login", "POST", {"loginname": RUN, "password": "wrong"})
     check("Admin wrong password rejected", bad["flag"] is False)
 
-    api(9003, "/user", "POST", {"mobile": RUN, "password": admin["password"], "nickname": RUN,
+    api(9003, "/user", "POST", {"mobile": RUN, "password": password, "nickname": RUN,
                                    "fanscount": 0, "followcount": 0})
     user = api(9003, "/user/search", "POST", {"nickname": RUN})[0]
     fixtures["user"] = user["id"]
     login = api(9005, "/user/user/login", "POST", {"mobile": RUN, "password": password})
+    user_token = login["token"]
     check("User JWT login without SMS", login["name"] == RUN)
     users = api(9005, "/user/user/search/1/10", "POST", {"nickname": RUN}, token=admin_token)
     check("Authenticated user pagination", users["total"] == 1)
@@ -187,9 +187,9 @@ try:
     api(9005, "/article/article/" + article_id, "PUT", article_body)
     check("Republished article restored to ES", indexed(RUN, article_id))
 
-    api(9005, "/article/comment", "POST", {"articleid": article_id, "userid": user["id"], "content": RUN + " 评论🙂"})
-    comments = api(9005, "/article/comment/article/" + article_id)
-    comment = next(row for row in comments if row["content"].startswith(RUN))
+    comment = api(9005, "/article/comment", "POST", {"articleid": article_id, "userid": "forged", "content": RUN + " 评论🙂"}, token=user_token)
+    check("Comment identity comes from JWT", comment["userid"] == user["id"])
+    check("Pending comment hidden from public", not http(9005, "/article/comment/article/" + article_id)["data"])
     fixtures["comment"] = comment["_id"]
     check("Comment legacy _id and Chinese emoji", "id" not in comment and comment["content"].endswith("🙂"))
     api(9005, "/article/comment/examine/" + comment["_id"], "PUT")

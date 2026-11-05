@@ -32,6 +32,8 @@ public class User implements Serializable{
 	private String mobile;
 
 	@Schema(description = "密码", requiredMode = Schema.RequiredMode.REQUIRED)
+	@com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY)
+	@lombok.ToString.Exclude
 	private String password;
 
 	@Schema(description = "昵称", requiredMode = Schema.RequiredMode.REQUIRED)

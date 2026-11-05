@@ -38,12 +38,22 @@ public class CommentService {
      */
     @Transactional
     public void add(com.liushao.pojo.Comment comment){
+        articleService.findPublicById(comment.getArticleid());
+        if (comment.getContent() == null || comment.getContent().isBlank() || comment.getContent().length() > 10000)
+            throw new IllegalArgumentException("评论不能为空且不能超过10000字");
+        if (comment.getParentid() != null && !comment.getParentid().isBlank()) {
+            Comment parent = commentDao.findById(comment.getParentid()).orElseThrow(() ->
+                    new IllegalArgumentException("回复的评论不存在"));
+            if (!comment.getArticleid().equals(parent.getArticleid()) || !"1".equals(parent.getState()))
+                throw new IllegalArgumentException("只能回复同一文章下已审核的评论");
+        }
         // 设置ID
         comment.set_id( idWorker.nextId()+"" );
         // 设置发布时间
         comment.setPublishdate(new Date());
         // 设置状态未审核
         comment.setState("0");
+        comment.setChecktime(null);
         commentDao.save(comment);
     }
 
@@ -59,7 +69,8 @@ public class CommentService {
      * 根据文章ID查询评论列表
      */
     public List<com.liushao.pojo.Comment> findByArticleid(String articleid){
-        return commentDao.findByArticleid(articleid);
+        articleService.findPublicById(articleid);
+        return commentDao.findByArticleidAndStateOrderByPublishdateAsc(articleid, "1");
     }
 
     /**
@@ -113,9 +124,17 @@ public class CommentService {
             // 管理界面使用 id，实体接口继续保留 _id。
             commentVo.setId(commentOne.get_id());
             // 设置文章标题
-            commentVo.setArticle(articleService.findById(commentOne.getArticleid()).getTitle());
+            try { commentVo.setArticle(articleService.findById(commentOne.getArticleid()).getTitle()); }
+            catch (org.springframework.web.server.ResponseStatusException e) {
+                if (e.getStatusCode().value() != 404) throw e;
+                commentVo.setArticle("已删除文章");
+            }
             // 设置用户名
-            commentVo.setUser((String)userClient.findNicknameById(commentOne.getUserid()).getData());
+            try {
+                var user = userClient.findNicknameById(commentOne.getUserid());
+                commentVo.setUser(user != null && user.isFlag() && user.getData() instanceof String
+                        ? (String) user.getData() : "未知用户");
+            } catch (feign.FeignException.NotFound e) { commentVo.setUser("已删除用户"); }
             commentVos.add(commentVo);
         }
         Page<CommentVo> commentVoPage = new PageImpl<CommentVo>(commentVos, pageRequest, comments.getTotalElements());

@@ -90,15 +90,25 @@ public class UserService {
 	 * @return
 	 */
 	public User findById(String id) {
-		return userDao.findById(id).get();
+		return userDao.findById(id).orElseThrow(() ->
+				new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "用户不存在"));
 	}
 
 	/**
 	 * 增加
 	 * @param user
 	 */
+	@Transactional
 	public void add(User user) {
+		user.setMobile(AccountValidation.name(user.getMobile(), 100, "登录标识"));
+		user.setNickname(AccountValidation.name(user.getNickname(), 100, "昵称"));
+		AccountValidation.password(user.getPassword());
+		if (userDao.findByMobile(user.getMobile()) != null)
+			throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.CONFLICT, "登录标识已存在");
+		user.setPassword(encoder.encode(user.getPassword()));
 		user.setId( idWorker.nextId()+"" );
+		user.setRegdate(new Date()); user.setUpdatedate(new Date());
+		user.setFanscount(0); user.setFollowcount(0); user.setOnline(0L);
 		userDao.save(user);
 	}
 
@@ -106,7 +116,23 @@ public class UserService {
 	 * 修改
 	 * @param user
 	 */
+	@Transactional
 	public void update(User user) {
+		User stored = userDao.findById(user.getId()).orElseThrow(() ->
+				new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "用户不存在"));
+		if (user.getPassword() == null || user.getPassword().isEmpty()) user.setPassword(stored.getPassword());
+		else { AccountValidation.password(user.getPassword()); user.setPassword(encoder.encode(user.getPassword())); }
+		if (user.getMobile() == null) user.setMobile(stored.getMobile());
+		else {
+			user.setMobile(AccountValidation.name(user.getMobile(), 100, "登录标识"));
+			User duplicate = userDao.findByMobile(user.getMobile());
+			if (duplicate != null && !duplicate.getId().equals(stored.getId()))
+				throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.CONFLICT, "登录标识已存在");
+		}
+		if (user.getNickname() == null) user.setNickname(stored.getNickname());
+		else user.setNickname(AccountValidation.name(user.getNickname(), 100, "昵称"));
+		user.setRegdate(stored.getRegdate()); user.setUpdatedate(new Date());
+		user.setFanscount(stored.getFanscount()); user.setFollowcount(stored.getFollowcount()); user.setOnline(stored.getOnline());
 		userDao.save(user);
 	}
 
@@ -185,7 +211,7 @@ public class UserService {
 	 */
 	public User findByMobileAndPassword(String mobile,String password){
 		User user = userDao.findByMobile(mobile);
-		if(user!=null && encoder.matches(password,user.getPassword())){
+		if(user!=null && password != null && encoder.matches(password,user.getPassword())){
 			return user;
 		}else{
 			return null;

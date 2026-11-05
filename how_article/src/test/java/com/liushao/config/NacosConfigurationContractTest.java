@@ -93,7 +93,7 @@ class NacosConfigurationContractTest {
                     assertEquals("ssyhsup", environment.getProperty("spring.datasource.password"));
                     assertEquals("none", environment.getProperty("spring.jpa.hibernate.ddl-auto"));
                 }
-                if (Arrays.asList("how_article", "how_user", "how_gateway_web")
+                if (Arrays.asList("how_article", "how_user", "how_search", "how_gateway_web")
                         .contains(application.getKey())) {
                     assertEquals("P1AXH29zhYz/U7v0Ft4jWjUs3myjsVBfd6SnhzoTNO4=",
                             environment.getProperty("jwt.config.key"));

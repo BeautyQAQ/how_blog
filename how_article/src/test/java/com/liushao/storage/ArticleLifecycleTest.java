@@ -2,6 +2,7 @@ package com.liushao.storage;
 
 import com.liushao.client.SearchClient;
 import com.liushao.dao.ArticleDao;
+import com.liushao.dao.CommentDao;
 import com.liushao.entity.Result;
 import com.liushao.pojo.Article;
 import com.liushao.service.ArticleService;
@@ -32,11 +33,12 @@ import static org.mockito.Mockito.*;
 class ArticleLifecycleTest {
     @Autowired ArticleService articles;
     @Autowired ArticleDao dao;
+    @Autowired CommentDao comments;
     @Autowired SearchClient search;
     @Autowired RedisTemplate<String, Object> redis;
 
     @BeforeEach void resetState() {
-        dao.deleteAll();
+        comments.deleteAll(); dao.deleteAll();
         reset(search, redis);
         when(redis.opsForValue()).thenReturn(mock(ValueOperations.class));
         when(search.saveArticle(any())).thenReturn(new Result(true, 20000, "ok"));
@@ -50,6 +52,7 @@ class ArticleLifecycleTest {
         assertEquals("0", saved.getState()); assertEquals("1", saved.getIspublic());
         assertEquals(0, saved.getThumbup()); assertEquals(0, saved.getVisits());
         assertNotNull(saved.getCreatetime()); assertNotNull(saved.getUpdatetime());
+        assertEquals(0, saved.getCreatetime().getTime() % 1000, "Creation response must match MySQL DATETIME precision");
         assertEquals(0, articles.findPublic(1, 10, null, null).getTotalElements());
         assertEquals(404, assertThrows(ResponseStatusException.class, () -> articles.findPublicById(saved.getId())).getStatusCode().value());
     }
@@ -115,9 +118,27 @@ class ArticleLifecycleTest {
 
     @Test void deletingPublishedArticleRemovesItFromBothStoresAndCache() {
         Article saved = articles.add(input("delete")); articles.examine(saved.getId());
+        var comment = new com.liushao.pojo.Comment(); comment.set_id("linked-comment"); comment.setArticleid(saved.getId()); comments.saveAndFlush(comment);
         articles.deleteById(saved.getId());
+        assertEquals(0, comments.count());
         assertFalse(dao.existsById(saved.getId())); verify(search).deleteArticle(saved.getId());
         assertThrows(ResponseStatusException.class, () -> articles.findPublicById(saved.getId()));
+    }
+
+    @Test void summariesAreGeneratedAndPublicCardsNeverExposeBodies() throws Exception {
+        Article markdown = input("summary"); markdown.setContentformat("markdown"); markdown.setContent("## 标题\n\n**正文**🙂");
+        Article saved = articles.add(markdown); articles.examine(saved.getId());
+        var card = articles.findPublic(1, 10, null, null).getContent().getFirst();
+        assertEquals("标题 正文🙂", card.summary());
+        String json = new tools.jackson.databind.ObjectMapper().writeValueAsString(card);
+        assertFalse(json.contains("\"content\"")); assertFalse(json.contains("\"contentHtml\""));
+        Article update = input("summary"); update.setId(saved.getId()); update.setSummary("手工摘要"); articles.update(update);
+        assertEquals("手工摘要", articles.publicDetail(saved.getId()).summary());
+        update.setSummary(null); update.setContent("新的正文"); articles.update(update);
+        assertEquals("手工摘要", articles.publicDetail(saved.getId()).summary());
+        update.setSummary(""); articles.update(update);
+        assertEquals("新的正文", articles.publicDetail(saved.getId()).summary());
+        assertEquals("markdown", dao.findById(saved.getId()).orElseThrow().getContentformat());
     }
 
     private Article input(String title) {
@@ -126,7 +147,7 @@ class ArticleLifecycleTest {
 
     @Configuration @EnableTransactionManagement
     @EnableJpaRepositories(basePackageClasses = ArticleDao.class,
-            includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = ArticleDao.class))
+            includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {ArticleDao.class, CommentDao.class}))
     static class Config {
         @Bean DataSource dataSource() { return new DriverManagerDataSource("jdbc:h2:mem:article-lifecycle;MODE=MySQL;DB_CLOSE_DELAY=-1", "sa", ""); }
         @Bean LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource source) {
@@ -136,6 +157,7 @@ class ArticleLifecycleTest {
         }
         @Bean PlatformTransactionManager transactionManager(EntityManagerFactory factory) { return new JpaTransactionManager(factory); }
         @Bean ArticleService articleService() { return new ArticleService(); }
+        @Bean com.liushao.content.ArticleContent articleContent() { return new com.liushao.content.ArticleContent(); }
         @Bean IdWorker idWorker() { return new IdWorker(1, 1); }
         @Bean SearchClient searchClient() { return mock(SearchClient.class); }
         @Bean RedisTemplate<String, Object> redisTemplate() { return mock(RedisTemplate.class); }

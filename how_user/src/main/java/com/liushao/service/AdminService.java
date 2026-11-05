@@ -16,6 +16,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import com.liushao.dao.AdminDao;
@@ -78,14 +82,20 @@ public class AdminService {
 	 * @return
 	 */
 	public Admin findById(String id) {
-		return adminDao.findById(id).get();
+		return adminDao.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "管理员不存在"));
 	}
 
 	/**
 	 * 增加
 	 * @param admin
 	 */
+	@Transactional
 	public void add(Admin admin) {
+		admin.setLoginname(AccountValidation.name(admin.getLoginname(), 100, "登录名"));
+		AccountValidation.password(admin.getPassword());
+		if (adminDao.findByLoginname(admin.getLoginname()) != null)
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "登录名已存在");
+		admin.setState(state(admin.getState()));
 		admin.setId(idWorker.nextId()+""); //主键值
 		//密码加密
 		String newpassword = encoder.encode(admin.getPassword());//加密后的密码
@@ -97,8 +107,36 @@ public class AdminService {
 	 * 修改
 	 * @param admin
 	 */
+	@Transactional
 	public void update(Admin admin) {
-		adminDao.save(admin);
+		Admin stored = adminDao.findById(admin.getId()).orElseThrow(() ->
+				new ResponseStatusException(HttpStatus.NOT_FOUND, "管理员不存在"));
+		if (admin.getLoginname() != null) {
+			String name = AccountValidation.name(admin.getLoginname(), 100, "登录名");
+			Admin duplicate = adminDao.findByLoginname(name);
+			if (duplicate != null && !duplicate.getId().equals(stored.getId()))
+				throw new ResponseStatusException(HttpStatus.CONFLICT, "登录名已存在");
+			stored.setLoginname(name);
+		}
+		if (admin.getPassword() != null && !admin.getPassword().isEmpty()) {
+			AccountValidation.password(admin.getPassword());
+			stored.setPassword(encoder.encode(admin.getPassword()));
+		}
+		if (admin.getState() != null) stored.setState(state(admin.getState()));
+		adminDao.save(stored);
+	}
+
+	@Transactional(isolation = Isolation.SERIALIZABLE)
+	public void bootstrap(String loginname, String password) {
+		if (adminDao.count() != 0) throw new IllegalStateException("已存在管理员，拒绝重复初始化");
+		Admin admin = new Admin(); admin.setLoginname(loginname); admin.setPassword(password); admin.setState("1");
+		add(admin);
+	}
+
+	private String state(String state) {
+		if (state == null) return "1";
+		if (!"0".equals(state) && !"1".equals(state)) throw new IllegalArgumentException("状态只能是0或1");
+		return state;
 	}
 
 	/**
@@ -117,7 +155,7 @@ public class AdminService {
 	 */
 	public Admin findByLoginnameAndPassword(String loginname, String password){
 		Admin admin = adminDao.findByLoginname(loginname);
-		if( admin!=null && encoder.matches(password,admin.getPassword())) {
+		if( admin!=null && "1".equals(admin.getState()) && password != null && encoder.matches(password,admin.getPassword())) {
 			return admin;
 		}else{
 			return null;

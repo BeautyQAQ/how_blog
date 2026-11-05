@@ -23,6 +23,6 @@ public class PublicArticleController {
 
     @GetMapping("/{id}")
     public Result detail(@PathVariable String id) {
-        return new Result(true, StatusCode.OK, "查询成功", articles.findPublicById(id));
+        return new Result(true, StatusCode.OK, "查询成功", articles.publicDetail(id));
     }
 }

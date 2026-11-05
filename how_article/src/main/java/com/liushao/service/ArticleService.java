@@ -2,6 +2,11 @@ package com.liushao.service;
 
 import com.liushao.client.SearchClient;
 import com.liushao.dao.ArticleDao;
+import com.liushao.dao.CommentDao;
+import com.liushao.dao.ArticleCardProjection;
+import com.liushao.content.ArticleContent;
+import com.liushao.vo.PublicArticleSummary;
+import com.liushao.vo.PublicArticleDetail;
 import com.liushao.entity.Result;
 import com.liushao.pojo.Article;
 import com.liushao.util.IdWorker;
@@ -24,8 +29,10 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class ArticleService {
     @Autowired private ArticleDao articleDao;
+    @Autowired private CommentDao commentDao;
     @Autowired private SearchClient searchClient;
     @Autowired private IdWorker idWorker;
+    @Autowired private ArticleContent content;
     @Resource private RedisTemplate<String, Object> redisTemplate;
 
     public List<Article> findAll() { return articleDao.findAll(); }
@@ -42,7 +49,7 @@ public class ArticleService {
 
     public List<Article> findPublished() { return articleDao.findAll(published()); }
 
-    public Page<Article> findPublic(int page, int size, String channelid, String keyword) {
+    public Page<PublicArticleSummary> findPublic(int page, int size, String channelid, String keyword) {
         validatePage(page, size);
         Specification<Article> spec = published();
         if (channelid != null && !channelid.isBlank()) {
@@ -53,8 +60,19 @@ public class ArticleService {
             spec = spec.and((root, query, cb) -> cb.or(
                     cb.like(root.get("title"), pattern, '\\'), cb.like(root.get("content"), pattern, '\\')));
         }
-        return articleDao.findAll(spec, PageRequest.of(page - 1, size,
-                Sort.by(Sort.Direction.DESC, "istop", "updatetime", "id")));
+        var pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "istop", "updatetime", "id"));
+        return articleDao.findBy(spec, query -> query.as(ArticleCardProjection.class).page(pageable))
+                .map(row -> new PublicArticleSummary(row.getId(), row.getTitle(), content.summary(row.getSummary(), row.getExcerpt()),
+                        row.getImage(), row.getChannelid(), row.getColumnid(), row.getIstop(), row.getCreatetime(), row.getUpdatetime()));
+    }
+
+    public PublicArticleDetail publicDetail(String id) {
+        Article article = findPublicById(id);
+        String format = content.format(article.getContentformat());
+        return new PublicArticleDetail(article.getId(), article.getTitle(), article.getContent(), format,
+                content.render(article.getContent(), format), content.summary(article.getSummary(), article.getExcerpt()),
+                article.getImage(), article.getChannelid(), article.getColumnid(), article.getIstop(), article.getState(),
+                article.getIspublic(), article.getCreatetime(), article.getUpdatetime());
     }
 
     public Article findPublicById(String id) {
@@ -74,8 +92,10 @@ public class ArticleService {
     @Transactional
     public Article add(Article article) {
         validateContent(article);
+        article.setContentformat(content.format(article.getContentformat()));
+        article.setExcerpt(content.excerpt(article.getContent(), article.getContentformat()));
         article.setId(String.valueOf(idWorker.nextId()));
-        article.setCreatetime(new Date());
+        article.setCreatetime(now());
         article.setUpdatetime(article.getCreatetime());
         article.setState("0");
         article.setIspublic(flag(article.getIspublic(), "1"));
@@ -90,6 +110,9 @@ public class ArticleService {
     public void update(Article input) {
         validateContent(input);
         Article article = requireArticle(input.getId());
+        article.setContentformat(content.format(input.getContentformat() == null ? article.getContentformat() : input.getContentformat()));
+        if (input.getSummary() != null) article.setSummary(input.getSummary());
+        article.setExcerpt(content.excerpt(input.getContent(), article.getContentformat()));
         article.setTitle(input.getTitle());
         article.setContent(input.getContent());
         article.setImage(input.getImage());
@@ -99,7 +122,7 @@ public class ArticleService {
         article.setType(input.getType());
         article.setIspublic(flag(input.getIspublic(), article.getIspublic()));
         article.setIstop(flag(input.getIstop(), article.getIstop()));
-        article.setUpdatetime(new Date());
+        article.setUpdatetime(now());
         articleDao.saveAndFlush(article);
         if ("1".equals(article.getState())) syncIndex(article);
         invalidateAfterCommit(article.getId());
@@ -109,6 +132,7 @@ public class ArticleService {
     public void deleteById(String id) {
         Article article = requireArticle(id);
         if ("1".equals(article.getState())) requireSearchSuccess(searchClient.deleteArticle(id));
+        commentDao.deleteByArticleid(id);
         articleDao.deleteById(id);
         invalidateAfterCommit(id);
     }
@@ -117,7 +141,7 @@ public class ArticleService {
     public void examine(String id) {
         Article article = requireArticle(id);
         article.setState("1");
-        article.setUpdatetime(new Date());
+        article.setUpdatetime(now());
         articleDao.saveAndFlush(article);
         syncIndex(article);
         invalidateAfterCommit(id);
@@ -161,6 +185,21 @@ public class ArticleService {
             throw new IllegalArgumentException("标题不能为空且不能超过100字");
         if (article.getContent() == null || article.getContent().isBlank())
             throw new IllegalArgumentException("正文不能为空");
+        if (article.getContent().length() > ArticleContent.MAX_CONTENT) throw new IllegalArgumentException("正文不能超过20万字符");
+        if (article.getSummary() != null && article.getSummary().codePointCount(0, article.getSummary().length()) > 300)
+            throw new IllegalArgumentException("摘要不能超过300字");
+        if (article.getImage() != null && article.getImage().length() > 100) throw new IllegalArgumentException("封面链接不能超过100字符");
+        if (article.getImage() != null && !article.getImage().isBlank()) {
+            String image = article.getImage().trim();
+            boolean local = image.matches("/api/article/media/[a-f0-9]{32}\\.(png|jpg)");
+            try {
+                var uri = java.net.URI.create(image);
+                boolean external = ("https".equalsIgnoreCase(uri.getScheme()) || "http".equalsIgnoreCase(uri.getScheme()))
+                        && uri.getHost() != null && uri.getUserInfo() == null;
+                if (!local && !external) throw new IllegalArgumentException("封面需使用已上传图片或http/https链接");
+            } catch (IllegalArgumentException e) { throw new IllegalArgumentException("封面需使用已上传图片或有效的http/https链接"); }
+            article.setImage(image);
+        }
         article.setTitle(article.getTitle().trim());
     }
 
@@ -169,6 +208,10 @@ public class ArticleService {
         if (!"0".equals(value) && !"1".equals(value)) throw new IllegalArgumentException("状态只能是0或1");
         return value;
     }
+
+    // The existing MySQL DATETIME columns have second precision. Avoid server-side
+    // rounding changing the creation time between the create response and a later read.
+    private Date now() { return new Date(System.currentTimeMillis() / 1000 * 1000); }
 
     private void validatePage(int page, int size) {
         if (page < 1 || size < 1 || size > 100) throw new IllegalArgumentException("页码至少为1，每页数量须在1到100之间");

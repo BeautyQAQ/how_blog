@@ -46,15 +46,14 @@ public class JwtUtil {
      * @return
      */
     public String createJWT(String id, String subject, String roles) {
+        if (ttl <= 0) throw new IllegalStateException("JWT 有效期必须大于零");
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         JwtBuilder builder = Jwts.builder().id(id)
                 .subject(subject)
                 .issuedAt(now)
                 .signWith(signingKey(), Jwts.SIG.HS256).claim("roles", roles);
-        if (ttl > 0) {
-            builder.expiration(new Date(nowMillis + ttl));
-        }
+        builder.expiration(new Date(nowMillis + Math.min(ttl, 3_600_000L)));
         return builder.compact();
     }
 

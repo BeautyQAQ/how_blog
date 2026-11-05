@@ -8,6 +8,7 @@ import secrets
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from urllib.request import Request, urlopen
+from test_support import admin_credentials
 
 OUT = Path("target/demo-data")
 OUT.mkdir(parents=True, exist_ok=True)
@@ -57,6 +58,7 @@ def ensure(kind, key, fields, field="name", port=9001, published=False):
     return row_id
 
 
+token = api(9005, "/user/admin/login", "POST", admin_credentials())["token"]
 admins = api(9003, "/admin/search", "POST", {"loginname": credentials["admin"]})
 admin = next((r for r in admins if r["loginname"] == credentials["admin"]), None)
 if admin is None:
@@ -64,8 +66,8 @@ if admin is None:
     admin = api(9003, "/admin/search", "POST", {"loginname": credentials["admin"]})[0]
 token = api(9005, "/user/admin/login", "POST", {"loginname": credentials["admin"], "password": credentials["password"]})["token"]
 manifest["admin"] = admin["id"]
-reader = ensure("user", "reader", {"mobile": credentials["reader"], "nickname": "演示读者", "password": admin["password"], "fanscount": 0, "followcount": 0}, "mobile", 9003)
-api(9005, "/user/user/login", "POST", {"mobile": credentials["reader"], "password": credentials["password"]})
+reader = ensure("user", "reader", {"mobile": credentials["reader"], "nickname": "演示读者", "password": credentials["password"], "fanscount": 0, "followcount": 0}, "mobile", 9003)
+reader_token = api(9005, "/user/user/login", "POST", {"mobile": credentials["reader"], "password": credentials["password"]})["token"]
 
 channels = [ensure("channel", name, {"name": name, "state": "1"}) for name in ["后端开发", "前端实践", "项目随笔"]]
 for name in ["Java", "Vue", "数据库", "工程实践"]:
@@ -97,15 +99,19 @@ ensure("article", "private", {"title": "已审核但未公开的文章", "conten
 
 # Comments expose only article-scoped GET, unlike most resources.
 for index, (content, approved) in enumerate([("欢迎来到怎样博客，第一篇留言！🙂", True), ("这是一条待审核评论，可以在评论管理中审核。", False), ("期待后续的Markdown编辑与图片上传。", True)]):
-    rows = api(9001, "/comment/article/" + article_ids[0])
+    rows = api(9001, "/comment/search/1/100", "POST", {"articleid": article_ids[0]})["rows"]
     existing_id = manifest.get("comment", {}).get(str(index))
-    row = next((r for r in rows if r["_id"] == existing_id or r["content"] == content), None)
+    row = next((r for r in rows if r.get("id", r.get("_id")) == existing_id or r["content"] == content), None)
     if row is None:
-        api(9001, "/comment", "POST", {"articleid": article_ids[0], "userid": reader, "content": content})
-        row = next(r for r in api(9001, "/comment/article/" + article_ids[0]) if r["content"] == content)
+        admin_token = token
+        try:
+            token = reader_token
+            row = api(9001, "/comment", "POST", {"articleid": article_ids[0], "content": content})
+        finally:
+            token = admin_token
         if approved:
             api(9001, "/comment/examine/" + row["_id"], "PUT")
-    manifest.setdefault("comment", {})[str(index)] = row["_id"]
+    manifest.setdefault("comment", {})[str(index)] = row.get("id", row.get("_id"))
     save_manifest()
 
 spit = ensure("spit", "main", {"content": "今天把文章发布链路跑通了，记录一下这个小进展。🙂", "userid": reader, "nickname": "演示读者", "state": "1"}, "content")

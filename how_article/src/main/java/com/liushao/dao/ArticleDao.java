@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
  *
  */
 public interface ArticleDao extends JpaRepository<Article,String>,JpaSpecificationExecutor<Article>{
+    boolean existsByImageOrContentContaining(String image, String content);
     /**
      * 审核
      * @param id

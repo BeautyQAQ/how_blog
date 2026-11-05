@@ -2,6 +2,10 @@
 
 2026-11-05 开始推进文章发布链路和前端现代化。管理端已迁移到 Vue 3 / Vite 8 / Element Plus / Pinia，前台已迁移到 Nuxt 4 / Vue 3 / TypeScript。范围、已实现功能和后续优先级见 [项目推进记录](doc/project-progress.md)，启动命令见两个前端仓库的 README。阿里云短信继续暂缓。
 
+管理与内部搜索接口已完成统一鉴权，账号响应不再输出密码，公开评论只显示已审核内容。首个管理员改为显式本机启动初始化，不再允许匿名创建，详见 [账号与接口权限](doc/security.md)。
+
+文章现支持 Markdown 对照预览、PNG/JPEG 图片上传、封面及手工/自动摘要；首页使用不含正文的摘要 DTO，详情由服务端安全渲染并支持 SSR。历史文章保留纯文本格式，现有数据库需执行一次 [文章字段迁移](doc/sql/migrations/20261105-article-markdown.sql)。使用、接口和图片持久化说明见 [Markdown、图片与摘要](doc/article-content.md)，验证结果见 [本轮验收](doc/testing/2026-11-05-markdown.md)。
+
 ## 主要技术栈
 JDK 21、Spring Boot 4.0.9、Spring Cloud 2025.1.4、Spring Cloud Alibaba 2025.1.0.0；MySQL、Redis、Kafka、Elasticsearch HTTP API。依赖版本由根 POM 和官方 BOM 统一管理。
 
@@ -33,7 +37,7 @@ Linux / macOS 使用 `bash ./mvnw -B -ntp compile`。Wrapper 固定 Maven 3.9.16
 
 Windows / IntelliJ IDEA 中，直接运行下表中的 Application 启动类即可。中间件配置修改位置为 `doc/nacos-public` 或 `doc/nacos-dev`，编辑后需发布到 Nacos；Nacos 连接信息直接修改各模块的 `application.properties`。`doc/deploy/app.env.example` 仅供查看当前连接值，应用不再依赖该文件。
 
-文章、用户和网关的 `jwt.config.key` 已填写同一把现有密钥；更换时同步修改三份 YAML。短信服务的 `aliyun.sms` 四项目前为空字符串，发送真实短信前直接填写模板编号、签名、AccessKey ID 和 AccessKey Secret。
+文章、用户、搜索和网关的 `jwt.config.key` 需使用同一把密钥；更换时同步修改四份 YAML。短信服务的 `aliyun.sms` 四项目前为空字符串，发送真实短信前直接填写模板编号、签名、AccessKey ID 和 AccessKey Secret。
 
 | 模块 | IDE 启动类 | 默认端口 |
 | --- | --- | --- |

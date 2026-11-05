@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 前缀 /article
@@ -47,9 +49,11 @@ public class CommentController {
      */
     @Operation(summary = "添加评论")
     @RequestMapping(method= RequestMethod.POST)
-    public Result save(@RequestBody com.liushao.pojo.Comment comment){
+    public Result save(@RequestBody com.liushao.pojo.Comment comment, HttpServletRequest request){
+        Claims claims = (Claims) request.getAttribute("user_claims");
+        comment.setUserid(claims.getId());
         commentService.add(comment);
-        return new Result(true, StatusCode.OK, "提交成功 ");
+        return new Result(true, StatusCode.OK, "已提交，等待审核", comment);
     }
 
     /**

@@ -21,6 +21,12 @@ public interface CommentDao extends JpaRepository<Comment, String> {
      */
     List<Comment> findByArticleid(String articleid);
 
+    List<Comment> findByArticleidAndStateOrderByPublishdateAsc(String articleid, String state);
+
+    @Modifying(flushAutomatically = true)
+    @Query("delete from Comment c where c.articleid = :articleid")
+    int deleteByArticleid(@Param("articleid") String articleid);
+
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("update Comment c set c.state = '1', c.checktime = :checktime where c._id = :id")
     int examine(@Param("id") String id, @Param("checktime") Date checktime);

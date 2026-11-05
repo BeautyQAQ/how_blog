@@ -4,6 +4,7 @@ import secrets
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
+from test_support import admin_credentials
 
 run = "draft_" + secrets.token_hex(6)
 checks = []
@@ -39,9 +40,10 @@ def check(name, valid):
 
 
 try:
+    owner_token = api(9005, "/user/admin/login", "POST", admin_credentials())["token"]
     password = secrets.token_urlsafe(20)
-    api(9003, "/admin", "POST", {"loginname": run, "password": password, "state": "1"})
-    admin_id = api(9003, "/admin/search", "POST", {"loginname": run})[0]["id"]
+    api(9003, "/admin", "POST", {"loginname": run, "password": password, "state": "1"}, owner_token)
+    admin_id = api(9003, "/admin/search", "POST", {"loginname": run}, owner_token)[0]["id"]
     token = api(9005, "/user/admin/login", "POST", {"loginname": run, "password": password})["token"]
     check("Administrator login", bool(token))
     article = api(9005, "/article/article", "POST", {"title": run, "content": "中文🙂\n正文", "state": "1", "thumbup": 99}, token)
